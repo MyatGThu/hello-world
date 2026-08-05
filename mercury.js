@@ -44,7 +44,7 @@
     return out;
   }
   var CONFIGS = [
-    { b: [[0, 0.35, 0, 1.5], [-2.1, -1.15, 0, 0.3], [2.25, 1.3, 0, 0.24]], k: 0.9, ripple: 0.0, off: [0, 0], puddle: 0, hue: 0.0, shape: -1, op: [0, 0.35] },          // arrival — the raw pearl
+    { b: [[0.46, 0.12, 0, 1.19], [-2.5, -1.9, 0, 0.3], [2.25, 1.3, 0, 0.24]], k: 0.9, ripple: 0.0, off: [0, 0], puddle: 0, hue: 0.0, shape: -1, op: [0.46, 0.12] },    // arrival — the raw pearl, framed in the hero's open right-hand column
     { b: [[1.9, 0.1, 0, 0.9], [1.1, -0.7, 0, 0.5], [2.7, 0.9, 0, 0.35]], k: 0.7, ripple: 0.022, off: [0, 0], puddle: 0, hue: 0.7, shape: 0, op: [1.9, 0.15] },        // the person — headset
     { b: [[0, 0.1, 0, 1.1], [-1.6, -0.4, 0, 0.55], [1.7, 0.5, 0, 0.55], [0.4, 1.0, 0, 0.4]], k: 0.5, ripple: 0.0, off: [0, 0], puddle: 0, hue: 1.6, shape: 1, op: [0.2, 0.15] }, // the craft — keyboard + mouse
     { b: ring(6, 2.35, 0.4, 0, 0.1).concat([[0, 0.1, 0, 0.78]]), k: 0.34, ripple: 0.0, off: [0, 0], puddle: 0, hue: 2.6, shape: 2, op: [0, 0.1] },                    // the orbit — spinning CD
@@ -421,6 +421,15 @@
         if (released && r > 0.01 && r < 0.6) {
           var dx = mx - tx, dy = my - ty, q = Math.max(0.4, dx * dx + dy * dy);
           tx += dx / q * 0.14; ty += dy / q * 0.14;
+        }
+        // The main body leans toward the pointer while the metal is liquid,
+        // saturating at a quarter of a unit so it reads as attention rather
+        // than drift. Never while a shape is cast: a solidified artifact that
+        // followed the cursor would undo the "this has set" reading.
+        if (released && r >= 0.6 && uniforms.uForm.value < 0.05) {
+          var lx = mx - tx, ly = my - ty, ld = Math.sqrt(lx * lx + ly * ly) || 1;
+          var lean = Math.min(0.26, ld * 0.06);
+          tx += lx / ld * lean; ty += ly / ld * lean;
         }
         var k = 26, damp = Math.exp(-5.2 * dt);
         vel[i * 3] = (vel[i * 3] + (tx - pos[i * 3]) * k * dt) * damp;

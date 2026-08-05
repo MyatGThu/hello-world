@@ -24,7 +24,7 @@
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23181511'/><text x='50' y='70' font-size='56' font-family='Arial,sans-serif' font-weight='700' fill='%23f1ede5' text-anchor='middle'>M</text></svg>" />
 
-  <script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('wipe'))document.documentElement.classList.add('is-entering');}catch(e){}</script>
+  <script>document.documentElement.classList.add('js');try{var n=sessionStorage.getItem('nav');if(n){var c=document.documentElement.classList;c.add('is-entering');if(n==='wipe')c.add('is-wipe');}}catch(e){}</script>
 
   <link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin />
@@ -39,12 +39,12 @@
 
   <!-- Header -->
   <header class="head" id="head">
-    <a class="head__brand" href="index.html" data-cursor="home" data-scramble>Myat&nbsp;Thu</a>
+    <a class="head__brand" href="index.html" data-cursor="home">Myat&nbsp;Thu</a>
     <a class="head__status" href="#contact" data-cursor="say hi">
-      <span class="head__dot"></span> <span data-scramble>Open to work</span>
+      <span class="head__dot"></span> <span>Open to work</span>
     </a>
     <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
-      <span class="menu-btn__label" data-scramble>Menu</span>
+      <span class="menu-btn__label">Menu</span>
       <span class="menu-btn__bars"><i></i><i></i></span>
     </button>
   </header>
@@ -53,24 +53,24 @@
   <nav class="menu" id="menu" aria-label="Primary" aria-hidden="true">
     <div class="menu__inner">
       <ul class="menu__links">
-        <li><a href="index.html" data-scramble><span class="menu__idx">01</span> Home</a></li>
-        <li><a href="#top" data-scramble><span class="menu__idx">02</span> About</a></li>
-        <li><a href="index.html#work" data-scramble><span class="menu__idx">03</span> Work</a></li>
-        <li><a href="index.html#certs" data-scramble><span class="menu__idx">04</span> Credentials</a></li>
-        <li><a href="#contact" data-scramble><span class="menu__idx">05</span> Contact</a></li>
+        <li><a href="index.html"><span class="menu__idx">01</span> Home</a></li>
+        <li><a href="#top"><span class="menu__idx">02</span> About</a></li>
+        <li><a href="index.html#work"><span class="menu__idx">03</span> Work</a></li>
+        <li><a href="index.html#certs"><span class="menu__idx">04</span> Credentials</a></li>
+        <li><a href="#contact"><span class="menu__idx">05</span> Contact</a></li>
       </ul>
       <div class="menu__meta">
         <div class="menu__col">
           <span class="menu__h">Get in touch</span>
-          <a href="mailto:myatgeorgethu@gmail.com" data-cursor="email" data-scramble>myatgeorgethu@gmail.com</a>
+          <a href="mailto:myatgeorgethu@gmail.com" data-cursor="email">myatgeorgethu@gmail.com</a>
         </div>
         <div class="menu__col">
           <span class="menu__h">Based in</span>
-          <span data-scramble>Melbourne, Australia</span>
+          <span>Melbourne, Australia</span>
         </div>
         <div class="menu__col">
           <span class="menu__h">Status</span>
-          <span data-scramble>Open to opportunities — 2026</span>
+          <span>Open to opportunities — 2026</span>
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@
       <span class="blok blok--plus" data-parallax="-0.6" data-parallax-x="0.25" data-parallax-rot="60" aria-hidden="true">+</span>
 
       <div class="play__head">
-        <h2 class="section-title" data-reveal data-scramble>Off the clock</h2>
+        <h2 class="section-title" data-reveal>Off the clock</h2>
         <p class="play__note" data-reveal>How I switch off and recharge.</p>
       </div>
 
@@ -143,7 +143,7 @@
           <div class="pcard__head"><span class="pcard__no">CLOCK_01</span><span class="pcard__tag">Gaming · MOBA</span></div>
           <div class="pcard__brand">
             <span class="logo-tile logo-tile--sm" data-cursor="Dota 2"><img class="logo-tile__img" src="assets/icons/dota2.svg" alt="Dota 2" /></span>
-            <h3 class="pcard__title" data-scramble>Dota 2</h3>
+            <h3 class="pcard__title">Dota 2</h3>
           </div>
           <p class="pcard__summary">The ranked grind — matchmaking, team fights, and the occasional 60-minute nail-biter won on a good late-game comeback.</p>
           <span class="pcard__meta">Valve · Steam</span>
@@ -154,7 +154,7 @@
           <div class="pcard__head"><span class="pcard__no">CLOCK_02</span><span class="pcard__tag">Gaming · Football</span></div>
           <div class="pcard__brand">
             <span class="logo-tile logo-tile--sm" data-cursor="EA Sports FC"><span class="logo-tile__mark logo-tile__mark--fc">EA&nbsp;FC</span></span>
-            <h3 class="pcard__title" data-scramble>EA Sports FC</h3>
+            <h3 class="pcard__title">EA Sports FC</h3>
           </div>
           <p class="pcard__summary">Building Ultimate Team squads and grinding career mode — football for the nights I can't be out on the pitch.</p>
           <span class="pcard__meta">EA Sports</span>
@@ -165,7 +165,7 @@
           <div class="pcard__head"><span class="pcard__no">CLOCK_03</span><span class="pcard__tag">Cinema · Marvel &amp; DC</span></div>
           <div class="pcard__brand">
             <span class="logo-tile logo-tile--sm" data-cursor="Superhero films"><img class="logo-tile__img" src="assets/icons/dcentertainment.svg" alt="DC" /></span>
-            <h3 class="pcard__title" data-scramble>Superhero films</h3>
+            <h3 class="pcard__title">Superhero films</h3>
           </div>
           <p class="pcard__summary">Marvel and DC on the big screen — team-ups, origin stories, and an ever-growing watchlist I'm always adding to.</p>
           <span class="pcard__meta">Opening night</span>
@@ -176,7 +176,7 @@
           <div class="pcard__head"><span class="pcard__no">CLOCK_04</span><span class="pcard__tag">Comfort TV · Rewatchable</span></div>
           <div class="pcard__brand">
             <span class="logo-tile logo-tile--sm" data-cursor="Comfort TV"><img class="logo-tile__img" src="assets/icons/netflix.svg" alt="Netflix" /></span>
-            <h3 class="pcard__title" data-scramble>Comfort TV</h3>
+            <h3 class="pcard__title">Comfort TV</h3>
           </div>
           <p class="pcard__summary">The rewatch rotation that's always on in the background — Supernatural, The Big Bang Theory, How I Met Your Mother, and Brooklyn Nine-Nine.</p>
           <span class="pcard__meta">On in the background</span>
@@ -187,7 +187,7 @@
           <div class="pcard__head"><span class="pcard__no">CLOCK_05</span><span class="pcard__tag">Building · AI</span></div>
           <div class="pcard__brand">
             <span class="logo-tile logo-tile--sm" data-cursor="Claude Code"><img class="logo-tile__img" src="assets/icons/claude.svg" alt="Claude" /></span>
-            <h3 class="pcard__title" data-scramble>Claude Code</h3>
+            <h3 class="pcard__title">Claude Code</h3>
           </div>
           <p class="pcard__summary">Tinkering with agentic coding after hours — pointing Claude Code at small problems, automating the dull bits, and building little tools just to see how far it goes.</p>
           <span class="pcard__meta">Personal projects · ongoing</span>
@@ -221,7 +221,7 @@
                 <path d="M12 6.7V3.3M15.9 9.5l3.1-1.1M14.4 14.1l2.8 2.2M9.6 14.1l-2.8 2.2M8.1 9.5L5 8.4" />
               </svg>
             </span>
-            <h3 class="pcard__title" data-scramble>Saturday football</h3>
+            <h3 class="pcard__title">Saturday football</h3>
           </div>
           <p class="pcard__summary">Informal pickup games on the Monash Sport soccer fields every Saturday — the standing weekly fixture that gets me off the screen and out on the pitch.</p>
           <span class="pcard__meta">Monash Sport · every Saturday</span>
@@ -235,7 +235,7 @@
       <span class="blok blok--dot2" data-parallax="-0.5" data-parallax-x="0.2" aria-hidden="true"></span>
 
       <div class="play__head">
-        <h2 class="section-title" data-reveal data-scramble>Always leveling up</h2>
+        <h2 class="section-title" data-reveal>Always leveling up</h2>
         <p class="play__note" data-reveal>How I keep the career moving forward.</p>
       </div>
 
@@ -243,7 +243,7 @@
         <article class="icard icard--feature" data-cap data-parallax="0.05">
           <span class="icard__badge">In progress</span>
           <span class="icard__code">SC-300</span>
-          <h3 class="icard__title" data-scramble>Microsoft Identity &amp; Access Administrator</h3>
+          <h3 class="icard__title">Microsoft Identity &amp; Access Administrator</h3>
           <p class="icard__desc">My current study focus — deepening Entra ID, conditional access, and identity governance.</p>
           <span class="icard__tag">Certification</span>
         </article>
@@ -253,14 +253,14 @@
             <img src="assets/icons/pluralsight.svg" alt="Pluralsight" />
             <img src="assets/icons/coursera.svg" alt="Coursera" />
           </div>
-          <h3 class="icard__title" data-scramble>New technologies</h3>
+          <h3 class="icard__title">New technologies</h3>
           <p class="icard__desc">Reading, labs, and courses — staying current with the Microsoft cloud and security stack.</p>
           <span class="icard__tag">Learning</span>
         </article>
 
         <article class="icard" data-cap data-parallax="0.06">
           <div class="icard__logo"><img src="assets/icons/googlenews.svg" alt="Google News" /></div>
-          <h3 class="icard__title" data-scramble>Finance &amp; markets</h3>
+          <h3 class="icard__title">Finance &amp; markets</h3>
           <p class="icard__desc">A daily read of finance news — markets, tech, and the bigger picture.</p>
           <span class="icard__tag">Reading</span>
         </article>
@@ -274,7 +274,7 @@
         <span class="line"><span class="word" data-split>Let's</span></span>
         <span class="line"><span class="word word--accent" data-split>talk.</span></span>
       </h2>
-      <a class="contact__mail" href="mailto:myatgeorgethu@gmail.com" data-magnetic data-cursor="email" data-scramble>
+      <a class="contact__mail" href="mailto:myatgeorgethu@gmail.com" data-magnetic="0.22" data-cursor="email">
         myatgeorgethu@gmail.com
       </a>
       <div class="contact__meta" data-reveal>
@@ -286,7 +286,7 @@
 
   <footer class="foot">
     <span>© 2026 Myat Thu</span>
-    <a href="index.html" data-cursor="home" data-scramble>Back to home ↑</a>
+    <a href="index.html" data-cursor="home">Back to home ↑</a>
     <span>Melbourne, Australia</span>
   </footer>
 
