@@ -155,6 +155,12 @@
     if (!words.length) return;
     if (!hasGSAP || reduceMotion) { if (hasGSAP) gsap.set(words, { yPercent: 0, clearProps: "all" }); return; }
     gsap.fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: 1.1, ease: "expo.out", stagger: 0.08, delay: 0.05 });
+    // The cast: a specular band crosses each letterform just behind the rise,
+    // so the name reads as struck from the same metal moving behind it. The
+    // band lives in the word's own background (clipped to the glyphs), so it
+    // lights the type without touching the page around it.
+    gsap.fromTo(words, { "--sweep": "-150%" },
+      { "--sweep": "210%", duration: 1.5, ease: "power2.inOut", stagger: 0.08, delay: 0.26 });
   }
 
   /* ---------- Generic reveals (direction-aware) ---------- */
@@ -166,6 +172,11 @@
     // tip toward the direction of travel), and resets once fully off-screen
     // so each pass through the page re-performs the entrance.
     gsap.utils.toArray("[data-reveal],[data-cap],[data-role]").forEach(function (el) {
+      // The hero is above the fold by definition, so its blocks play as part of
+      // the arrival (see boot) instead of waiting for a scroll trigger they may
+      // already sit past — a block landing a few pixels below the start line
+      // would otherwise stay invisible until the visitor scrolled.
+      if (el.closest(".hero")) return;
       if (el.closest(".toolbox__head")) {
         // Sticky heading: its static trigger box scrolls away while the
         // element itself stays pinned on screen — hiding it would pop.
@@ -300,20 +311,6 @@
     });
   }
 
-  /* ---------- StringTune: attribute-driven magnetic pulls ---------- */
-  function initStrings() {
-    if (reduceMotion || typeof window.StringTune === "undefined") return;
-    try {
-      var st = StringTune.StringTune.getInstance();
-      st.use(StringTune.StringMagnetic);
-      // Native scroll mode: Lenis owns scrolling. StringTune's own smooth
-      // scroller would desync GSAP's ScrollTrigger (it did — reveals froze).
-      st.scrollDesktopMode = "default";
-      st.scrollMobileMode = "default";
-      st.start(60);
-    } catch (e) { /* the page works without strings */ }
-  }
-
   /* ---------- Chapter caption (fixed, serif — replaces the old HUD) ---------- */
   function initChapterCaption() {
     var secs = Array.prototype.slice.call(document.querySelectorAll("main [data-chapter]"));
@@ -362,7 +359,10 @@
   /* ---------- Alternating drift: rows converge from opposite sides ---------- */
   function initDrift() {
     if (!hasGSAP || reduceMotion) return;
-    [".stats .stat", ".edu__item", ".contact__meta span", ".hero__meta span"].forEach(function (sel) {
+    // The hero is deliberately absent: a scrub that ends at "top 92%" can never
+    // reach progress 1 for a block that starts above the fold, so its rows would
+    // sit frozen at their side offsets and overlap each other.
+    [".stats .stat", ".edu__item", ".contact__meta span"].forEach(function (sel) {
       gsap.utils.toArray(sel).forEach(function (el, i) {
         // End well above the fold: elements near the page bottom can never
         // cross deeper lines, and a stuck drift leaves rows overlapping.
@@ -509,40 +509,70 @@
     }
   }
 
-  /* ---------- Custom cursor ---------- */
+  /* ---------- Custom cursor (dot + trailing ring) ---------- */
   function initCursor() {
     var cursor = document.querySelector(".cursor");
     if (!cursor || !fine) return;
     var label = cursor.querySelector(".cursor__label");
-    var x = window.innerWidth / 2, y = window.innerHeight / 2, cx = x, cy = y;
-    window.addEventListener("mousemove", function (e) { x = e.clientX; y = e.clientY; });
-    (function render() {
-      cx += (x - cx) * 0.18; cy += (y - cy) * 0.18;
-      cursor.style.transform = "translate(" + cx + "px," + cy + "px) translate(-50%,-50%)";
-      requestAnimationFrame(render);
-    })();
+    var ring = document.createElement("div");
+    ring.className = "cursor-ring";
+    ring.setAttribute("aria-hidden", "true");
+    document.body.appendChild(ring);
+
+    var x = 0, y = 0, cx = 0, cy = 0, rx = 0, ry = 0, raf = null, seen = false;
+    function render() {
+      var dx = x - cx, dy = y - cy;
+      cx += dx * 0.2; cy += dy * 0.2;
+      // The ring lags the dot — the gap widens with speed, which is what reads
+      // as weight rather than a second cursor.
+      rx += (x - rx) * 0.11; ry += (y - ry) * 0.11;
+      cursor.style.transform = "translate(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px) translate(-50%,-50%)";
+      ring.style.transform = "translate(" + rx.toFixed(1) + "px," + ry.toFixed(1) + "px) translate(-50%,-50%)";
+      // Park the loop once both have caught up. An always-on rAF spends a frame
+      // every 16ms redrawing a cursor that has not moved.
+      raf = (Math.abs(dx) + Math.abs(dy) + Math.abs(x - rx) + Math.abs(y - ry) > 0.4)
+        ? requestAnimationFrame(render) : null;
+    }
+    window.addEventListener("mousemove", function (e) {
+      x = e.clientX; y = e.clientY;
+      if (!seen) { seen = true; cx = rx = x; cy = ry = y; document.documentElement.classList.add("has-cursor"); }
+      if (!raf) raf = requestAnimationFrame(render);
+    }, { passive: true });
+    document.addEventListener("mouseleave", function () { cursor.classList.add("is-out"); ring.classList.add("is-out"); });
+    document.addEventListener("mouseenter", function () { cursor.classList.remove("is-out"); ring.classList.remove("is-out"); });
+
     document.querySelectorAll("a, button, [data-cursor], [data-magnetic]").forEach(function (el) {
       el.addEventListener("mouseenter", function () {
         var text = el.getAttribute("data-cursor");
         if (text) { cursor.classList.add("is-label"); if (label) label.textContent = text; }
         else { cursor.classList.add("is-hover"); }
+        ring.classList.add("is-wide");
       });
       el.addEventListener("mouseleave", function () {
         cursor.classList.remove("is-hover", "is-label");
+        ring.classList.remove("is-wide");
         if (label) label.textContent = "";
       });
     });
   }
 
-  /* ---------- Tilt ---------- */
-  function initTilt() {
-    if (reduceMotion || !hasGSAP || !fine) return;
-    document.querySelectorAll("[data-tilt]").forEach(function (el) {
-      el.addEventListener("mousemove", function (e) {
+  /* ---------- Magnetic buttons ---------- */
+  function initMagnetic() {
+    if (reduceMotion || !fine || !hasGSAP) return;
+    document.querySelectorAll("[data-magnetic]").forEach(function (el) {
+      // Pull strength: how far the element leans toward the pointer, as a
+      // fraction of the pointer's offset from the element's centre.
+      var pull = parseFloat(el.getAttribute("data-magnetic")) || 0.3;
+      var xTo = gsap.quickTo(el, "x", { duration: 0.55, ease: "power3.out" });
+      var yTo = gsap.quickTo(el, "y", { duration: 0.55, ease: "power3.out" });
+      el.addEventListener("pointermove", function (e) {
         var r = el.getBoundingClientRect();
-        gsap.to(el, { rotateY: ((e.clientX - r.left) / r.width - 0.5) * 12, rotateX: -(((e.clientY - r.top) / r.height) - 0.5) * 12, duration: 0.5, ease: "power2.out", transformPerspective: 800 });
+        xTo((e.clientX - r.left - r.width / 2) * pull);
+        yTo((e.clientY - r.top - r.height / 2) * pull);
       });
-      el.addEventListener("mouseleave", function () { gsap.to(el, { rotateY: 0, rotateX: 0, duration: 0.8, ease: "elastic.out(1,0.5)" }); });
+      // Released through the same quickTo tween — a separate gsap.to here would
+      // overwrite the cached tween and leave the next hover dead.
+      el.addEventListener("pointerleave", function () { xTo(0); yTo(0); });
     });
   }
 
@@ -733,6 +763,10 @@
     bar.className = "progress";
     bar.setAttribute("aria-hidden", "true");
     document.body.appendChild(bar);
+    // Where the browser can drive this from a scroll timeline, the stylesheet
+    // already does — off the main thread, with no scroll listener at all. Wire
+    // the JS fallback only for engines without one.
+    if (window.CSS && CSS.supports && CSS.supports("animation-timeline", "scroll()")) return;
     var raf = null;
     function update() {
       raf = null;
@@ -745,26 +779,43 @@
     update();
   }
 
-  /* ---------- Page transition wipe ---------- */
+  /* ---------- Page transitions ----------
+     Preferred path is the browser's own cross-document View Transitions, driven
+     by @view-transition in the stylesheet: the navigation starts immediately and
+     the browser cross-fades real snapshots of both pages. The JS wipe below is
+     the fallback for engines without it, and it costs a 520ms stall before the
+     navigation even begins — so it only runs where nothing better exists.
+     `onpagereveal` ships with cross-document view transitions, which makes it an
+     exact feature test (same-document support alone would false-positive). */
   function initTransitions() {
-    var wipe = document.querySelector(".wipe");
-    if (!wipe) return;
     var html = document.documentElement;
+    var wipe = document.querySelector(".wipe");
+    var nativeVT = "onpagereveal" in window;
 
     // Arrived via a transition — uncover once the covered state has painted.
     if (html.classList.contains("is-entering")) {
       requestAnimationFrame(function () {
-        requestAnimationFrame(function () { html.classList.remove("is-entering"); });
+        requestAnimationFrame(function () { html.classList.remove("is-entering", "is-wipe"); });
       });
     }
-    try { sessionStorage.removeItem("wipe"); } catch (e) {}
+    try { sessionStorage.removeItem("nav"); } catch (e) {}
 
-    // Clear the cover if the page is restored from the back/forward cache.
+    // Restored from the back/forward cache — drop any leftover cover.
     window.addEventListener("pageshow", function (e) {
-      if (e.persisted) { wipe.classList.remove("is-cover"); html.classList.remove("is-entering"); }
+      if (!e.persisted) return;
+      if (wipe) wipe.classList.remove("is-cover");
+      html.classList.remove("is-entering", "is-wipe");
     });
 
-    if (reduceMotion) return; // navigate normally, no cover animation
+    // Mark the navigation so the arriving page skips its preloader.
+    function mark(kind) { try { sessionStorage.setItem("nav", kind); } catch (e) {} }
+
+    if (nativeVT) {
+      window.addEventListener("pageswap", function () { mark("vt"); });
+      return; // never intercept the click: the browser animates the real navigation
+    }
+
+    if (!wipe || reduceMotion) return; // navigate normally, no cover animation
 
     document.addEventListener("click", function (e) {
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -775,7 +826,7 @@
       if (url.origin !== location.origin || url.pathname === location.pathname) return;
       if (!/\.html?$/.test(url.pathname)) return; // only page-to-page navigation
       e.preventDefault();
-      try { sessionStorage.setItem("wipe", "1"); } catch (e2) {}
+      mark("wipe");
       wipe.classList.add("is-cover");
       setTimeout(function () { location.href = url.href; }, 520);
     });
@@ -789,7 +840,6 @@
     initReveals();
     initKineticType();
     initLetters();
-    initStrings();
     initWordReveal();
     initGhosts();
     initParallax();
@@ -799,7 +849,7 @@
     initCounters();
     initMarquee();
     initCursor();
-    initTilt();
+    initMagnetic();
     initPortrait();
     initWorkPreview();
     initProgress();
@@ -809,7 +859,15 @@
     initTransitions();
 
     runLoader(function () {
-      revealSplitWords(document.querySelector(".hero"));
+      var hero = document.querySelector(".hero");
+      revealSplitWords(hero);
+      // Hero blocks rise in behind the name, staggered so the eyebrow, thesis
+      // and footer read in the order the eye travels rather than all at once.
+      var heroBits = hero ? hero.querySelectorAll("[data-reveal]") : [];
+      if (heroBits.length && hasGSAP && !reduceMotion) {
+        gsap.fromTo(heroBits, { opacity: 0, y: 26 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.09, delay: 0.14 });
+      }
       var contact = document.querySelector(".contact");
       if (contact && hasGSAP && !reduceMotion) {
         ScrollTrigger.create({ trigger: contact, start: "top 70%", once: true, onEnter: function () { revealSplitWords(contact); } });

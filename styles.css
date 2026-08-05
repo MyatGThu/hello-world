@@ -112,6 +112,8 @@ b { font-weight: 600; color: var(--accent); }
 @media (prefers-reduced-motion: reduce) { .grain { animation: none; } }
 
 /* ----- Custom cursor ----- */
+/* Hidden until the pointer first moves — otherwise the dot sits parked in the
+   top-left corner of a freshly loaded page. */
 .cursor {
   position: fixed; top: 0; left: 0; z-index: 950;
   min-width: 10px; height: 10px; border-radius: 999px; background: var(--accent);
@@ -129,7 +131,22 @@ b { font-weight: 600; color: var(--accent); }
 /* Labelled hover: a pill sized to the text — fits any length. */
 .cursor.is-label { height: auto; padding: 9px 16px; }
 .cursor.is-label .cursor__label { max-width: 60vw; opacity: 1; }
-@media (hover: hover) and (pointer: fine) { .cursor { display: flex; } }
+/* The trailing ring lags the dot, so fast moves stretch the pair apart and
+   slow ones close it back up. Difference blending keeps it readable over both
+   the porcelain page and the dark fullscreen menu. */
+.cursor-ring {
+  position: fixed; top: 0; left: 0; z-index: 949; display: none;
+  width: 30px; height: 30px; border-radius: 999px;
+  border: 1px solid var(--ink); mix-blend-mode: difference; pointer-events: none;
+  transition: width .35s var(--ease), height .35s var(--ease), opacity .3s var(--ease);
+}
+.cursor-ring.is-wide { width: 56px; height: 56px; opacity: .45; }
+.cursor.is-out, .cursor-ring.is-out { opacity: 0; }
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor .cursor { display: flex; }
+  html.has-cursor .cursor-ring { display: block; }
+}
+@media (prefers-reduced-motion: reduce) { .cursor-ring { display: none !important; } }
 
 /* ----- Preloader (a chrome drop falls while the counter climbs) ----- */
 .loader {
@@ -216,7 +233,7 @@ section { position: relative; }
 
 /* ----- HERO ----- */
 .hero {
-  min-height: 100svh; padding: 120px var(--pad) 48px;
+  min-height: 100svh; padding: clamp(84px, 10vh, 104px) var(--pad) clamp(28px, 4vh, 44px);
   display: flex; flex-direction: column; justify-content: center; overflow: hidden;
 }
 .hero__bg {
@@ -238,12 +255,12 @@ section { position: relative; }
    on their own. Reuses the isolate + z-index:-1 pattern (sits above the canvas,
    behind the block's own text). */
 .intro__lead, .now__text, .hero__role, .caps__note, .toolbox__note,
-.certs__note, .step__d, .role__points, .lab__d {
+.certs__note, .step__d, .role__points, .lab__d, .contact__meta {
   position: relative; isolation: isolate;
 }
 .intro__lead::before, .now__text::before, .hero__role::before, .caps__note::before,
 .toolbox__note::before, .certs__note::before, .step__d::before, .role__points::before,
-.lab__d::before {
+.lab__d::before, .contact__meta::before {
   content: ""; position: absolute; inset: -0.5em -0.9em; z-index: -1;
   background: var(--bone); border-radius: 16px;
   filter: blur(15px); opacity: 0.72; pointer-events: none;
@@ -258,8 +275,16 @@ html.js::-webkit-scrollbar { display: none; }
 .stats, .edu { overflow-x: hidden; overflow-x: clip; }
 .progress {
   position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 845; /* under the menu overlay */
-  background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; pointer-events: none;
+  background: var(--iri); transform: scaleX(0); transform-origin: 0 50%; pointer-events: none;
 }
+/* Driven by the scroll position itself rather than a scroll listener: the
+   compositor advances it, so it stays smooth while the main thread is busy and
+   costs nothing per scroll event. main.js wires its JS fallback only where this
+   is unsupported, so the two never both run. */
+@supports (animation-timeline: scroll()) {
+  .progress { animation: progress-grow linear both; animation-timeline: scroll(root block); }
+}
+@keyframes progress-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .hero__eyebrow {
   display: flex; justify-content: space-between; max-width: var(--maxw); width: 100%;
   margin: 0 auto clamp(18px, 4vh, 40px); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
@@ -276,9 +301,45 @@ html.js::-webkit-scrollbar { display: none; }
   color: transparent; -webkit-text-fill-color: transparent;
 }
 
-/* rotating badge */
+/* ----- The cast -----
+   Each display word carries two stacked backgrounds clipped to its glyphs: a
+   specular band on top, the word's normal fill underneath. Sliding --sweep runs
+   the band across the letterforms once, so the name reads as struck from the
+   metal moving behind it. Parked off the right by default, which is also the
+   resting state for reduced motion and for no-GSAP. Gated on html.js so a
+   visitor without JS never risks transparent text with no gradient behind it. */
+html.js .hero__title .word,
+html.js .contact__title .word {
+  --word-fill: linear-gradient(var(--ink) 0 100%);
+  background-image:
+    linear-gradient(102deg, transparent 0 41%, rgba(255,255,255,0.95) 47%,
+                    rgba(206,202,193,0.9) 51%, transparent 58% 100%),
+    var(--word-fill);
+  background-size: 240% 100%, 100% 100%;
+  background-position: var(--sweep, 210%) 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+html.js .hero__title .word--accent,
+html.js .contact__title .word--accent { --word-fill: var(--iri); }
+
+/* ----- Hero thesis: the line that says what the metal is doing ----- */
+.hero__thesis {
+  margin-top: clamp(14px, 2.2vh, 24px); max-width: 46ch;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(15px, 1.55vw, 21px); line-height: 1.3; letter-spacing: 0;
+  color: var(--ink);
+}
+.hero__thesis::before {
+  content: ""; display: block; width: 46px; height: 2px; margin-bottom: 12px;
+  background: var(--iri);
+}
+
+/* rotating badge — centred with the independent `translate` property, not
+   `transform`, so the magnetic pull can own `transform` without fighting it. */
 .badge {
-  position: absolute; top: 50%; right: 2%; transform: translateY(-50%);
+  position: absolute; top: 50%; right: 2%; translate: 0 -50%;
   width: clamp(110px, 13vw, 168px); aspect-ratio: 1; display: grid; place-items: center;
 }
 .badge__svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 16s linear infinite; }
@@ -292,12 +353,12 @@ html.js::-webkit-scrollbar { display: none; }
 @media (max-width: 720px) {
   /* Keep .badge absolutely positioned (so its SVG stays contained) and sit it
      inline to the right of the name instead of stacking below. */
-  .badge { position: absolute; top: 50%; right: 0; transform: translateY(-50%); margin: 0; width: clamp(92px, 26vw, 124px); }
+  .badge { position: absolute; top: 50%; right: 0; translate: 0 -50%; margin: 0; width: clamp(92px, 26vw, 124px); }
 }
 
 .hero__foot {
-  margin-top: clamp(28px, 5vh, 64px); max-width: var(--maxw); margin-left: auto; margin-right: auto; width: 100%;
-  display: grid; grid-template-columns: 210px 1fr; gap: clamp(24px, 5vw, 80px); align-items: end;
+  margin-top: clamp(20px, 3vh, 44px); max-width: var(--maxw); margin-left: auto; margin-right: auto; width: 100%;
+  display: grid; grid-template-columns: 178px 1fr; gap: clamp(24px, 5vw, 80px); align-items: end;
 }
 .hero__portrait { width: 100%; }
 .hero__portrait-media {
@@ -310,7 +371,9 @@ html.js::-webkit-scrollbar { display: none; }
 .hero__portrait { cursor: pointer; }
 .hero__portrait-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; display: block; transition: filter .5s var(--ease), transform .5s var(--ease); }
 html.js .hero__portrait:not(.is-revealed) .hero__portrait-img { filter: blur(9px); transform: scale(1.08); }
-.hero__role { font-size: clamp(19px, 2.4vw, 30px); font-weight: 400; line-height: 1.25; max-width: 20ch; letter-spacing: -0.01em; }
+/* Demoted to supporting detail: the thesis line above now carries the hook, so
+   this paragraph's job is the specifics a recruiter scans for, not the headline. */
+.hero__role { font-size: clamp(15.5px, 1.5vw, 19px); font-weight: 400; line-height: 1.45; max-width: 34ch; letter-spacing: -0.005em; color: var(--ink-2); }
 .hero__meta { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 22px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .hero__meta span { position: relative; padding-left: 16px; }
 .hero__meta span::before { content: "↳"; position: absolute; left: 0; color: var(--accent); }
@@ -325,6 +388,8 @@ html.js .hero__portrait:not(.is-revealed) .hero__portrait-img { filter: blur(9px
 @media (orientation: landscape) and (max-height: 880px) {
   .hero { min-height: 0; padding-top: clamp(72px, 13vh, 112px); padding-bottom: clamp(20px, 4vh, 36px); }
   .hero__title { font-size: clamp(48px, min(13vw, 23vh), 150px); }
+  .hero__thesis { font-size: clamp(14px, 1.4vw, 17px); margin-top: clamp(10px, 1.8vh, 18px); }
+  .hero__thesis::before { margin-bottom: 9px; }
   .hero__foot { margin-top: clamp(18px, 3vh, 40px); gap: clamp(20px, 4vw, 56px); align-items: center; }
   .hero__portrait { max-width: 160px; }
   .hero__scroll { display: none; }
@@ -342,8 +407,28 @@ html.js .hero__portrait:not(.is-revealed) .hero__portrait-img { filter: blur(9px
 .intro__lead { font-size: clamp(24px, 3.8vw, 52px); font-weight: 400; line-height: 1.22; letter-spacing: -0.02em; max-width: 24ch; }
 .intro__lead .w { display: inline-block; color: var(--faint); transition: color .2s linear; }
 .intro__lead .w.on { color: var(--ink); }
-.intro__more { display: inline-block; margin-top: clamp(28px, 5vh, 56px); font-size: clamp(16px, 1.6vw, 20px); font-weight: 500; padding-bottom: 4px; border-bottom: 1px solid var(--ink); transition: color .3s var(--ease), border-color .3s var(--ease); }
-.intro__more:hover { color: var(--accent); border-color: var(--accent); }
+.intro__more { display: inline-block; margin-top: clamp(28px, 5vh, 56px); font-size: clamp(16px, 1.6vw, 20px); font-weight: 500; padding-bottom: 5px; transition: color .3s var(--ease); }
+.intro__more:hover { color: var(--accent); }
+
+/* ----- Underline re-strike -----
+   The existing rule retracts to the right, then a fresh one is drawn from the
+   left. Two pseudo-elements rather than one so the out and the in can overlap
+   slightly; the delays swap on hover so the choreography reverses cleanly
+   instead of stalling when the pointer leaves. */
+.intro__more, .contact__mail { position: relative; border-bottom: 0; }
+.intro__more::before, .intro__more::after,
+.contact__mail::before, .contact__mail::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
+  background: currentColor; transition: transform .3s var(--ease); transition-delay: .26s;
+}
+.intro__more::after, .contact__mail::after {
+  transform: scaleX(0); transform-origin: 0 50%; transition-delay: 0s;
+}
+.intro__more::before, .contact__mail::before { transform-origin: 100% 50%; }
+@media (hover: hover) {
+  .intro__more:hover::before, .contact__mail:hover::before { transform: scaleX(0); transition-delay: 0s; }
+  .intro__more:hover::after, .contact__mail:hover::after { transform: scaleX(1); transition-delay: .26s; }
+}
 
 /* ----- STATS ----- */
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); }
@@ -426,7 +511,22 @@ html.js .toolbox.is-undealt .tool__card { opacity: 0; }
 .cap__t { font-size: clamp(22px, 3vw, 42px); font-weight: 500; letter-spacing: -0.02em; transition: color .3s var(--ease); }
 .cap__d { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); text-align: right; }
 .cap::after { content: "→"; position: absolute; left: -4px; opacity: 0; color: var(--accent); transition: opacity .35s var(--ease), transform .35s var(--ease); transform: translateX(-8px); font-size: 20px; }
-@media (hover:hover) { .cap:hover { padding-left: 36px; } .cap:hover .cap__t { color: var(--accent); } .cap:hover::after { opacity: 1; transform: translateX(0); } }
+/* The row fills from the left on hover, as if the metal ran into it. Kept as a
+   pseudo-element behind the row's own content (isolate pins the negative
+   z-index inside the row) so it tints nothing but this line. */
+@media (hover: hover) {
+  .cap { isolation: isolate; }
+  .cap::before {
+    content: ""; position: absolute; inset: 1px -18px 0; z-index: -1; border-radius: 10px;
+    background: linear-gradient(90deg, rgb(from var(--accent) r g b / 0.09), rgb(from var(--accent) r g b / 0.02) 62%, transparent);
+    transform: scaleX(0); transform-origin: 0 50%;
+    transition: transform .55s var(--ease);
+  }
+  .cap:hover::before { transform: scaleX(1); }
+  .cap:hover { padding-left: 36px; }
+  .cap:hover .cap__t { color: var(--accent); }
+  .cap:hover::after { opacity: 1; transform: translateX(0); }
+}
 @media (max-width: 640px) { .cap { grid-template-columns: 32px 1fr; } .cap__d { display: none; } }
 
 /* ----- WORK ----- */
@@ -603,8 +703,10 @@ html.has-scene .lab__hint { display: inline; }
   background: var(--iri); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
 }
-.contact__mail { display: inline-block; margin-top: clamp(36px, 6vh, 64px); font-size: clamp(20px, 3vw, 40px); font-weight: 400; padding-bottom: 6px; border-bottom: 1px solid rgb(from var(--ink) r g b / 0.4); transition: color .35s var(--ease), border-color .35s var(--ease); }
-.contact__mail:hover { color: var(--accent); border-color: var(--accent); }
+/* border-bottom stays off here: the underline is drawn by the re-strike
+   pseudo-elements above, and a real border would sit under them as a second line. */
+.contact__mail { display: inline-block; margin-top: clamp(36px, 6vh, 64px); font-size: clamp(20px, 3vw, 40px); font-weight: 400; padding-bottom: 8px; transition: color .35s var(--ease); }
+.contact__mail:hover { color: var(--accent); }
 .contact__cv-row { margin-top: clamp(26px, 4vh, 44px); }
 .contact__cv { display: inline-flex; align-items: center; gap: 10px; padding: 13px 26px; border: 1px solid rgb(from var(--ink) r g b / 0.45); border-radius: 999px; font-size: 13px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); transition: border-color .3s var(--ease), background-color .3s var(--ease), color .3s var(--ease); }
 .contact__cv:hover { border-color: var(--accent); background-color: var(--accent); color: #fff; }
@@ -628,12 +730,27 @@ html.has-scene .lab__hint { display: inline; }
 .workprev__img { width: 100%; height: 104px; object-fit: contain; background: #fff; border-radius: 8px; padding: 12px; }
 .workprev__org { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
 
-/* ----- Page transition wipe ----- */
+/* ----- Page transitions -----
+   Preferred path: the browser animates the real navigation between documents.
+   The old page's content lifts and dims while the new one rises into place, so
+   the swap reads as one continuous surface instead of two separate loads. The
+   root is the only named group on purpose: the header carries mix-blend-mode,
+   and a separately captured snapshot loses the backdrop that blend needs. */
+@view-transition { navigation: auto; }
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out .32s var(--ease) both; }
+  ::view-transition-new(root) { animation: vt-in .46s var(--ease) both; }
+}
+@keyframes vt-out { to { opacity: 0; transform: translateY(-22px) scale(.985); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(26px); } }
+
+/* Fallback wipe, for engines without cross-document view transitions. */
 .wipe { position: fixed; inset: 0; z-index: 1100; background: var(--noir); color: var(--noir-fg); display: grid; place-items: center; pointer-events: none; transform: translateY(-101%); transition: transform .55s var(--ease); }
 .wipe.is-cover { transform: translateY(0); }
-html.is-entering .wipe { transform: translateY(0); transition: none; }
+html.is-wipe .wipe { transform: translateY(0); transition: none; }
 .wipe__label { font-family: var(--font-display); font-size: 17px; font-weight: 800; letter-spacing: .1em; color: var(--noir-fg); opacity: 0; transition: opacity .3s var(--ease) .12s; }
-.wipe.is-cover .wipe__label, html.is-entering .wipe__label { opacity: 1; }
+.wipe.is-cover .wipe__label, html.is-wipe .wipe__label { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) { .workprev { transition: none; } .wipe { transition: none; } }
 
