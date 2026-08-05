@@ -838,6 +838,39 @@ html.is-wipe .wipe { transform: translateY(0); transition: none; }
 
 
 /* ===========================================================================
+   MULTIVERSE — divergence
+   --split is how far the timelines have drifted apart: 0 at rest, rising with
+   scroll velocity. Registering it with @property is what lets it transition at
+   all (an unregistered custom property cannot animate), and that transition is
+   what collapses the page back into one reality when you stop moving. main.js
+   only ever writes the number; every visual consequence lives here.
+   =========================================================================== */
+@property --split {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+:root { --split: 0; }
+
+/* Display type separates into two coloured timelines that re-converge when you
+   stop. The shadow alpha is scaled by --split as well as the offset, so at rest
+   the ghosts are fully transparent rather than merely hidden behind the glyph.
+   That is what lets the same rule cover the two gradient-filled headings, whose
+   transparent glyphs would otherwise show a solid shadow straight through.
+   Offset alone is not enough; the alpha is doing real work here. */
+.section-title, .role__title, .stat__num, .chap, .chapcap, .cap__t,
+.edu__deg, .case__title, .cert__code, .step__t, .lab__t, .icard__title,
+.hero__title .word, .contact__title .word {
+  text-shadow:
+    calc(var(--split) * 7px) 0 rgb(from var(--accent) r g b / calc(var(--split) * 0.55)),
+    calc(var(--split) * -7px) 0 rgb(from var(--accent-2) r g b / calc(var(--split) * 0.5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --split: 0 !important; }
+}
+
+/* ===========================================================================
    Reveal states (JS-only)
    =========================================================================== */
 html.js [data-reveal] { opacity: 0; transform: translateY(28px); }

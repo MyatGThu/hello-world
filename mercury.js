@@ -89,13 +89,20 @@
       uShape: { value: -1 },
       uObj: { value: new T.Vector2(0, 0) },
       uScale: { value: small ? 0.6 : 1 },
+      // Divergence: how far the timelines have drifted apart, and which two
+      // shapes are haunting the one that got chosen (-1 = no ghost).
+      uSplit: { value: 0 },
+      uGhostA: { value: -1 },
+      uGhostB: { value: -1 },
+      uGhostOff: { value: new T.Vector2(0, 0) },
       uAlpha: { value: 0 }
     };
 
     var frag = [
       "precision highp float;",
       "uniform float uTime, uK, uPuddle, uRipple, uHue, uAlpha, uN, uForm, uShape, uScale;",
-      "uniform vec2 uRes, uOff, uStretch, uMouse, uObj;",
+      "uniform float uSplit, uGhostA, uGhostB;",
+      "uniform vec2 uRes, uOff, uStretch, uMouse, uObj, uGhostOff;",
       "uniform vec4 uBlobs[" + MAXB + "];",
       "uniform vec4 uImpacts[" + MAXI + "];",
       "float smin(float a, float b, float k){ float h = clamp(0.5 + 0.5*(b-a)/k, 0.0, 1.0); return mix(b, a, h) - k*h*(1.0-h); }",
@@ -105,17 +112,17 @@
       "float sdEll(vec3 p, vec3 r){ float k0 = length(p/r); float k1 = length(p/(r*r)); return k0*(k0 - 1.0)/max(k1, 1e-4); }",
 
       /* ---- The artifacts. Local space, roughly 4 units wide, facing +z. ---- */
-      "float sdObject(vec3 p){",
+      "float sdObject(vec3 p, float shape){",
       "  p /= uScale;",
       "  p.xz *= rot(sin(uTime*0.30)*mix(0.30, 0.18, uForm));", // turntable sway, calmest when fully cast
       "  float d = 1e9;",
-      "  if (uShape < 0.5) {", // 0 — headset
+      "  if (shape < 0.5) {", // 0 — headset
       "    float band = length(vec2(length(p.xy) - 1.15, p.z)) - 0.18;",
       "    band = max(band, -p.y + 0.05);",
       "    float cups = min(sdEll(p - vec3(-1.18, -0.1, 0.0), vec3(0.32, 0.52, 0.44)),",
       "                     sdEll(p - vec3( 1.18, -0.1, 0.0), vec3(0.32, 0.52, 0.44)));",
       "    d = smin(band, cups, 0.15);",
-      "  } else if (uShape < 1.5) {", // 1 — keyboard + mouse
+      "  } else if (shape < 1.5) {", // 1 — keyboard + mouse
       "    vec3 q = p - vec3(-0.6, 0.0, 0.0);",
       "    q.yz *= rot(-0.5);",
       "    float base = sdRBox(q, vec3(1.7, 0.07, 0.68), 0.05);",
@@ -128,14 +135,14 @@
       "    float ms = sdEll(mq, vec3(0.48, 0.38, 0.7));",
       "    ms = max(ms, -mq.y - 0.24);",
       "    d = min(min(base, keys), ms);",
-      "  } else if (uShape < 2.5) {", // 2 — CD
+      "  } else if (shape < 2.5) {", // 2 — CD
       "    vec3 q = p;",
       "    q.yz *= rot(0.55);",
       "    q.xy *= rot(uTime*0.7);", // the disc spins
       "    float disc = max(length(q.xy) - 1.5, abs(q.z) - 0.035);",
       "    disc = max(disc, 0.24 - length(q.xy));", // spindle hole
       "    d = disc - 0.012;",
-      "  } else if (uShape < 3.5) {", // 3 — terminal
+      "  } else if (shape < 3.5) {", // 3 — terminal
       "    float scr = sdRBox(p - vec3(0.0, 0.42, 0.0), vec3(1.42, 0.92, 0.14), 0.07);",
       "    scr = max(scr, -sdBox(p - vec3(0.0, 0.46, 0.18), vec3(1.12, 0.64, 0.07)));", // screen inset
       "    float neck = sdBox(p - vec3(0.0, -0.72, -0.06), vec3(0.18, 0.3, 0.12));",
@@ -165,7 +172,7 @@
       "    d = smin(d, length(p - b.xyz) - b.w, uK);",
       "  }",
       "  if (uForm > 0.001) {",
-      "    float dO = sdObject(p - vec3(uObj - uOff, 0.0));",
+      "    float dO = sdObject(p - vec3(uObj - uOff, 0.0), uShape);",
       "    d = mix(d, dO, uForm);",
       "  }",
       "  d *= min(uStretch.x, uStretch.y);",
@@ -196,6 +203,19 @@
       "  }",
       "  return d;",
       "}",
+      /* Ghost sweep. A short fixed-step walk through the slab the artifacts
+         occupy, rather than riding the main march's positions: those steps grow
+         huge in open space and smear a silhouette into a blob. Fixed spacing
+         samples the shape evenly, so the outline stays readable. */
+      "float ghostDist(vec3 ro, vec3 rd, float shape, vec2 off){",
+      "  float m = 1e9;",
+      "  for (int i = 0; i < 14; i++) {",
+      "    vec3 p = ro + rd * (3.2 + float(i) * 0.26);",
+      "    p.xy = (p.xy - uOff) / uStretch;",
+      "    m = min(m, sdObject(p - vec3(uObj - uOff + off, 0.0), shape));",
+      "  }",
+      "  return m;",
+      "}",
       "vec3 normalAt(vec3 p){",
       "  vec2 e = vec2(0.004, -0.004);",
       "  return normalize(e.xyy*map(p+e.xyy) + e.yyx*map(p+e.yyx) + e.yxy*map(p+e.yxy) + e.xxx*map(p+e.xxx));",
@@ -225,13 +245,39 @@
       "  }",
       "  if (!hit) {",
       "    float halo = exp(-glow*22.0) * 0.10;",
-      "    gl_FragColor = vec4(vec3(0.08, 0.09, 0.11), halo * uAlpha);",
+      /* The two shapes this chapter did NOT settle on, drawn as outlines. Only
+         the miss path runs them, so the chosen shape occludes its own ghosts.
+         Outlines rather than fills because a filled ghost would park a solid
+         mass behind body copy, which is the opposite of how this page is tuned. */
+      "    vec3 gcol = vec3(0.0); float galpha = 0.0;",
+      "    if (uSplit > 0.001) {",
+      "      if (uGhostA > -0.5) {",
+      "        float e = exp(-abs(ghostDist(ro, rd, uGhostA, uGhostOff))*11.0) * uSplit * 0.62;",
+      "        gcol += vec3(0.42, 0.30, 0.94) * e; galpha += e;", // accent — the timeline just left
+      "      }",
+      "      if (uGhostB > -0.5) {",
+      "        float e = exp(-abs(ghostDist(ro, rd, uGhostB, -uGhostOff))*11.0) * uSplit * 0.62;",
+      "        gcol += vec3(0.88, 0.31, 0.54) * e; galpha += e;", // accent-2 — the timeline ahead
+      "      }",
+      "    }",
+      // Un-premultiplied blend by relative weight, so galpha == 0 reproduces the
+      // original halo exactly rather than tinting it.
+      "    vec3 hc = mix(vec3(0.08, 0.09, 0.11), gcol / max(galpha, 1e-4), galpha / (galpha + halo + 1e-4));",
+      "    gl_FragColor = vec4(hc, (halo + galpha) * uAlpha);",
       "    return;",
       "  }",
       "  vec3 n = normalAt(p);",
       "  vec3 r = reflect(rd, n);",
       "  float fre = pow(1.0 - max(dot(-rd, n), 0.0), 3.0);",
-      "  vec3 col = env(r) * (0.62 + fre*0.55);",
+      // The metal's own timelines slip out of phase: each channel reflects a
+      // slightly different world. Three env lookups, still one march.
+      "  vec3 col;",
+      "  if (uSplit > 0.001) {",
+      "    float s = uSplit * 0.32;",
+      "    col = vec3(env(normalize(r + n*s)).r, env(r).g, env(normalize(r - n*s)).b) * (0.62 + fre*0.55);",
+      "  } else {",
+      "    col = env(r) * (0.62 + fre*0.55);",
+      "  }",
       "  float ao = clamp(map(p + n*0.22) / 0.22, 0.0, 1.0);",
       "  col *= 0.70 + ao*0.30;", // lift the crevice-shadow floor — those dark patches are what park behind copy
 
@@ -277,7 +323,10 @@
     // Blend chapter configs by document position. The metal is liquid while
     // travelling (form dips to 0 at the midpoint between chapters) and
     // solidifies into the chapter's artifact as you settle (form -> 1).
-    var target = { b: [], k: 0.9, ripple: 0, off: [0, 0], puddle: 0, hue: 0, form: 0, shape: -1, op: [0, 0] };
+    var target = { b: [], k: 0.9, ripple: 0, off: [0, 0], puddle: 0, hue: 0, form: 0, shape: -1, op: [0, 0], ghostA: -1, ghostB: -1 };
+    // Ghost shapes cost an SDF evaluation per march step, so phones keep the
+    // channel split (three cheap env lookups) and skip the ghosts.
+    var GHOSTS = !small;
     function lerp(a, b, t) { return a + (b - a) * t; }
     function smoothstep(e0, e1, x) { var t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); }
     function blendConfigs(sc) {
@@ -319,6 +368,13 @@
         target.op = B.op;
         target.form = B.shape < 0 ? 0 : smoothstep(0.54, 0.64, f);
       }
+      // The ghosts are the chapters either side of the one that won: the shape
+      // the metal just left and the one it is about to take. At the ends of the
+      // run the neighbour is the chosen chapter itself, which simply doubles
+      // that timeline instead of inventing one.
+      var chosen = f < 0.5 ? i : Math.min(i + 1, CONFIGS.length - 1);
+      target.ghostA = CONFIGS[Math.max(0, chosen - 1)].shape;
+      target.ghostB = CONFIGS[Math.min(CONFIGS.length - 1, chosen + 1)].shape;
       return n;
     }
 
@@ -407,6 +463,20 @@
       // Scroll velocity stretches the metal — but a HELD solid should stay crisp,
       // not smear vertically. Gate the stretch by form: full smear while liquid
       // (form 0), near-rigid when cast (form 1). Volume is still conserved.
+      // Divergence. The timelines separate when the outcome is genuinely
+      // undecided (the metal is between shapes) and when you scroll fast enough
+      // to outrun it. They collapse back to one as the artifact sets, which is
+      // the whole argument: many possible forms, one standard result.
+      // "Undecided" only counts where a shape was actually on the table. The
+      // arrival and contact chapters are liquid by design, not mid-choice, so
+      // they get no standing divergence and the first screen stays clean.
+      var undecided = target.shape >= 0 ? 1 - uniforms.uForm.value : 0;
+      var splitTarget = Math.min(0.92, undecided * 0.20 + Math.min(1, Math.abs(v) * 0.00055) * 0.80);
+      uniforms.uSplit.value += (splitTarget - uniforms.uSplit.value) * Math.min(1, dt * 5);
+      uniforms.uGhostA.value = GHOSTS ? target.ghostA : -1;
+      uniforms.uGhostB.value = GHOSTS ? target.ghostB : -1;
+      uniforms.uGhostOff.value.set(uniforms.uSplit.value * 0.9, uniforms.uSplit.value * 0.2);
+
       var stretchGain = 1 - 0.9 * uniforms.uForm.value;
       var sy = 1 + Math.min(0.5, Math.abs(v) * 0.00035) * stretchGain;
       uniforms.uStretch.value.y += (sy - uniforms.uStretch.value.y) * Math.min(1, dt * 7);

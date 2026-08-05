@@ -374,6 +374,47 @@
     });
   }
 
+  /* ---------- Divergence: the page separates into overlapping timelines ----------
+     Publishes one number, --split, on the root; every visual consequence lives
+     in the stylesheet. Speed is measured here from scrollY rather than read off
+     Lenis: Lenis clears its own `velocity` on an internal timeout, so a reader
+     sampling on a slow frame can legitimately see 0 mid-scroll. Measuring it
+     locally also means this still works on touch and with no Lenis at all.
+     The loop parks itself once the timelines have closed back up. */
+  function initDivergence() {
+    if (reduceMotion) return;
+    var root = document.documentElement;
+    var lastY = window.scrollY, lastT = performance.now();
+    var cur = 0, target = 0, raf = null;
+
+    // Speed is taken between scroll events, never between animation frames: a
+    // scroll event only fires when scrollY actually moved, so this cannot land
+    // on a frame where the smooth-scroll library has yet to advance the
+    // document and read a spurious zero.
+    window.addEventListener("scroll", function () {
+      var now = performance.now(), y = window.scrollY;
+      target = Math.min(1, (Math.abs(y - lastY) * 16.67 / Math.max(1, now - lastT)) * 0.022);
+      lastY = y; lastT = now;
+      if (!raf) raf = requestAnimationFrame(ease);
+    }, { passive: true });
+
+    function ease() {
+      // Diverge fast, converge slow: the snap back together is the point. The
+      // impulse decays on its own, so the timelines close up as soon as the
+      // scroll stops feeding them.
+      cur += (target - cur) * (target > cur ? 0.4 : 0.12);
+      target *= 0.82;
+      if (cur > 0.003) {
+        root.style.setProperty("--split", cur.toFixed(3));
+        raf = requestAnimationFrame(ease);
+      } else {
+        cur = 0; target = 0;
+        root.style.setProperty("--split", "0");
+        raf = null;
+      }
+    }
+  }
+
   /* ---------- Velocity skew: the page shears with scroll speed ---------- */
   function initSkew() {
     if (!hasGSAP || reduceMotion || !fine || !lenis) return;
@@ -846,6 +887,7 @@
     initToolbox();
     initDrift();
     initSkew();
+    initDivergence();
     initCounters();
     initMarquee();
     initCursor();
