@@ -27,29 +27,39 @@
   font-display: swap;
 }
 
-/* ----- Tokens ----- */
+/* ----- Tokens — FIELD NOTES / 2077 -----
+   Paper + graphite + two neon interference colours. Token NAMES are unchanged
+   from the porcelain era on purpose: every rule downstream (scrims, divergence
+   shadows, hover fills) re-skins itself from these values alone. */
 :root {
-  --bone: #f3f1ec;
-  --bone-2: #e9e6de;
-  --ink: #16140f;
-  --ink-2: #3a362e;
-  --muted: #7d7669;
-  --faint: #a9a294;
-  --line: rgba(22, 20, 15, 0.14);
-  --accent: #6c4cf1;
-  --accent-2: #e04f8a;
-  --iri: linear-gradient(100deg, #6c4cf1 0%, #e04f8a 52%, #f5a95c 100%);
-  --noir: #16140f;
-  --noir-fg: #f3f1ec;
-  --card: #fbfaf7;
+  --bone: #f2efe6;                      /* warm working paper */
+  --bone-2: #e7e2d5;
+  --ink: #232019;                       /* 2B graphite, never pure black */
+  --ink-2: #454034;
+  --muted: #7c766a;
+  --faint: #a59d8d;
+  --line: rgba(35, 32, 25, 0.24);       /* construction lines read darker on paper */
+  --accent: #00808f;                    /* neon cyan, held down to AA on paper */
+  --accent-2: #d61f69;                  /* magenta interference */
+  --neon: #19d3e6;                      /* glow-only variants — never body text */
+  --neon-2: #ff4d9a;
+  --iri: linear-gradient(100deg, #00a3b8 0%, #d61f69 58%, #ff8a3c 108%);
+  --noir: #1b1914;                      /* blackboard */
+  --noir-fg: #f2efe6;
+  --card: #f6f3ea;
   --grain-blend: multiply;
-  --grain-op: 0.04;
+  --grain-op: 0.055;                    /* more tooth: this is paper now */
   --accent-glow: none;
-  --glow-1: rgba(108, 76, 241, 0.10);
-  --glow-2: rgba(224, 79, 138, 0.07);
+  --glow-1: rgba(0, 128, 143, 0.08);
+  --glow-2: rgba(214, 31, 105, 0.06);
   --font: "Outfit", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Bodoni Moda", Didot, "Playfair Display", Georgia, serif;
   --mono: "Share Tech Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* the hand-drawn rectangle: four uneven radii, the classic wobble */
+  --sketch-r: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  --sketch-r-sm: 125px 10px 115px 10px / 10px 115px 10px 125px;
+  --hatch: repeating-linear-gradient(45deg, transparent 0 3px, rgba(35, 32, 25, 0.055) 3px 4px);
 
   --pad: clamp(20px, 5vw, 88px);
   --maxw: 1480px;
@@ -155,7 +165,7 @@ b { font-weight: 600; color: var(--accent); }
 }
 .loader__drop {
   position: absolute; left: 50%; top: -30px; width: 22px; height: 22px; border-radius: 50% 50% 52% 48%;
-  background: radial-gradient(circle at 34% 30%, #fff 0 18%, #b9b6ae 42%, #55524b 100%);
+  background: radial-gradient(circle at 34% 30%, #8f887a 0 18%, #4c463c 46%, var(--ink) 100%);
   animation: dropfall 1.15s cubic-bezier(0.5, 0, 0.9, 0.4) infinite;
 }
 @keyframes dropfall {
@@ -245,8 +255,9 @@ section { position: relative; }
 /* The mercury — fixed raymarch canvas injected by mercury.js, painted above
    the body background but behind all content. Fades in on its first frame. */
 .mercury { position: fixed; inset: 0; z-index: -1; display: block; pointer-events: none; opacity: 0; transition: opacity 1.1s var(--ease); }
-/* Held back so the chrome reads as a quiet backdrop and the type stays crisp. */
-.mercury.is-live { opacity: 0.62; }
+/* Graphite is far lighter-handed than chrome was, so the drawing runs closer
+   to full strength; the shader's own ink alpha does the receding. */
+.mercury.is-live { opacity: 0.85; }
 
 /* Reading scrim — a soft porcelain wash behind body copy. Same colour as the
    page, so it is invisible over porcelain and only softens the roaming metal
@@ -309,6 +320,7 @@ html.js::-webkit-scrollbar { display: none; }
    resting state for reduced motion and for no-GSAP. Gated on html.js so a
    visitor without JS never risks transparent text with no gradient behind it. */
 html.js .hero__title .word,
+html.js .plate__title .word,
 html.js .contact__title .word {
   --word-fill: linear-gradient(var(--ink) 0 100%);
   background-image:
@@ -322,6 +334,7 @@ html.js .contact__title .word {
   color: transparent; -webkit-text-fill-color: transparent;
 }
 html.js .hero__title .word--accent,
+html.js .plate__title .word--accent,
 html.js .contact__title .word--accent { --word-fill: var(--iri); }
 
 /* ----- Hero thesis: the line that says what the metal is doing ----- */
@@ -887,3 +900,168 @@ html.js [data-rise]:not(.is-risen) { opacity: 0; }
   .intro__lead .w { color: var(--ink); }
   * { scroll-behavior: auto !important; }
 }
+
+/* ===========================================================================
+   SKETCH REVISION — 2077
+   The layer that turns the porcelain gallery into an engineer's field
+   notebook: hand-drawn rectangles, cross-hatch fills, schematic annotations,
+   editorial plates and folios. Appended last so it wins by cascade; every
+   selector below restyles an existing component rather than inventing state.
+   =========================================================================== */
+
+/* ----- Masthead layout: brand | tabs | status + burger ----- */
+.head__right { display: flex; align-items: center; gap: clamp(14px, 2vw, 26px); }
+/* the contact plate carries only a folio strip before the big statement */
+.plate--slim { padding-bottom: 0; }
+
+/* ----- Masthead: inline page tabs (each one IS a page) ----- */
+.head__nav { display: none; align-items: baseline; gap: clamp(14px, 2vw, 28px); }
+.head__nav a {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase;
+  padding: 6px 2px; opacity: .82;
+}
+.head__nav a i { font-style: normal; opacity: .55; margin-right: 5px; }
+.head__nav a:hover { opacity: 1; }
+/* the current page gets the hand-drawn circle an engineer puts around the
+   figure number that matters */
+.head__nav a[aria-current="page"] {
+  opacity: 1; border: 1.5px solid currentColor; border-radius: var(--sketch-r-sm);
+  padding: 6px 10px;
+}
+@media (min-width: 960px) { .head__nav { display: flex; } }
+
+/* ----- Editorial plate: the header every subpage opens with ----- */
+.plate { padding: clamp(108px, 15vh, 170px) var(--pad) clamp(30px, 5vh, 56px); max-width: var(--maxw); margin: 0 auto; }
+.plate__folio {
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-2); border-bottom: 1.5px solid var(--ink); padding-bottom: 12px;
+}
+.plate__title {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: 0;
+  font-size: clamp(52px, 10.5vw, 138px); line-height: 0.92; margin-top: clamp(22px, 4vh, 44px);
+}
+.plate__title .line { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.plate__title .word { display: inline-block; }
+.plate__title .word--accent {
+  background: var(--iri); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.plate__stand {
+  margin-top: clamp(18px, 3vh, 30px); max-width: 52ch; color: var(--ink-2);
+  font-size: clamp(15.5px, 1.5vw, 19px); line-height: 1.5;
+}
+/* the double rule that closes a magazine standfirst */
+.plate__rule { margin-top: clamp(22px, 4vh, 40px); border: 0; border-top: 3px double var(--ink); }
+
+/* plates share the divergence + scrim treatments of display type */
+.plate__title .word { text-shadow:
+  calc(var(--split) * 7px) 0 rgb(from var(--accent) r g b / calc(var(--split) * 0.55)),
+  calc(var(--split) * -7px) 0 rgb(from var(--accent-2) r g b / calc(var(--split) * 0.5)); }
+.plate__stand { position: relative; isolation: isolate; }
+.plate__stand::before {
+  content: ""; position: absolute; inset: -0.5em -0.9em; z-index: -1;
+  background: var(--bone); border-radius: 16px; filter: blur(15px); opacity: 0.72; pointer-events: none;
+}
+
+/* ----- Contents (home): the magazine table of contents ----- */
+.toc { max-width: var(--maxw); margin: 0 auto; padding: clamp(70px, 12vh, 160px) var(--pad); }
+.toc__list { list-style: none; padding: 0; margin: 0; }
+.toc__row {
+  display: grid; grid-template-columns: 72px 1fr auto; align-items: baseline; gap: 20px;
+  padding: clamp(20px, 3.4vh, 36px) 0; border-top: 1.5px solid var(--ink); position: relative;
+  isolation: isolate; transition: padding-left .45s var(--ease);
+}
+.toc__row:last-child { border-bottom: 1.5px solid var(--ink); }
+.toc__no { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.toc__t {
+  font-family: var(--font-display); font-weight: 800; font-size: clamp(30px, 5.4vw, 72px);
+  line-height: 0.95; letter-spacing: 0; transition: color .3s var(--ease);
+}
+.toc__d { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); text-align: right; }
+.toc__row::before {
+  content: ""; position: absolute; inset: 1px -18px 0; z-index: -1; border-radius: 10px;
+  background: var(--hatch); transform: scaleX(0); transform-origin: 0 50%; transition: transform .5s var(--ease);
+}
+@media (hover: hover) {
+  .toc__row:hover { padding-left: 26px; }
+  .toc__row:hover::before { transform: scaleX(1); }
+  .toc__row:hover .toc__t { color: var(--accent); }
+}
+@media (max-width: 640px) { .toc__row { grid-template-columns: 44px 1fr; } .toc__d { display: none; } }
+
+/* ----- Hand-drawn rectangles on every card-like thing ----- */
+.case, .cert, .icard, .pcard, .tool__card, .cmodal__card {
+  border: 1.5px solid var(--ink); border-radius: var(--sketch-r);
+  box-shadow: 3px 4px 0 rgb(from var(--ink) r g b / 0.16);
+}
+/* alternate the wobble so a grid doesn't read as a stamped pattern */
+.case:nth-child(2n), .cert:nth-child(2n), .icard:nth-child(2n), .pcard:nth-child(2n) {
+  border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px;
+}
+.logo-tile { border: 1.5px solid var(--ink); border-radius: var(--sketch-r-sm); }
+.contact__cv { border: 1.5px solid var(--ink); border-radius: var(--sketch-r-sm); }
+.workprev { border-radius: var(--sketch-r-sm); }
+.hero__portrait-media { border: 1.5px solid var(--ink); border-radius: var(--sketch-r-sm); }
+/* tape holding the portrait to the page */
+.hero__portrait { position: relative; }
+.hero__portrait::after {
+  content: ""; position: absolute; top: -10px; left: 50%; width: 74px; height: 22px;
+  transform: translateX(-50%) rotate(-3deg);
+  background: rgb(from var(--accent) r g b / 0.18); border: 1px solid rgb(from var(--accent) r g b / 0.25);
+  pointer-events: none;
+}
+
+/* hover lift keeps the offset shadow honest (it grows instead of blurring) */
+@media (hover: hover) {
+  .case:hover, .cert:hover, .icard:hover, .pcard:hover {
+    border-color: var(--ink); box-shadow: 5px 7px 0 rgb(from var(--ink) r g b / 0.2);
+  }
+}
+
+/* ----- Schematic annotations ----- */
+.anno {
+  position: absolute; z-index: 3; font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); pointer-events: none;
+}
+.anno::before { content: ""; position: absolute; border-top: 1px dashed var(--ink-2); opacity: .7; }
+.anno--l::before { right: 100%; margin-right: 8px; width: var(--lead, 70px); top: 50%; }
+.anno--r::before { left: 100%; margin-left: 8px; width: var(--lead, 70px); top: 50%; }
+.anno em { font-style: normal; color: var(--accent-2); }
+@media (max-width: 900px) { .anno { display: none; } }
+
+/* ----- Editorial rules ----- */
+.marquee { border-top: 3px double var(--ink); border-bottom: 3px double var(--ink); }
+.stats { border-top: 1.5px solid var(--ink); }
+.stat__label::before { content: "— "; color: var(--accent); }
+.step { border-top: 2px solid var(--ink); }
+.lab__item { border-top: 2px solid var(--ink); }
+.cap { border-top-color: rgb(from var(--ink) r g b / 0.5); }
+.cap:last-child { border-bottom-color: rgb(from var(--ink) r g b / 0.5); }
+
+/* section titles get a pencil underline stroke */
+.caps__head .section-title, .certs__head .section-title, .work__intro .section-title {
+  position: relative; display: inline-block; padding-bottom: 10px;
+}
+.caps__head .section-title::after, .certs__head .section-title::after, .work__intro .section-title::after {
+  content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px;
+  background: var(--ink); border-radius: 50% 40% 55% 45% / 90% 60% 80% 70%; opacity: .85;
+}
+
+/* ----- Cyberpunk menu: blackboard + scanlines + neon hover ----- */
+.menu {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(242, 239, 230, 0.025) 3px 4px),
+    var(--noir);
+}
+.menu__links a:hover { color: var(--neon); }
+.menu__col a:hover { color: var(--neon); }
+
+/* selection reads as highlighter over pencil */
+::selection { background: var(--accent-2); color: var(--bone); }
+
+/* the cursor label pill keeps its ink fill; ring is already ink */
+.cursor { background: var(--ink); }
+.cursor__label { color: var(--bone); }
+
+/* reduced motion: annotations are static anyway; nothing extra to disable */

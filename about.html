@@ -4,65 +4,77 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — Myat Thu</title>
-  <meta name="description" content="Off the clock with Myat Thu — gaming, films and shows, and the way he keeps growing his IT career." />
+  <meta name="description" content="The person behind the field notes — the professional brief for hiring managers, and how Myat Thu switches off: gaming, films, football, and always leveling up." />
   <meta name="author" content="Myat Thu" />
   <link rel="canonical" href="https://myatgthu.github.io/hello-world.io/about.html" />
-  <meta name="theme-color" content="#f3f1ec" />
+  <meta name="theme-color" content="#f2efe6" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Myat Thu" />
   <meta property="og:url" content="https://myatgthu.github.io/hello-world.io/about.html" />
   <meta property="og:title" content="About — Myat Thu" />
-  <meta property="og:description" content="Off the clock with Myat Thu — gaming, films and shows, and the way he keeps growing his IT career." />
+  <meta property="og:description" content="The person behind the field notes — the professional brief for hiring managers, and how Myat Thu switches off: gaming, films, football, and always leveling up." />
   <meta property="og:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
   <meta property="og:image:width" content="2400" />
   <meta property="og:image:height" content="1260" />
   <meta property="og:image:alt" content="Myat Thu — IT professional shaping the Microsoft modern workplace. Intune · Entra ID · Cloud · Melbourne." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="About — Myat Thu" />
-  <meta name="twitter:description" content="Off the clock with Myat Thu — gaming, films and shows, and the way he keeps growing his IT career." />
+  <meta name="twitter:description" content="The person behind the field notes — the professional brief for hiring managers, and how Myat Thu switches off: gaming, films, football, and always leveling up." />
   <meta name="twitter:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23181511'/><text x='50' y='70' font-size='56' font-family='Arial,sans-serif' font-weight='700' fill='%23f1ede5' text-anchor='middle'>M</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23201d15'/><text x='50' y='70' font-size='56' font-family='Arial,sans-serif' font-weight='700' fill='%23f2efe6' text-anchor='middle'>M</text></svg>" />
 
   <script>document.documentElement.classList.add('js');try{var n=sessionStorage.getItem('nav');if(n){var c=document.documentElement.classList;c.add('is-entering');if(n==='wipe')c.add('is-wipe');}}catch(e){}</script>
 
   <link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/share-tech-mono.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css?v=__BUILD__" />
 </head>
 <body>
-  <a class="skip-link" href="#bio">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="grain" aria-hidden="true"></div>
   <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
-  <div class="wipe" aria-hidden="true"><span class="wipe__label">One moment —</span></div>
+  <div class="wipe" aria-hidden="true"><span class="wipe__label">Turning the page —</span></div>
 
-  <!-- Header -->
+  <!-- Masthead: the tabs are pages, not anchors -->
   <header class="head" id="head">
-    <a class="head__brand" href="index.html" data-cursor="home">Myat&nbsp;Thu</a>
-    <a class="head__status" href="#contact" data-cursor="say hi">
-      <span class="head__dot"></span> <span>Open to work</span>
-    </a>
-    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
-      <span class="menu-btn__label">Menu</span>
-      <span class="menu-btn__bars"><i></i><i></i></span>
-    </button>
+    <a class="head__brand" href="index.html" data-cursor="cover">Myat&nbsp;Thu</a>
+    <nav class="head__nav" aria-label="Pages">
+      <a href="about.html" aria-current="page"><i>02</i>About</a>
+      <a href="work.html"><i>03</i>Work</a>
+      <a href="projects.html"><i>04</i>Projects</a>
+      <a href="credentials.html"><i>05</i>Credentials</a>
+      <a href="contact.html"><i>06</i>Contact</a>
+    </nav>
+    <div class="head__right">
+      <a class="head__status" href="contact.html" data-cursor="say hi">
+        <span class="head__dot"></span> <span>Open to work</span>
+      </a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
+        <span class="menu-btn__label">Menu</span>
+        <span class="menu-btn__bars"><i></i><i></i></span>
+      </button>
+    </div>
   </header>
 
   <!-- Fullscreen menu -->
   <nav class="menu" id="menu" aria-label="Primary" aria-hidden="true">
     <div class="menu__inner">
       <ul class="menu__links">
-        <li><a href="index.html"><span class="menu__idx">01</span> Home</a></li>
-        <li><a href="#top"><span class="menu__idx">02</span> About</a></li>
-        <li><a href="index.html#work"><span class="menu__idx">03</span> Work</a></li>
-        <li><a href="index.html#certs"><span class="menu__idx">04</span> Credentials</a></li>
-        <li><a href="#contact"><span class="menu__idx">05</span> Contact</a></li>
+        <li><a href="index.html"><span class="menu__idx">01</span> Cover</a></li>
+        <li><a href="about.html" aria-current="page"><span class="menu__idx">02</span> About</a></li>
+        <li><a href="work.html"><span class="menu__idx">03</span> Work</a></li>
+        <li><a href="projects.html"><span class="menu__idx">04</span> Projects</a></li>
+        <li><a href="credentials.html"><span class="menu__idx">05</span> Credentials</a></li>
+        <li><a href="contact.html"><span class="menu__idx">06</span> Contact</a></li>
       </ul>
       <div class="menu__meta">
         <div class="menu__col">
           <span class="menu__h">Get in touch</span>
           <a href="mailto:myatgeorgethu@gmail.com" data-cursor="email">myatgeorgethu@gmail.com</a>
+          <a href="assets/Myat-Thu-CV.pdf" download data-cursor="download">Download CV ↓</a>
         </div>
         <div class="menu__col">
           <span class="menu__h">Based in</span>
@@ -76,18 +88,18 @@
     </div>
   </nav>
 
-  <main>
+  <main id="main">
     <!-- ============================ HERO ============================ -->
     <section class="hero hero--about" id="top">
       <div class="hero__bg" data-parallax="0.22" aria-hidden="true"></div>
 
       <p class="hero__eyebrow" data-reveal>
-        <span>About — Off the clock</span><span>Melbourne, AU — 2026</span>
+        <span>Field notes — the person</span><span>Plate 02 — Melbourne, AU</span>
       </p>
 
       <h1 class="hero__title hero__title--about" aria-label="Beyond the help desk">
-        <span class="line"><span class="word" data-split>Beyond the</span></span>
-        <span class="line"><span class="word word--accent" data-split>help desk.</span></span>
+        <span class="line" aria-hidden="true"><span class="word" data-split>Beyond the</span></span>
+        <span class="line" aria-hidden="true"><span class="word word--accent" data-split>help desk.</span></span>
       </h1>
 
       <a class="hero__scroll" href="#bio" data-cursor="scroll" aria-label="Scroll to content">
@@ -95,9 +107,55 @@
       </a>
     </section>
 
-    <!-- ============================ BIO ============================ -->
-    <section class="intro" id="bio">
-      <p class="intro__label" data-reveal><span>(Who I am)</span></p>
+    <!-- ============================ PROFESSIONAL BIO ============================ -->
+    <section class="intro" id="bio" data-chapter="The Person">
+      <p class="chap" data-reveal><em>Fig.01</em> The professional</p>
+      <p class="intro__lead" data-words>
+        I am an IT professional specialised in the Microsoft ecosystem, with a
+        strong focus on modern device management and cloud administration. I have
+        moved beyond traditional support toward automation and security —
+        leveraging Microsoft Intune and Entra ID to keep operations seamless,
+        compliant, and quietly resilient.
+      </p>
+    </section>
+
+    <!-- ============================ THE BRIEF ============================ -->
+    <section class="approach" id="brief" aria-label="The brief, for hiring managers">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>The brief</h2>
+        <p class="caps__note" data-reveal>What a hiring manager should know in thirty seconds.</p>
+      </div>
+      <ol class="steps">
+        <li class="step" data-cap>
+          <span class="step__n">01</span>
+          <h3 class="step__t">Scale under pressure</h3>
+          <p class="step__d">A 400+ store retail fleet, 40–50 tickets a day, public-holiday cover included. Volume doesn't rattle him.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">02</span>
+          <h3 class="step__t">Trusted escalation</h3>
+          <p class="step__d">Second-level point for the IPH service desk, with earlier Level 3 network and firewall exposure at a Telstra-partner MSP.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">03</span>
+          <h3 class="step__t">Owns the device lifecycle</h3>
+          <p class="step__d">SOE builds, imaging, onboarding to offboarding, hardware remediation — the endpoint from box to retirement.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">04</span>
+          <h3 class="step__t">Writes it down</h3>
+          <p class="step__d">KBAs, rollout playbooks, Change Board representation, annual IT audits. The fix that stays fixed.</p>
+        </li>
+      </ol>
+      <p class="caps__note" data-reveal style="margin-top: clamp(22px, 4vh, 40px); max-width: 60ch;">
+        The next seat: endpoint engineering. SC-300 is in progress, and conditional
+        access and identity governance are already live in the lab tenant.
+      </p>
+    </section>
+
+    <!-- ============================ PERSONAL BIO ============================ -->
+    <section class="intro" id="offclock">
+      <p class="chap" data-reveal><em>Fig.02</em> Off the clock</p>
       <p class="intro__lead" data-words>
         I'm Myat — an IT professional by day. Off the clock you'll find me deep
         in a Dota 2 match, lining up a FIFA fixture, catching the latest superhero
@@ -267,32 +325,30 @@
       </div>
     </section>
 
-    <!-- ============================ CONTACT ============================ -->
-    <section class="contact" id="contact">
-      <p class="contact__label" data-reveal><span>(Contact)</span></p>
-      <h2 class="contact__title" aria-label="Let's talk">
-        <span class="line"><span class="word" data-split>Let's</span></span>
-        <span class="line"><span class="word word--accent" data-split>talk.</span></span>
-      </h2>
-      <a class="contact__mail" href="mailto:myatgeorgethu@gmail.com" data-magnetic="0.22" data-cursor="email">
-        myatgeorgethu@gmail.com
-      </a>
-      <div class="contact__meta" data-reveal>
-        <span>Based in Melbourne, Australia</span>
-        <span>Open to opportunities</span>
+    <!-- ============================ CONTACT CTA ============================ -->
+    <section class="lab" aria-label="Get in touch">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>Margin note</h2>
+        <p class="caps__note" data-reveal>The full forwarding address lives on its own plate.</p>
       </div>
+      <p class="contact__cv-row" data-reveal>
+        <a class="contact__cv" href="contact.html" data-cursor="connect">Open Connect <span aria-hidden="true">→</span></a>
+      </p>
     </section>
   </main>
 
   <footer class="foot">
     <span>© 2026 Myat Thu</span>
-    <a href="index.html" data-cursor="home">Back to home ↑</a>
+    <a href="index.html" data-cursor="cover">Back to the cover ↑</a>
     <span>Melbourne, Australia</span>
   </footer>
 
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
   <script src="vendor/lenis.min.js" defer></script>
+  <script src="vendor/anime.umd.min.js" defer></script>
   <script src="main.js?v=__BUILD__" defer></script>
+  <!-- mercury lazy-loads vendor/three.mercury.min.js itself, off the critical path -->
+  <script src="mercury.js?v=__BUILD__" defer></script>
 </body>
 </html>
