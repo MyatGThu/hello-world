@@ -151,6 +151,7 @@
 
   /* ---------- Hero / contact heading reveal ---------- */
   function revealSplitWords(scope) {
+    if (!scope) return;
     var words = scope.querySelectorAll("[data-split]");
     if (!words.length) return;
     if (!hasGSAP || reduceMotion) { if (hasGSAP) gsap.set(words, { yPercent: 0, clearProps: "all" }); return; }
@@ -247,13 +248,13 @@
 
   /* ---------- Scroll-driven word reveal ---------- */
   function initWordReveal() {
-    var lead = document.querySelector("[data-words]");
-    if (!lead) return;
-    var words = splitWords(lead);
-    if (!hasGSAP || reduceMotion) { words.forEach(function (w) { w.classList.add("on"); }); return; }
-    ScrollTrigger.create({
-      trigger: lead, start: "top 75%", end: "bottom 60%", scrub: true,
-      onUpdate: function (self) { var n = Math.floor(self.progress * words.length); words.forEach(function (w, i) { w.classList.toggle("on", i < n); }); }
+    document.querySelectorAll("[data-words]").forEach(function (lead) {
+      var words = splitWords(lead);
+      if (!hasGSAP || reduceMotion) { words.forEach(function (w) { w.classList.add("on"); }); return; }
+      ScrollTrigger.create({
+        trigger: lead, start: "top 75%", end: "bottom 60%", scrub: true,
+        onUpdate: function (self) { var n = Math.floor(self.progress * words.length); words.forEach(function (w, i) { w.classList.toggle("on", i < n); }); }
+      });
     });
   }
 
@@ -314,7 +315,7 @@
   /* ---------- Chapter caption (fixed, serif — replaces the old HUD) ---------- */
   function initChapterCaption() {
     var secs = Array.prototype.slice.call(document.querySelectorAll("main [data-chapter]"));
-    if (secs.length < 3) return;
+    if (secs.length < 1) return;
     var cap = document.createElement("p");
     cap.className = "chapcap";
     cap.setAttribute("aria-hidden", "true");
@@ -328,7 +329,7 @@
       }
       if (idx === cur) return;
       cur = idx;
-      cap.innerHTML = "<em>Ch.0" + (idx + 1) + "</em> " + secs[idx].getAttribute("data-chapter");
+      cap.innerHTML = "<em>Fig.0" + (idx + 1) + "</em> " + secs[idx].getAttribute("data-chapter");
       if (typeof window.anime !== "undefined" && !reduceMotion) {
         anime.animate(cap, { opacity: [0, 1], y: [8, 0], duration: 600, ease: "out(3)" });
       }
@@ -901,7 +902,7 @@
     initTransitions();
 
     runLoader(function () {
-      var hero = document.querySelector(".hero");
+      var hero = document.querySelector(".hero, .plate");
       revealSplitWords(hero);
       // Hero blocks rise in behind the name, staggered so the eyebrow, thesis
       // and footer read in the order the eye travels rather than all at once.

@@ -1,0 +1,910 @@
+#!/usr/bin/env python3
+"""Assemble the six pages of the field-notes site from one shared shell.
+Run from anywhere; writes into the repo. The shell lives here so the masthead,
+menu, footer and script block are identical on every page by construction."""
+import os
+
+REPO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+BASE = "https://myatgthu.github.io/hello-world.io/"
+
+PAGES = ["about", "work", "projects", "credentials", "contact"]
+LABEL = {"about": "About", "work": "Work", "projects": "Projects",
+         "credentials": "Credentials", "contact": "Contact"}
+
+def head(title, desc, canon):
+    return """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>%s</title>
+  <meta name="description" content="%s" />
+  <meta name="author" content="Myat Thu" />
+  <link rel="canonical" href="%s" />
+  <meta name="theme-color" content="#f2efe6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Myat Thu" />
+  <meta property="og:url" content="%s" />
+  <meta property="og:title" content="%s" />
+  <meta property="og:description" content="%s" />
+  <meta property="og:image" content="%sassets/og.png" />
+  <meta property="og:image:width" content="2400" />
+  <meta property="og:image:height" content="1260" />
+  <meta property="og:image:alt" content="Myat Thu — IT professional shaping the Microsoft modern workplace. Intune · Entra ID · Cloud · Melbourne." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="%s" />
+  <meta name="twitter:description" content="%s" />
+  <meta name="twitter:image" content="%sassets/og.png" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%%23201d15'/><text x='50' y='70' font-size='56' font-family='Arial,sans-serif' font-weight='700' fill='%%23f2efe6' text-anchor='middle'>M</text></svg>" />
+
+  <script>document.documentElement.classList.add('js');try{var n=sessionStorage.getItem('nav');if(n){var c=document.documentElement.classList;c.add('is-entering');if(n==='wipe')c.add('is-wipe');}}catch(e){}</script>
+
+  <link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/share-tech-mono.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="styles.css?v=__BUILD__" />
+</head>
+<body>""" % (title, desc, canon, canon, title, desc, BASE, title, desc, BASE)
+
+def chrome(active, with_loader=False):
+    """Everything between <body> and <main>: overlays, masthead, menu."""
+    loader = """
+  <!-- Preloader (graphite drop) — the cover only; subpages arrive mid-book -->
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader__drop" aria-hidden="true"></div>
+    <div class="loader__inner">
+      <span class="loader__name">Myat&nbsp;Thu</span>
+      <span class="loader__count"><i id="loaderCount">0</i><em>%</em></span>
+    </div>
+    <div class="loader__bar"><span id="loaderBar"></span></div>
+  </div>
+""" if with_loader else ""
+
+    def tab(page):
+        cur = ' aria-current="page"' if page == active else ""
+        return '      <a href="%s.html"%s><i>%02d</i>%s</a>' % (
+            page, cur, PAGES.index(page) + 2, LABEL[page])
+
+    def menu_item(idx, href, label, page_key):
+        cur = ' aria-current="page"' if page_key == active else ""
+        return '        <li><a href="%s"%s><span class="menu__idx">%02d</span> %s</a></li>' % (
+            href, cur, idx, label)
+
+    tabs = "\n".join(tab(p) for p in PAGES)
+    menu_items = "\n".join([
+        menu_item(1, "index.html", "Cover", "index"),
+        menu_item(2, "about.html", "About", "about"),
+        menu_item(3, "work.html", "Work", "work"),
+        menu_item(4, "projects.html", "Projects", "projects"),
+        menu_item(5, "credentials.html", "Credentials", "credentials"),
+        menu_item(6, "contact.html", "Contact", "contact"),
+    ])
+
+    return """
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+  <div class="wipe" aria-hidden="true"><span class="wipe__label">Turning the page —</span></div>
+%s
+  <!-- Masthead: the tabs are pages, not anchors -->
+  <header class="head" id="head">
+    <a class="head__brand" href="index.html" data-cursor="cover">Myat&nbsp;Thu</a>
+    <nav class="head__nav" aria-label="Pages">
+%s
+    </nav>
+    <div class="head__right">
+      <a class="head__status" href="contact.html" data-cursor="say hi">
+        <span class="head__dot"></span> <span>Open to work</span>
+      </a>
+      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
+        <span class="menu-btn__label">Menu</span>
+        <span class="menu-btn__bars"><i></i><i></i></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Fullscreen menu -->
+  <nav class="menu" id="menu" aria-label="Primary" aria-hidden="true">
+    <div class="menu__inner">
+      <ul class="menu__links">
+%s
+      </ul>
+      <div class="menu__meta">
+        <div class="menu__col">
+          <span class="menu__h">Get in touch</span>
+          <a href="mailto:myatgeorgethu@gmail.com" data-cursor="email">myatgeorgethu@gmail.com</a>
+          <a href="assets/Myat-Thu-CV.pdf" download data-cursor="download">Download CV ↓</a>
+        </div>
+        <div class="menu__col">
+          <span class="menu__h">Based in</span>
+          <span>Melbourne, Australia</span>
+        </div>
+        <div class="menu__col">
+          <span class="menu__h">Status</span>
+          <span>Open to opportunities — 2026</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+""" % (loader, tabs, menu_items)
+
+FOOT = """
+  <footer class="foot">
+    <span>© 2026 Myat Thu</span>
+    <a href="index.html" data-cursor="cover">Back to the cover ↑</a>
+    <span>Melbourne, Australia</span>
+  </footer>
+
+  <script src="vendor/gsap.min.js" defer></script>
+  <script src="vendor/ScrollTrigger.min.js" defer></script>
+  <script src="vendor/lenis.min.js" defer></script>
+  <script src="vendor/anime.umd.min.js" defer></script>
+  <script src="main.js?v=__BUILD__" defer></script>
+  <!-- mercury lazy-loads vendor/three.mercury.min.js itself, off the critical path -->
+  <script src="mercury.js?v=__BUILD__" defer></script>
+</body>
+</html>
+"""
+
+def plate(no, name, kicker, title_html, stand):
+    return """
+    <!-- ============================ PLATE ============================ -->
+    <header class="plate">
+      <p class="plate__folio" data-reveal>
+        <span>Field notes — %s</span><span>Plate %s</span><span>Melbourne, AU — 2026</span>
+      </p>
+      <h1 class="plate__title" aria-label="%s">
+%s
+      </h1>
+      <p class="plate__stand" data-reveal>%s</p>
+      <hr class="plate__rule" />
+    </header>
+""" % (kicker, no, name, title_html, stand)
+
+
+# ============================== INDEX (COVER) ==============================
+INDEX_MAIN = """
+  <main id="main">
+    <!-- ============================ COVER ============================ -->
+    <section class="hero" id="top" data-chapter="Arrival">
+      <div class="hero__bg" data-parallax="0.22" aria-hidden="true"></div>
+
+      <p class="hero__eyebrow" data-reveal>
+        <span>Field notes — modern workplace division</span><span>Melbourne, AU — 2026</span>
+      </p>
+
+      <div class="hero__main">
+        <h1 class="hero__title" aria-label="Myat Thu">
+          <span class="line" aria-hidden="true"><span class="word" data-split>Myat</span></span>
+          <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Thu.</span></span>
+        </h1>
+
+        <a class="badge" href="contact.html" data-cursor="let's talk" data-magnetic="0.34" aria-label="Open to work, available 2026">
+          <svg class="badge__svg" viewBox="0 0 140 140" aria-hidden="true">
+            <defs>
+              <path id="badgePath" d="M70,70 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0" />
+            </defs>
+            <text><textPath href="#badgePath" startOffset="0">OPEN TO WORK ✦ MELBOURNE ✦ 2026 ✦ </textPath></text>
+          </svg>
+          <span class="badge__center" aria-hidden="true">↓</span>
+        </a>
+
+        <p class="hero__thesis" data-reveal>
+          Every device that lands on my desk leaves in the same shape.
+          So does the machine.
+        </p>
+
+        <!-- schematic callouts pointing into the drawing -->
+        <span class="anno anno--l" style="top: 4%; right: 3%; --lead: 110px;" aria-hidden="true">fig.00 — <em>gyro stabiliser</em></span>
+        <span class="anno anno--r" style="bottom: -6%; left: 38%; --lead: 80px;" aria-hidden="true">graphite 2B // drafted 2077</span>
+      </div>
+
+      <div class="hero__foot">
+        <div class="hero__portrait" data-parallax="-0.16" data-cursor="that's me">
+          <div class="hero__portrait-media">
+            <img class="hero__portrait-img" src="assets/portrait.jpg" alt="Myat Thu" width="470" height="627" />
+          </div>
+        </div>
+        <div class="hero__intro">
+          <p class="hero__role" data-reveal>
+            IT professional shaping the <b>Microsoft modern workplace</b> —
+            device management, identity, and cloud, tuned for automation and security.
+          </p>
+          <div class="hero__meta" data-reveal>
+            <span>Service Desk Analyst</span>
+            <span>IPH Limited</span>
+            <span>Melbourne, Australia</span>
+          </div>
+        </div>
+      </div>
+
+      <a class="hero__scroll" href="#contents" data-cursor="scroll" aria-label="Scroll to contents">
+        <span>Scroll</span><i></i>
+      </a>
+    </section>
+
+    <!-- ============================ MARQUEE ============================ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marquee">
+        <span>Microsoft Intune</span><span class="dot">✦</span>
+        <span>Entra ID</span><span class="dot">✦</span>
+        <span>Windows Autopilot</span><span class="dot">✦</span>
+        <span>Modern Device Management</span><span class="dot">✦</span>
+        <span>Azure</span><span class="dot">✦</span>
+        <span>PowerShell</span><span class="dot">✦</span>
+        <span>Endpoint Security</span><span class="dot">✦</span>
+        <span>Microsoft 365</span><span class="dot">✦</span>
+        <span>Microsoft Intune</span><span class="dot">✦</span>
+        <span>Entra ID</span><span class="dot">✦</span>
+        <span>Windows Autopilot</span><span class="dot">✦</span>
+        <span>Modern Device Management</span><span class="dot">✦</span>
+        <span>Azure</span><span class="dot">✦</span>
+        <span>PowerShell</span><span class="dot">✦</span>
+        <span>Endpoint Security</span><span class="dot">✦</span>
+        <span>Microsoft 365</span><span class="dot">✦</span>
+      </div>
+    </div>
+
+    <!-- ============================ CONTENTS ============================ -->
+    <section class="toc" id="contents" data-chapter="Contents" aria-label="Contents">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>Contents</h2>
+        <p class="caps__note" data-reveal>Five plates. Each one is its own page — open any of them.</p>
+      </div>
+      <ol class="toc__list">
+        <li><a class="toc__row" href="about.html" data-cursor="open plate">
+          <span class="toc__no">PL.02</span>
+          <span class="toc__t">The Person</span>
+          <span class="toc__d">About — off the clock &amp; the brief</span>
+        </a></li>
+        <li><a class="toc__row" href="work.html" data-cursor="open plate">
+          <span class="toc__no">PL.03</span>
+          <span class="toc__t">The Orbit</span>
+          <span class="toc__d">Work — four roles, seven years</span>
+        </a></li>
+        <li><a class="toc__row" href="projects.html" data-cursor="open plate">
+          <span class="toc__no">PL.04</span>
+          <span class="toc__t">The Proof</span>
+          <span class="toc__d">Projects — case files &amp; the lab</span>
+        </a></li>
+        <li><a class="toc__row" href="credentials.html" data-cursor="open plate">
+          <span class="toc__no">PL.05</span>
+          <span class="toc__t">The Seals</span>
+          <span class="toc__d">Credentials — four certs, one in flight</span>
+        </a></li>
+        <li><a class="toc__row" href="contact.html" data-cursor="open plate">
+          <span class="toc__no">PL.06</span>
+          <span class="toc__t">Connect</span>
+          <span class="toc__d">Contact — usually replies within a day</span>
+        </a></li>
+      </ol>
+    </section>
+
+    <!-- ============================ STATS ============================ -->
+    <section class="stats" data-chapter="Signal" aria-label="By the numbers">
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="400" data-suffix="+">400+</span>
+        <span class="stat__label">Retail stores kept running nationwide</span>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="50" data-suffix="/day">50/day</span>
+        <span class="stat__label">Tickets cleared a day at peak load</span>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="2" data-suffix="nd">2nd</span>
+        <span class="stat__label">Level escalation point for the desk</span>
+      </div>
+      <div class="stat" data-reveal>
+        <span class="stat__num" data-count="4" data-suffix="">4</span>
+        <span class="stat__label">Microsoft &amp; Google certifications</span>
+      </div>
+    </section>
+
+    <!-- ============================ NOW ============================ -->
+    <section class="now" aria-label="What I'm focused on now">
+      <span class="now__tag"><span class="now__dot" aria-hidden="true"></span> Now</span>
+      <p class="now__text" data-reveal>
+        Studying for <strong>SC-300</strong> — Microsoft Identity &amp; Access Administrator —
+        deepening Entra ID, conditional access, and identity governance.
+      </p>
+    </section>
+
+    <!-- ============================ MARGIN NOTE ============================ -->
+    <section class="lab" data-chapter="Connect" aria-label="Get in touch">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>The margin note</h2>
+        <p class="caps__note" data-reveal>Every good field book ends with a forwarding address.</p>
+      </div>
+      <p class="contact__cv-row" data-reveal>
+        <a class="contact__cv" href="contact.html" data-cursor="connect">Open Connect <span aria-hidden="true">→</span></a>
+      </p>
+    </section>
+  </main>
+"""
+
+# ============================== WORK ==============================
+WORK_MAIN = """
+  <main id="main">
+%s
+    <!-- ============================ WORK ============================ -->
+    <section class="work" id="work" data-chapter="The Orbit">
+      <div class="work__grid">
+        <aside class="work__aside">
+          <div class="work__sticky">
+            <p class="work__range">2018 — Present</p>
+            <p class="work__hint">A path from the shop floor to modern endpoint management.</p>
+            <ol class="tl" aria-label="Career timeline">
+              <li class="tl__i"><span class="tl__y">May 2025</span><span class="tl__c">IPH Limited — Service Desk Analyst</span></li>
+              <li class="tl__i"><span class="tl__y">Feb 2023</span><span class="tl__c">The Reject Shop — IT Support Analyst</span></li>
+              <li class="tl__i"><span class="tl__y">Jul 2022</span><span class="tl__c">Azured Consulting — Support Engineer</span></li>
+              <li class="tl__i"><span class="tl__y">Jun 2019</span><span class="tl__c">MYER — Office Support Assistant</span></li>
+            </ol>
+          </div>
+        </aside>
+
+        <ol class="work__list">
+          <li class="role" data-role>
+            <div class="logo-tile" data-cursor="IPH Limited">
+              <img class="logo-tile__img" src="assets/logos/iph.png" alt="IPH Limited" />
+            </div>
+            <div class="role__body">
+              <div class="role__top">
+                <span class="role__year">May 2025 — Present</span>
+                <span class="role__loc">Melbourne, AU</span>
+              </div>
+              <h3 class="role__title">Service Desk Analyst</h3>
+              <p class="role__org">IPH Limited</p>
+              <ul class="role__points">
+                <li>Second-level escalation point, guiding the service desk team.</li>
+                <li>Builds laptops and devices to the Standard Operating Environment.</li>
+                <li>Active Directory administration and modern endpoint support.</li>
+                <li>Drives IT projects, change management, and on-call response.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="role" data-role>
+            <div class="logo-tile logo-tile--bleed" data-cursor="The Reject Shop">
+              <img class="logo-tile__img" src="assets/logos/reject-shop.png" alt="The Reject Shop" />
+            </div>
+            <div class="role__body">
+              <div class="role__top">
+                <span class="role__year">Feb 2023 — May 2025</span>
+                <span class="role__loc">Melbourne, AU</span>
+              </div>
+              <h3 class="role__title">IT Support Analyst</h3>
+              <p class="role__org">The Reject Shop</p>
+              <ul class="role__points">
+                <li>Level 1–2 support for 400+ stores; 40–50 tickets a day.</li>
+                <li>AD, Exchange, Teams &amp; M365 administration end-to-end.</li>
+                <li>Imaging, onboarding/offboarding, hardware remediation.</li>
+                <li>Replaced docks with daisy-chained hubs; documented the playbook.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="role" data-role>
+            <div class="logo-tile logo-tile--bleed" data-cursor="Azured Consulting">
+              <img class="logo-tile__img" src="assets/logos/azured.png" alt="Azured Consulting" />
+            </div>
+            <div class="role__body">
+              <div class="role__top">
+                <span class="role__year">Jul 2022 — Nov 2022</span>
+                <span class="role__loc">Australia</span>
+              </div>
+              <h3 class="role__title">Support Engineer</h3>
+              <p class="role__org">Azured Consulting</p>
+              <ul class="role__points">
+                <li>Service desk for a Telstra cloud partner &amp; MSP.</li>
+                <li>Level 3 network and firewall configuration support.</li>
+                <li>Maintained client cloud environments and M365 accounts.</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="role" data-role>
+            <div class="logo-tile" data-cursor="MYER">
+              <img class="logo-tile__img" src="assets/logos/myer.png" alt="MYER" />
+            </div>
+            <div class="role__body">
+              <div class="role__top">
+                <span class="role__year">Jun 2019 — Oct 2024</span>
+                <span class="role__loc">Australia</span>
+              </div>
+              <h3 class="role__title">Office Support Assistant</h3>
+              <p class="role__org">MYER</p>
+              <ul class="role__points">
+                <li>Supported store operations and end-of-day reporting in Excel.</li>
+                <li>Managed online returns, POS, and team training.</li>
+                <li>Coordinated across technical and non-technical teams.</li>
+              </ul>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============================ CAPABILITIES ============================ -->
+    <section class="caps" id="caps" data-chapter="The Craft">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>Capabilities</h2>
+        <p class="caps__note" data-reveal>
+          The toolkit I reach for to keep a modern, secure workplace running.
+        </p>
+      </div>
+      <ul class="caps__list">
+        <li class="cap" data-cap><span class="cap__i">01</span><span class="cap__t">Microsoft Intune &amp; Endpoint</span><span class="cap__d">MDM/MAM, compliance, SOE</span></li>
+        <li class="cap" data-cap><span class="cap__i">02</span><span class="cap__t">Entra ID &amp; Identity</span><span class="cap__d">Conditional access, provisioning</span></li>
+        <li class="cap" data-cap><span class="cap__i">03</span><span class="cap__t">Microsoft 365 Administration</span><span class="cap__d">Exchange, Teams, distribution</span></li>
+        <li class="cap" data-cap><span class="cap__i">04</span><span class="cap__t">Cloud &amp; Azure Fundamentals</span><span class="cap__d">Tenant maintenance, AD</span></li>
+        <li class="cap" data-cap><span class="cap__i">05</span><span class="cap__t">Service Desk &amp; ITSM</span><span class="cap__d">SLAs, escalation, knowledge base</span></li>
+        <li class="cap" data-cap><span class="cap__i">06</span><span class="cap__t">Security &amp; Compliance</span><span class="cap__d">Audits, risk, threat response</span></li>
+      </ul>
+    </section>
+
+    <!-- ============================ APPROACH ============================ -->
+    <section class="approach" id="approach">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>How I work</h2>
+        <p class="caps__note" data-reveal>My default playbook for turning a ticket into a clean resolution.</p>
+      </div>
+      <ol class="steps">
+        <li class="step" data-cap>
+          <span class="step__n">01</span>
+          <h3 class="step__t">Cut to the real issue</h3>
+          <p class="step__d">I read past how a ticket is worded to find what's actually broken — diagnosing the problem before reaching for a fix.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">02</span>
+          <h3 class="step__t">Work the knowledge first</h3>
+          <p class="step__d">KBAs, notes from past tickets, trusted research, and company-approved AI tools — I solve it with what's already known before reinventing it.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">03</span>
+          <h3 class="step__t">Escalate cleanly</h3>
+          <p class="step__d">If it's beyond L1–2, it goes to my senior service-desk lead and then management — with the context already gathered so they can act fast.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">04</span>
+          <h3 class="step__t">Close the loop &amp; document</h3>
+          <p class="step__d">Resolve within SLA, confirm it with the user, and write it up so the next person finds the answer faster than I did.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============================ TOOLBOX ============================ -->
+    <section class="toolbox" id="toolbox" aria-label="Tech stack and toolbox">
+      <div class="toolbox__head">
+        <h2 class="section-title" data-reveal>Toolbox</h2>
+        <p class="toolbox__note" data-reveal>The day-to-day stack I build, secure and support on.</p>
+        <span class="toolbox__scroll" aria-hidden="true">Scroll ↓</span>
+      </div>
+      <div class="toolbox__field" aria-label="Tools I work with">
+        <div class="tool" style="left:13%%;top:9%%">
+          <span class="tool__card" style="--r:-5deg"><span class="tool__name">Microsoft Intune</span><span class="tool__cat">Endpoint · MDM</span></span>
+        </div>
+        <div class="tool" style="left:63%%;top:7%%">
+          <span class="tool__card" style="--r:4deg"><span class="tool__name">Microsoft Entra ID</span><span class="tool__cat">Identity</span></span>
+        </div>
+        <div class="tool" style="left:25%%;top:21%%">
+          <span class="tool__card" style="--r:3deg"><span class="tool__name">Microsoft 365</span><span class="tool__cat">Productivity</span></span>
+        </div>
+        <div class="tool" style="left:68%%;top:23%%">
+          <span class="tool__card" style="--r:-4deg"><span class="tool__name">Microsoft Azure</span><span class="tool__cat">Cloud</span></span>
+        </div>
+        <div class="tool" style="left:11%%;top:37%%">
+          <span class="tool__card" style="--r:-3deg"><span class="tool__name">Active Directory</span><span class="tool__cat">Directory</span></span>
+        </div>
+        <div class="tool" style="left:57%%;top:39%%">
+          <span class="tool__card" style="--r:5deg"><span class="tool__name">Microsoft Defender</span><span class="tool__cat">Security</span></span>
+        </div>
+        <div class="tool" style="left:22%%;top:56%%">
+          <span class="tool__card" style="--r:4deg"><span class="tool__name">Microsoft Teams</span><span class="tool__cat">Collaboration</span></span>
+        </div>
+        <div class="tool" style="left:64%%;top:57%%">
+          <span class="tool__card" style="--r:-5deg"><span class="tool__name">Exchange Online</span><span class="tool__cat">Mail</span></span>
+        </div>
+        <div class="tool" style="left:15%%;top:72%%">
+          <span class="tool__card" style="--r:3deg"><span class="tool__name">Windows Autopilot</span><span class="tool__cat">Provisioning</span></span>
+        </div>
+        <div class="tool" style="left:59%%;top:73%%">
+          <span class="tool__card" style="--r:-4deg"><span class="tool__name">PowerShell</span><span class="tool__cat">Automation</span></span>
+        </div>
+        <div class="tool" style="left:37%%;top:85%%">
+          <span class="tool__card" style="--r:4deg"><span class="tool__name">Windows 11</span><span class="tool__cat">Endpoint OS</span></span>
+        </div>
+      </div>
+    </section>
+  </main>
+""" % plate("03", "The Orbit", "work",
+            """        <span class="line" aria-hidden="true"><span class="word" data-split>The</span></span>
+        <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Orbit.</span></span>""",
+            "From the MYER shop floor to second-level escalation at IPH Limited: seven years of "
+            "turning broken tickets into documented fixes — across a 400-store retail fleet, an "
+            "MSP's cloud clients, and a legal-sector professional services group.")
+
+# ============================== PROJECTS ==============================
+PROJECTS_MAIN = """
+  <main id="main">
+%s
+    <!-- ============================ CASE FILES ============================ -->
+    <section class="cases" id="projects" data-chapter="The Proof">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>Case files</h2>
+        <p class="caps__note" data-reveal>A few problems I've owned from ticket to resolution.</p>
+      </div>
+      <ol class="cases__list">
+        <li class="case" data-rise data-case data-title="Store-fleet dock standardisation" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case file: Store-fleet dock standardisation">
+          <div class="case__head"><span class="case__no">CASE_01</span><span class="case__tag">Endpoint · Rollout</span></div>
+          <h3 class="case__title">Store-fleet dock standardisation</h3>
+          <p class="case__summary">Killed recurring dock failures across 400+ stores with a simpler, documented setup.</p>
+          <span class="case__open" aria-hidden="true">Open case file →</span>
+          <div class="case__data">
+            <p class="cm__overview">Retail laptop docks were failing constantly and costing money to replace right across the store estate.</p>
+            <dl class="cm__rows">
+              <div><dt>Objective</dt><dd>Stop the steady stream of failing, costly laptop docks across 400+ retail stores.</dd></div>
+              <div><dt>My role</dt><dd>Replaced the Lenovo docks with daisy-chained hub monitors and wrote the rollout playbook for the service desk.</dd></div>
+              <div><dt>Outcome</dt><dd>Simpler desk setups, far fewer dock failures, and a repeatable process anyone on the team could run.</dd></div>
+            </dl>
+            <ul class="cm__stack"><li>Hardware</li><li>Rollout</li><li>Documentation</li></ul>
+          </div>
+        </li>
+        <li class="case" data-rise data-case data-title="Service-desk playbook" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case file: Service-desk playbook">
+          <div class="case__head"><span class="case__no">CASE_02</span><span class="case__tag">ITSM · Knowledge</span></div>
+          <h3 class="case__title">Service-desk playbook</h3>
+          <p class="case__summary">Turned tribal knowledge and repeat tickets into a documented, repeatable process.</p>
+          <span class="case__open" aria-hidden="true">Open case file →</span>
+          <div class="case__data">
+            <p class="cm__overview">The desk leaned on a few people's memory; the same issues kept coming back and new starters took a while to get up to speed.</p>
+            <dl class="cm__rows">
+              <div><dt>Objective</dt><dd>Turn tribal knowledge and repeat tickets into a consistent, documented process.</dd></div>
+              <div><dt>My role</dt><dd>Documented SOPs, KBAs and escalation paths, and became the second-level point the desk leans on.</dd></div>
+              <div><dt>Outcome</dt><dd>Faster, more consistent resolutions and a knowledge base new starters could pick up quickly.</dd></div>
+            </dl>
+            <ul class="cm__stack"><li>ITSM</li><li>KBAs</li><li>Process</li></ul>
+          </div>
+        </li>
+        <li class="case" data-rise data-case data-title="Modern device builds &amp; access" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case file: Modern device builds and access">
+          <div class="case__head"><span class="case__no">CASE_03</span><span class="case__tag">Identity · Devices</span></div>
+          <h3 class="case__title">Modern device builds &amp; access</h3>
+          <p class="case__summary">Got staff onto secure, standardised devices with the right access from day one.</p>
+          <span class="case__open" aria-hidden="true">Open case file →</span>
+          <div class="case__data">
+            <p class="cm__overview">Device builds and access were manual and inconsistent, creating rework and the odd security gap.</p>
+            <dl class="cm__rows">
+              <div><dt>Objective</dt><dd>Get staff onto secure, standardised devices with the right access from day one.</dd></div>
+              <div><dt>My role</dt><dd>Built laptops to the SOE, handled Active Directory and M365 administration, and ran joiner/leaver processes end to end.</dd></div>
+              <div><dt>Outcome</dt><dd>Consistent, compliant endpoints and a tidy account lifecycle with less manual rework.</dd></div>
+            </dl>
+            <ul class="cm__stack"><li>Intune</li><li>Active Directory</li><li>M365</li></ul>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============================ HOME LAB ============================ -->
+    <section class="lab" id="lab" data-chapter="The Bench" data-cursor="break it">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>Home lab</h2>
+        <p class="caps__note" data-reveal>Where I break things on purpose — my sandbox for SC-300 and the Microsoft cloud. <span class="lab__hint">Go on — dent the drawing.</span></p>
+      </div>
+      <ul class="lab__grid">
+        <li class="lab__item" data-cap><span class="lab__k">01</span><h3 class="lab__t">Microsoft 365 dev tenant</h3><p class="lab__d">A throwaway tenant for testing conditional access, policies and admin without touching production.</p></li>
+        <li class="lab__item" data-cap><span class="lab__k">02</span><h3 class="lab__t">Entra ID &amp; Intune</h3><p class="lab__d">Hands-on with identity governance, conditional access and endpoint policies — straight from the SC-300 syllabus.</p></li>
+        <li class="lab__item" data-cap><span class="lab__k">03</span><h3 class="lab__t">Azure free account</h3><p class="lab__d">Spinning up resources to learn cloud fundamentals and how the pieces fit together.</p></li>
+        <li class="lab__item" data-cap><span class="lab__k">04</span><h3 class="lab__t">Local VMs &amp; PowerShell</h3><p class="lab__d">Hyper-V and Windows Sandbox for builds and break-fix, with PowerShell to automate the repetitive bits.</p></li>
+      </ul>
+    </section>
+  </main>
+""" % plate("04", "The Proof", "projects",
+            """        <span class="line" aria-hidden="true"><span class="word" data-split>The</span></span>
+        <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Proof.</span></span>""",
+            "Three case files and a standing lab. The pattern in all of them: find what actually "
+            "broke, fix it once, and write it down so the next person is faster.")
+
+# ============================== CREDENTIALS ==============================
+CREDENTIALS_MAIN = """
+  <main id="main">
+%s
+    <!-- ============================ CERTIFICATIONS ============================ -->
+    <section class="certs" id="certs" data-chapter="The Seals">
+      <div class="certs__head">
+        <h2 class="section-title" data-reveal>Credentials</h2>
+        <p class="certs__note" data-reveal>Certified across the Microsoft and Google stacks.</p>
+      </div>
+      <div class="certs__grid">
+        <article class="cert" data-rise data-case data-title="Endpoint Administrator" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View credential: Endpoint Administrator (MD-102)">
+          <span class="cert__code">MD-102</span>
+          <h3 class="cert__title">Endpoint Administrator</h3>
+          <p class="cert__by">Microsoft Certified</p>
+          <span class="cert__open" aria-hidden="true">View details →</span>
+          <div class="cert__data">
+            <p class="cm__overview">Microsoft's endpoint administration certification — deploying, configuring and protecting Windows devices across an organisation with Intune.</p>
+            <dl class="cm__rows">
+              <div><dt>Covers</dt><dd>Windows client deployment, identity and compliance, device configuration, and app delivery through Intune / Endpoint Manager.</dd></div>
+              <div><dt>Trains</dt><dd>Modern device management end to end — Autopilot provisioning, configuration and compliance policies, conditional access, app protection, and update rings.</dd></div>
+              <div><dt>Issued by</dt><dd>Microsoft</dd></div>
+            </dl>
+            <ul class="cm__stack"><li>Intune</li><li>Autopilot</li><li>Windows</li><li>Entra ID</li></ul>
+          </div>
+        </article>
+        <article class="cert" data-rise data-case data-title="Azure Fundamentals" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View credential: Azure Fundamentals (AZ-900)">
+          <span class="cert__code">AZ-900</span>
+          <h3 class="cert__title">Azure Fundamentals</h3>
+          <p class="cert__by">Microsoft Certified</p>
+          <span class="cert__open" aria-hidden="true">View details →</span>
+          <div class="cert__data">
+            <p class="cm__overview">The foundational Azure certification — the core cloud concepts and services that underpin the Microsoft cloud.</p>
+            <dl class="cm__rows">
+              <div><dt>Covers</dt><dd>Cloud concepts, core Azure services, security and compliance, and Azure pricing and support.</dd></div>
+              <div><dt>Trains</dt><dd>Cloud fundamentals — IaaS / PaaS / SaaS models, regions and availability, core compute, storage and networking services, plus cost management and governance.</dd></div>
+              <div><dt>Issued by</dt><dd>Microsoft</dd></div>
+            </dl>
+            <ul class="cm__stack"><li>Azure</li><li>Cloud</li><li>Governance</li></ul>
+          </div>
+        </article>
+        <article class="cert" data-rise data-case data-title="Security, Compliance &amp; Identity" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View credential: Security, Compliance and Identity (SC-900)">
+          <span class="cert__code">SC-900</span>
+          <h3 class="cert__title">Security, Compliance &amp; Identity</h3>
+          <p class="cert__by">Microsoft Certified</p>
+          <span class="cert__open" aria-hidden="true">View details →</span>
+          <div class="cert__data">
+            <p class="cm__overview">The fundamentals of Microsoft's security, compliance and identity solutions — and the Zero Trust thinking behind them.</p>
+            <dl class="cm__rows">
+              <div><dt>Covers</dt><dd>Security, compliance and identity concepts, Entra ID identity and access, Microsoft security solutions, and compliance capabilities.</dd></div>
+              <div><dt>Trains</dt><dd>Zero Trust principles, identity and access management with Entra ID, threat protection across Defender, and the basics of governance and compliance with Purview.</dd></div>
+              <div><dt>Issued by</dt><dd>Microsoft</dd></div>
+            </dl>
+            <ul class="cm__stack"><li>Entra ID</li><li>Defender</li><li>Purview</li><li>Zero Trust</li></ul>
+          </div>
+        </article>
+        <article class="cert" data-rise data-case data-title="IT Support Professional" tabindex="0" role="button" aria-haspopup="dialog" aria-label="View credential: IT Support Professional Certificate (Google)">
+          <span class="cert__code">Google</span>
+          <h3 class="cert__title">IT Support Professional</h3>
+          <p class="cert__by">Professional Certificate</p>
+          <span class="cert__open" aria-hidden="true">View details →</span>
+          <div class="cert__data">
+            <p class="cm__overview">Google's professional certificate covering the practical fundamentals of an IT support role from the ground up.</p>
+            <dl class="cm__rows">
+              <div><dt>Covers</dt><dd>Technical support fundamentals, computer networking, operating systems, system administration, and IT security.</dd></div>
+              <div><dt>Trains</dt><dd>Hands-on support skills — hardware and software troubleshooting, Windows and Linux administration, networking, and the basics of securing systems and users.</dd></div>
+              <div><dt>Issued by</dt><dd>Google</dd></div>
+            </dl>
+            <ul class="cm__stack"><li>Networking</li><li>Operating systems</li><li>Security</li><li>Support</li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============================ EDUCATION ============================ -->
+    <section class="edu" id="edu">
+      <h2 class="section-title section-title--sm" data-reveal>Study</h2>
+      <ol class="edu__list">
+        <li class="edu__item" data-reveal>
+          <span class="logo-tile logo-tile--sm" data-cursor="RMIT University">
+            <img class="logo-tile__img" src="assets/logos/rmit.png" alt="RMIT University" />
+          </span>
+          <span class="edu__year">2019 — 2021</span>
+          <span class="edu__deg">Bachelor of Business, Information Systems</span>
+          <span class="edu__org">RMIT University</span>
+        </li>
+        <li class="edu__item" data-reveal>
+          <span class="logo-tile logo-tile--sm" data-cursor="RMIT University">
+            <img class="logo-tile__img" src="assets/logos/rmit.png" alt="RMIT University" />
+          </span>
+          <span class="edu__year">2018</span>
+          <span class="edu__deg">Diploma, Information Technology</span>
+          <span class="edu__org">RMIT University</span>
+        </li>
+        <li class="edu__item" data-reveal>
+          <span class="logo-tile logo-tile--sm" data-cursor="Trinity College">
+            <img class="logo-tile__img" src="assets/logos/trinity.png" alt="Trinity College" />
+          </span>
+          <span class="edu__year">2016 — 2017</span>
+          <span class="edu__deg">Foundation, Information Technology</span>
+          <span class="edu__org">Trinity College, University of Melbourne</span>
+        </li>
+      </ol>
+    </section>
+  </main>
+""" % plate("05", "The Seals", "credentials",
+            """        <span class="line" aria-hidden="true"><span class="word" data-split>The</span></span>
+        <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Seals.</span></span>""",
+            "Four certifications earned while working full time — MD-102, AZ-900, SC-900 and "
+            "Google IT Support — with SC-300 in progress, backed by a live tenant lab rather "
+            "than flashcards.")
+
+# ============================== CONTACT ==============================
+CONTACT_MAIN = """
+  <main id="main">
+    <header class="plate plate--slim">
+      <p class="plate__folio" data-reveal>
+        <span>Field notes — contact</span><span>Plate 06</span><span>Melbourne, AU — 2026</span>
+      </p>
+    </header>
+
+    <!-- ============================ CONTACT ============================ -->
+    <section class="contact" id="contact" data-chapter="Connect">
+      <p class="contact__avail" data-reveal><span class="contact__dot" aria-hidden="true"></span> Available for new opportunities — 2026</p>
+      <h1 class="contact__title" aria-label="Let's work together" data-reveal>
+        <span class="line" aria-hidden="true">
+          <span class="word" data-split>Let's</span> <span class="word" data-split>work</span>
+        </span>
+        <span class="line" aria-hidden="true">
+          <span class="word word--accent" data-split>together.</span>
+        </span>
+      </h1>
+      <a class="contact__mail" href="mailto:myatgeorgethu@gmail.com" data-magnetic="0.22" data-cursor="email">
+        <span>myatgeorgethu@gmail.com</span> <i class="contact__arrow" aria-hidden="true">→</i>
+      </a>
+      <p class="contact__cv-row" data-reveal>
+        <a class="contact__cv" href="assets/Myat-Thu-CV.pdf" download data-cursor="download">Download CV <span aria-hidden="true">↓</span></a>
+      </p>
+      <div class="contact__meta" data-reveal>
+        <span>Based in Melbourne, Australia</span>
+        <span>Open to full-time &amp; contract</span>
+        <span>Usually replies within a day</span>
+      </div>
+    </section>
+  </main>
+"""
+
+# ============================== ABOUT ==============================
+ABOUT_MAIN = """
+  <main id="main">
+    <!-- ============================ HERO ============================ -->
+    <section class="hero hero--about" id="top">
+      <div class="hero__bg" data-parallax="0.22" aria-hidden="true"></div>
+
+      <p class="hero__eyebrow" data-reveal>
+        <span>Field notes — the person</span><span>Plate 02 — Melbourne, AU</span>
+      </p>
+
+      <h1 class="hero__title hero__title--about" aria-label="Beyond the help desk">
+        <span class="line" aria-hidden="true"><span class="word" data-split>Beyond the</span></span>
+        <span class="line" aria-hidden="true"><span class="word word--accent" data-split>help desk.</span></span>
+      </h1>
+
+      <a class="hero__scroll" href="#bio" data-cursor="scroll" aria-label="Scroll to content">
+        <span>Scroll</span><i></i>
+      </a>
+    </section>
+
+    <!-- ============================ PROFESSIONAL BIO ============================ -->
+    <section class="intro" id="bio" data-chapter="The Person">
+      <p class="chap" data-reveal><em>Fig.01</em> The professional</p>
+      <p class="intro__lead" data-words>
+        I am an IT professional specialised in the Microsoft ecosystem, with a
+        strong focus on modern device management and cloud administration. I have
+        moved beyond traditional support toward automation and security —
+        leveraging Microsoft Intune and Entra ID to keep operations seamless,
+        compliant, and quietly resilient.
+      </p>
+    </section>
+
+    <!-- ============================ THE BRIEF ============================ -->
+    <section class="approach" id="brief" aria-label="The brief, for hiring managers">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>The brief</h2>
+        <p class="caps__note" data-reveal>What a hiring manager should know in thirty seconds.</p>
+      </div>
+      <ol class="steps">
+        <li class="step" data-cap>
+          <span class="step__n">01</span>
+          <h3 class="step__t">Scale under pressure</h3>
+          <p class="step__d">A 400+ store retail fleet, 40–50 tickets a day, public-holiday cover included. Volume doesn't rattle him.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">02</span>
+          <h3 class="step__t">Trusted escalation</h3>
+          <p class="step__d">Second-level point for the IPH service desk, with earlier Level 3 network and firewall exposure at a Telstra-partner MSP.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">03</span>
+          <h3 class="step__t">Owns the device lifecycle</h3>
+          <p class="step__d">SOE builds, imaging, onboarding to offboarding, hardware remediation — the endpoint from box to retirement.</p>
+        </li>
+        <li class="step" data-cap>
+          <span class="step__n">04</span>
+          <h3 class="step__t">Writes it down</h3>
+          <p class="step__d">KBAs, rollout playbooks, Change Board representation, annual IT audits. The fix that stays fixed.</p>
+        </li>
+      </ol>
+      <p class="caps__note" data-reveal style="margin-top: clamp(22px, 4vh, 40px); max-width: 60ch;">
+        The next seat: endpoint engineering. SC-300 is in progress, and conditional
+        access and identity governance are already live in the lab tenant.
+      </p>
+    </section>
+
+    <!-- ============================ PERSONAL BIO ============================ -->
+    <section class="intro" id="offclock">
+      <p class="chap" data-reveal><em>Fig.02</em> Off the clock</p>
+      <p class="intro__lead" data-words>
+        I'm Myat — an IT professional by day. Off the clock you'll find me deep
+        in a Dota 2 match, lining up a FIFA fixture, catching the latest superhero
+        film, or rewatching a comfort series. I'm always tinkering with new
+        Microsoft tech and keeping one eye on the markets.
+      </p>
+    </section>
+
+    <!-- ============================ MARQUEE ============================ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marquee">
+        <span>Dota 2</span><span class="dot">✦</span>
+        <span>FIFA</span><span class="dot">✦</span>
+        <span>Superhero films</span><span class="dot">✦</span>
+        <span>Comfort TV</span><span class="dot">✦</span>
+        <span>SC-300</span><span class="dot">✦</span>
+        <span>Finance news</span><span class="dot">✦</span>
+        <span>Dota 2</span><span class="dot">✦</span>
+        <span>FIFA</span><span class="dot">✦</span>
+        <span>Superhero films</span><span class="dot">✦</span>
+        <span>Comfort TV</span><span class="dot">✦</span>
+        <span>SC-300</span><span class="dot">✦</span>
+        <span>Finance news</span><span class="dot">✦</span>
+      </div>
+    </div>
+
+    __PLAY_AND_GROW__
+
+    <!-- ============================ CONTACT CTA ============================ -->
+    <section class="lab" aria-label="Get in touch">
+      <div class="caps__head">
+        <h2 class="section-title" data-reveal>Margin note</h2>
+        <p class="caps__note" data-reveal>The full forwarding address lives on its own plate.</p>
+      </div>
+      <p class="contact__cv-row" data-reveal>
+        <a class="contact__cv" href="contact.html" data-cursor="connect">Open Connect <span aria-hidden="true">→</span></a>
+      </p>
+    </section>
+  </main>
+"""
+
+def build():
+    # about keeps its existing play + grow sections verbatim: lift them from the
+    # current about.html rather than retyping content that already ships.
+    cur = open(os.path.join(REPO, "about.html")).read()
+    start = cur.index('<!-- ============================ OFF THE CLOCK')
+    end = cur.index('<!-- ============================ CONTACT')
+    play_and_grow = cur[start:end].rstrip()
+
+    pages = {
+        "index.html": dict(
+            title="Myat Thu — Modern Workplace & Cloud",
+            desc="Myat Thu — an IT professional specialising in the Microsoft ecosystem: Modern Device Management, Intune, Entra ID, and cloud administration. Based in Melbourne, Australia.",
+            canon=BASE, active="index", loader=True, main=INDEX_MAIN),
+        "about.html": dict(
+            title="About — Myat Thu",
+            desc="The person behind the field notes — the professional brief for hiring managers, and how Myat Thu switches off: gaming, films, football, and always leveling up.",
+            canon=BASE + "about.html", active="about", loader=False,
+            main=ABOUT_MAIN.replace("__PLAY_AND_GROW__", play_and_grow)),
+        "work.html": dict(
+            title="Work — Myat Thu",
+            desc="Seven years from the MYER shop floor to second-level escalation at IPH Limited — a 400-store retail fleet, an MSP's cloud clients, and a legal-sector service desk.",
+            canon=BASE + "work.html", active="work", loader=False, main=WORK_MAIN),
+        "projects.html": dict(
+            title="Projects — Myat Thu",
+            desc="Case files and the home lab — dock standardisation across 400+ stores, the service-desk playbook, modern device builds, and a live Microsoft 365 lab tenant.",
+            canon=BASE + "projects.html", active="projects", loader=False, main=PROJECTS_MAIN),
+        "credentials.html": dict(
+            title="Credentials — Myat Thu",
+            desc="MD-102, AZ-900, SC-900 and Google IT Support — earned while working full time, with SC-300 in progress. RMIT and Trinity College education.",
+            canon=BASE + "credentials.html", active="credentials", loader=False, main=CREDENTIALS_MAIN),
+        "contact.html": dict(
+            title="Contact — Myat Thu",
+            desc="Let's work together — Myat Thu is open to full-time and contract opportunities in Melbourne. Usually replies within a day.",
+            canon=BASE + "contact.html", active="contact", loader=False, main=CONTACT_MAIN),
+    }
+
+    for fname, p in pages.items():
+        html = (head(p["title"], p["desc"], p["canon"])
+                + chrome(p["active"], p["loader"])
+                + p["main"]
+                + FOOT)
+        open(os.path.join(REPO, fname), "w").write(html)
+        print("wrote %s (%d bytes)" % (fname, len(html)))
+
+if __name__ == "__main__":
+    build()

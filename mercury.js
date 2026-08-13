@@ -20,7 +20,7 @@
   if (!glOK) return;
 
   var chapters = document.querySelectorAll("main [data-chapter]");
-  if (chapters.length < 3) return; // home page only
+  if (chapters.length < 1) return; // any page that declares a chapter gets the machine
 
   var script = document.createElement("script");
   script.src = "vendor/three.mercury.min.js";
@@ -31,10 +31,10 @@
   var MAXB = 10;
   var MAXI = 3; // concurrent click impacts
 
-  /* Per-chapter choreography: liquid bodies [x, y, z, r], space params, and
-     the artifact the metal solidifies into when the chapter settles.
+  /* Chapter choreography, keyed by data-chapter NAME so every page composes
+     its own sequence from the same vocabulary. Liquid bodies are [x, y, z, r];
      shape: -1 liquid only · 0 headset · 1 keyboard+mouse · 2 CD ·
-            3 terminal · 4 floppy+USB.  op: where the artifact sits. */
+            3 terminal · 4 floppy+USB · 5 the machine.  op: artifact position. */
   function ring(n, rad, r, cx, cy) {
     var out = [];
     for (var i = 0; i < n; i++) {
@@ -43,15 +43,28 @@
     }
     return out;
   }
-  var CONFIGS = [
-    { b: [[0.46, 0.12, 0, 1.19], [-2.5, -1.9, 0, 0.3], [2.25, 1.3, 0, 0.24]], k: 0.9, ripple: 0.0, off: [0, 0], puddle: 0, hue: 0.0, shape: -1, op: [0.46, 0.12] },    // arrival — the raw pearl, framed in the hero's open right-hand column
-    { b: [[1.9, 0.1, 0, 0.9], [1.1, -0.7, 0, 0.5], [2.7, 0.9, 0, 0.35]], k: 0.7, ripple: 0.022, off: [0, 0], puddle: 0, hue: 0.7, shape: 0, op: [1.9, 0.15] },        // the person — headset
-    { b: [[0, 0.1, 0, 1.1], [-1.6, -0.4, 0, 0.55], [1.7, 0.5, 0, 0.55], [0.4, 1.0, 0, 0.4]], k: 0.5, ripple: 0.0, off: [0, 0], puddle: 0, hue: 1.6, shape: 1, op: [0.2, 0.15] }, // the craft — keyboard + mouse
-    { b: ring(6, 2.35, 0.4, 0, 0.1).concat([[0, 0.1, 0, 0.78]]), k: 0.34, ripple: 0.0, off: [0, 0], puddle: 0, hue: 2.6, shape: 2, op: [0, 0.1] },                    // the orbit — spinning CD
-    { b: [[2.2, 0.45, 0, 1.1], [1.2, -0.5, 0, 0.45], [3.0, 1.3, 0, 0.3]], k: 0.75, ripple: 0.012, off: [0, 0], puddle: 0, hue: 3.6, shape: 3, op: [2.2, 0.45] },      // the proof — terminal
-    { b: [[-1.0, 0.1, 0, 0.7], [1.2, 0.0, 0, 0.6], [0.1, 0.6, 0, 0.45]], k: 0.4, ripple: 0.0, off: [0, 0.2], puddle: 0, hue: 4.5, shape: 4, op: [0, 0.15] },          // the seals — floppy + USB
-    { b: [[0, -1.9, 0, 1.7]], k: 0.9, ripple: 0.05, off: [0, 0], puddle: 1, hue: 5.4, shape: -1, op: [0, -1.9] }                                                      // connect — mirror puddle
-  ];
+  var CONFIG_BY_NAME = {
+    "Arrival":    { b: [[0.46, 0.12, 0, 1.05], [-2.5, -1.9, 0, 0.3], [2.25, 1.3, 0, 0.24]], k: 0.9, ripple: 0.0, off: [0, 0], puddle: 0, shape: 5, op: [0.6, 0.1] },   // the machine, drafted in the cover's open column
+    "Contents":   { b: [[-1.8, 0.2, 0, 0.7], [1.6, -0.5, 0, 0.6], [0.2, 0.9, 0, 0.45], [2.6, 1.2, 0, 0.3]], k: 0.65, ripple: 0.014, off: [0, 0], puddle: 0, shape: -1, op: [0, 0] },
+    "Signal":     { b: [[2.3, 0.3, 0, 0.75], [1.3, -0.6, 0, 0.4], [3.0, 1.2, 0, 0.28]], k: 0.55, ripple: 0.02, off: [0, 0], puddle: 0, shape: -1, op: [2.3, 0.3] },
+    "The Person": { b: [[1.9, 0.1, 0, 0.9], [1.1, -0.7, 0, 0.5], [2.7, 0.9, 0, 0.35]], k: 0.7, ripple: 0.022, off: [0, 0], puddle: 0, shape: 0, op: [1.9, 0.15] },
+    "The Craft":  { b: [[0, 0.1, 0, 1.1], [-1.6, -0.4, 0, 0.55], [1.7, 0.5, 0, 0.55], [0.4, 1.0, 0, 0.4]], k: 0.5, ripple: 0.0, off: [0, 0], puddle: 0, shape: 1, op: [0.2, 0.15] },
+    "The Orbit":  { b: ring(6, 2.35, 0.4, 0, 0.1).concat([[0, 0.1, 0, 0.78]]), k: 0.34, ripple: 0.0, off: [0, 0], puddle: 0, shape: 2, op: [0, 0.1] },
+    "The Bench":  { b: [[-2.0, 0.3, 0, 0.8], [-1.0, -0.5, 0, 0.5], [-2.8, 1.1, 0, 0.3]], k: 0.6, ripple: 0.016, off: [0, 0], puddle: 0, shape: -1, op: [-2.0, 0.3] },
+    "The Proof":  { b: [[2.2, 0.45, 0, 1.1], [1.2, -0.5, 0, 0.45], [3.0, 1.3, 0, 0.3]], k: 0.75, ripple: 0.012, off: [0, 0], puddle: 0, shape: 3, op: [2.2, 0.45] },
+    "The Seals":  { b: [[-1.0, 0.1, 0, 0.7], [1.2, 0.0, 0, 0.6], [0.1, 0.6, 0, 0.45]], k: 0.4, ripple: 0.0, off: [0, 0.2], puddle: 0, shape: 4, op: [0, 0.15] },
+    "Connect":    { b: [[0, -1.9, 0, 1.7]], k: 0.9, ripple: 0.05, off: [0, 0], puddle: 1, shape: -1, op: [0, -1.9] }
+  };
+  var DEFAULT_CFG = { b: [[0, 0.2, 0, 1.0], [-1.9, -1.2, 0, 0.35], [2.1, 1.1, 0, 0.28]], k: 0.8, ripple: 0.01, off: [0, 0], puddle: 0, shape: -1, op: [0, 0.2] };
+  // Phones: the cover machine rides higher so the thesis line and portrait
+  // keep clear paper under them.
+  if (window.matchMedia("(max-width: 820px)").matches && CONFIG_BY_NAME["Arrival"]) {
+    CONFIG_BY_NAME["Arrival"].op = [0.4, 0.9];
+  }
+  // The page's sequence, in DOM order. Unknown chapter names stay liquid.
+  var CONFIGS = Array.prototype.map.call(chapters, function (s) {
+    return CONFIG_BY_NAME[s.getAttribute("data-chapter")] || DEFAULT_CFG;
+  });
 
   function init() {
     var T = window.THREE;
@@ -62,7 +75,10 @@
     try {
       renderer = new T.WebGLRenderer({ antialias: false, alpha: true, powerPreference: "high-performance" });
     } catch (e) { return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.2 : 1.6) * (small ? 0.72 : 0.82));
+    // Hatching is line art: it needs more resolution than chrome blur did, and
+    // the sketch shader is cheaper per fragment than the old env shading, so
+    // phones can afford the bump.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.4 : 1.6) * (small ? 0.9 : 0.82));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.domElement.className = "mercury";
     renderer.domElement.setAttribute("aria-hidden", "true");
@@ -81,7 +97,6 @@
       uOff: { value: new T.Vector2(0, 0) },
       uPuddle: { value: 0 },
       uRipple: { value: 0 },
-      uHue: { value: 0 },
       uStretch: { value: new T.Vector2(1, 1) },
       uImpacts: { value: new Float32Array(MAXI * 4) }, // [x, y, strength, age] per slot
       uMouse: { value: new T.Vector2(0, 0) },
@@ -100,7 +115,7 @@
 
     var frag = [
       "precision highp float;",
-      "uniform float uTime, uK, uPuddle, uRipple, uHue, uAlpha, uN, uForm, uShape, uScale;",
+      "uniform float uTime, uK, uPuddle, uRipple, uAlpha, uN, uForm, uShape, uScale;",
       "uniform float uSplit, uGhostA, uGhostB;",
       "uniform vec2 uRes, uOff, uStretch, uMouse, uObj, uGhostOff;",
       "uniform vec4 uBlobs[" + MAXB + "];",
@@ -148,7 +163,7 @@
       "    float neck = sdBox(p - vec3(0.0, -0.72, -0.06), vec3(0.18, 0.3, 0.12));",
       "    float base = sdRBox(p - vec3(0.0, -1.06, 0.06), vec3(0.75, 0.07, 0.46), 0.04);",
       "    d = smin(scr, smin(neck, base, 0.09), 0.09);",
-      "  } else {", // 4 — floppy disk + USB stick
+      "  } else if (shape < 4.5) {", // 4 — floppy disk + USB stick
       "    vec3 q = p - vec3(-0.85, 0.05, 0.0);",
       "    float fl = sdRBox(q, vec3(0.95, 0.95, 0.07), 0.03);",
       "    fl = min(fl, sdRBox(q - vec3(0.18, 0.56, 0.075), vec3(0.42, 0.28, 0.015), 0.01));", // shutter
@@ -158,6 +173,17 @@
       "    float usb = sdRBox(uq + vec3(0.32, 0.0, 0.0), vec3(0.6, 0.3, 0.16), 0.07);",
       "    usb = min(usb, sdBox(uq - vec3(0.56, 0.0, 0.0), vec3(0.3, 0.2, 0.11)));",
       "    d = min(fl, usb);",
+      "  } else {", // 5 — THE MACHINE: a gyroscopic stabiliser, three nested rings live-spinning around a core
+      "    vec3 q1 = p; q1.xy *= rot(uTime*0.22);",
+      "    float r1 = length(vec2(length(q1.xy) - 1.5, q1.z)) - 0.085;",
+      "    vec3 q2 = p; q2.yz *= rot(1.05); q2.xy *= rot(-uTime*0.31);",
+      "    float r2 = length(vec2(length(q2.xy) - 1.08, q2.z)) - 0.065;",
+      "    vec3 q3 = p; q3.xz *= rot(0.8); q3.yz *= rot(uTime*0.27);",
+      "    float r3 = length(vec2(length(q3.yz) - 0.66, q3.x)) - 0.05;",
+      "    float core = length(p) - 0.36;",
+      "    float mast = sdBox(p - vec3(0.0, 0.85, 0.0), vec3(0.028, 0.5, 0.028));", // antenna
+      "    float tip = length(p - vec3(0.0, 1.42, 0.0)) - 0.07;",
+      "    d = min(min(r1, r2), min(r3, min(tip, smin(core, mast, 0.08))));",
       "  }",
       "  return d * uScale;",
       "}",
@@ -220,16 +246,13 @@
       "  vec2 e = vec2(0.004, -0.004);",
       "  return normalize(e.xyy*map(p+e.xyy) + e.yyx*map(p+e.yyx) + e.yxy*map(p+e.yxy) + e.xxx*map(p+e.xxx));",
       "}",
-      "vec3 env(vec3 d){",
-      "  float h = d.y*0.5 + 0.5;",
-      "  vec3 base = mix(vec3(0.66, 0.655, 0.645), vec3(1.02, 1.01, 1.0), h);", // lighter floor so it recedes
-      "  float band = sin(d.x*2.6 + d.y*5.5 + d.z*1.7 + uTime*0.12);",
-      "  vec3 iri = 0.5 + 0.5*cos(6.2831*(band*0.22 + vec3(0.0, 0.33, 0.67)) + uHue);",
-      "  base += iri * 0.14 * smoothstep(0.15, 1.0, abs(band));", // quieter iridescence, less visual noise behind text
-      "  base += vec3(1.0, 0.98, 0.95) * pow(max(dot(d, normalize(vec3(0.55, 0.75, 0.35))), 0.0), 30.0) * 1.4;",
-      "  base += vec3(0.9, 0.95, 1.0) * pow(max(dot(d, normalize(vec3(-0.6, 0.2, 0.45))), 0.0), 40.0) * 0.7;",
-      "  return base;",
-      "}",
+      /* GRAPHITE SHADING. The canvas is transparent and the page is the paper,
+         so this outputs pencil pigment with alpha — never a background fill.
+         Tone comes from one key light plus AO; shade is laid down as three
+         cross-hatch passes that wake one by one as the tone deepens, exactly
+         the way a hand builds it. The silhouette is re-inked by a contour on
+         both sides of the edge: fresnel inside the hit, distance-field
+         proximity outside it. */
       "void main(){",
       "  vec2 uv = (gl_FragCoord.xy * 2.0 - uRes) / uRes.y;",
       "  vec3 ro = vec3(0.0, 0.0, 5.0);",
@@ -243,46 +266,58 @@
       "    t += d * 0.85;",
       "    if (t > 14.0) break;",
       "  }",
+      "  vec3 GRAPH = vec3(0.155, 0.145, 0.125);", // 2B graphite
+      "  vec3 NEON_A = vec3(0.05, 0.72, 0.82);",   // cyan — the timeline just left
+      "  vec3 NEON_B = vec3(1.0, 0.26, 0.60);",    // magenta — the timeline ahead
       "  if (!hit) {",
-      "    float halo = exp(-glow*22.0) * 0.10;",
-      /* The two shapes this chapter did NOT settle on, drawn as outlines. Only
-         the miss path runs them, so the chosen shape occludes its own ghosts.
-         Outlines rather than fills because a filled ghost would park a solid
-         mass behind body copy, which is the opposite of how this page is tuned. */
+      "    float edge = smoothstep(0.09, 0.012, glow) * 0.7;", // the drawn outline, just outside the surface
+      /* The shapes this chapter did NOT settle on, as neon interference. Only
+         the miss path runs them, so the chosen shape occludes its own ghosts;
+         outlines, never fills, so they cannot park a mass behind body copy. */
       "    vec3 gcol = vec3(0.0); float galpha = 0.0;",
       "    if (uSplit > 0.001) {",
       "      if (uGhostA > -0.5) {",
       "        float e = exp(-abs(ghostDist(ro, rd, uGhostA, uGhostOff))*11.0) * uSplit * 0.62;",
-      "        gcol += vec3(0.42, 0.30, 0.94) * e; galpha += e;", // accent — the timeline just left
+      "        gcol += NEON_A * e; galpha += e;",
       "      }",
       "      if (uGhostB > -0.5) {",
       "        float e = exp(-abs(ghostDist(ro, rd, uGhostB, -uGhostOff))*11.0) * uSplit * 0.62;",
-      "        gcol += vec3(0.88, 0.31, 0.54) * e; galpha += e;", // accent-2 — the timeline ahead
+      "        gcol += NEON_B * e; galpha += e;",
       "      }",
       "    }",
       // Un-premultiplied blend by relative weight, so galpha == 0 reproduces the
-      // original halo exactly rather than tinting it.
-      "    vec3 hc = mix(vec3(0.08, 0.09, 0.11), gcol / max(galpha, 1e-4), galpha / (galpha + halo + 1e-4));",
-      "    gl_FragColor = vec4(hc, (halo + galpha) * uAlpha);",
+      // plain contour exactly rather than tinting it.
+      "    vec3 hc = mix(GRAPH, gcol / max(galpha, 1e-4), galpha / (galpha + edge + 1e-4));",
+      "    gl_FragColor = vec4(hc, (edge + galpha) * uAlpha);",
       "    return;",
       "  }",
       "  vec3 n = normalAt(p);",
-      "  vec3 r = reflect(rd, n);",
-      "  float fre = pow(1.0 - max(dot(-rd, n), 0.0), 3.0);",
-      // The metal's own timelines slip out of phase: each channel reflects a
-      // slightly different world. Three env lookups, still one march.
-      "  vec3 col;",
-      "  if (uSplit > 0.001) {",
-      "    float s = uSplit * 0.32;",
-      "    col = vec3(env(normalize(r + n*s)).r, env(r).g, env(normalize(r - n*s)).b) * (0.62 + fre*0.55);",
-      "  } else {",
-      "    col = env(r) * (0.62 + fre*0.55);",
-      "  }",
       "  float ao = clamp(map(p + n*0.22) / 0.22, 0.0, 1.0);",
-      "  col *= 0.70 + ao*0.30;", // lift the crevice-shadow floor — those dark patches are what park behind copy
-
-      "  col = pow(col, vec3(0.92));",
-      "  gl_FragColor = vec4(col, uAlpha);",
+      "  float fre = pow(1.0 - max(dot(-rd, n), 0.0), 3.0);",
+      "  float tone = clamp(0.5 + 0.5*dot(n, normalize(vec3(0.55, 0.75, 0.35))), 0.0, 1.0);",
+      "  float density = clamp((1.0 - tone) + (1.0 - ao)*0.4, 0.0, 1.0);",
+      /* Hand wobble, stepped to ~5 fps so the drawing boils like a pencil test
+         instead of swimming continuously. */
+      "  float tq = floor(uTime*5.0)/5.0;",
+      "  vec2 px = gl_FragCoord.xy / uRes.y;",
+      "  float wob = sin(px.y*46.0 + tq*6.0)*0.5 + sin(px.x*38.0 - tq*4.0)*0.5;",
+      /* Different frequency per pass — equal-frequency crossings read as
+         gingham cloth, not pencil. */
+      "  float s1 = smoothstep(0.25, 0.8, 0.5 + 0.5*sin((px.x + px.y)*230.0 + wob));",
+      "  float s2 = smoothstep(0.3, 0.82, 0.5 + 0.5*sin((px.x - px.y)*317.0 - wob));",
+      "  float s3 = smoothstep(0.3, 0.85, 0.5 + 0.5*sin(px.y*287.0 + wob*0.7));",
+      "  float ink = 0.07;",                                     // the form's faint overall wash
+      "  ink += s1 * smoothstep(0.16, 0.34, density) * 0.5;",    // first hatch pass: mid-tones
+      "  ink += s2 * smoothstep(0.4, 0.6, density) * 0.55;",     // cross pass: shadow
+      "  ink += s3 * smoothstep(0.64, 0.82, density) * 0.6;",    // third pass: core dark
+      "  ink += smoothstep(0.5, 0.95, fre) * 0.75;",             // interior contour re-ink
+      "  ink = clamp(ink, 0.0, 1.0);",
+      /* Divergence on the surface: while the timelines are apart, alternate
+         strokes trade graphite for the two neons — the drawing itself loses
+         colour registration. */
+      "  vec3 col = GRAPH;",
+      "  if (uSplit > 0.001) col = mix(GRAPH, mix(NEON_A, NEON_B, step(s2, s1)), uSplit * 0.6);",
+      "  gl_FragColor = vec4(col, ink * uAlpha);",
       "}"
     ].join("\n");
 
@@ -323,7 +358,7 @@
     // Blend chapter configs by document position. The metal is liquid while
     // travelling (form dips to 0 at the midpoint between chapters) and
     // solidifies into the chapter's artifact as you settle (form -> 1).
-    var target = { b: [], k: 0.9, ripple: 0, off: [0, 0], puddle: 0, hue: 0, form: 0, shape: -1, op: [0, 0], ghostA: -1, ghostB: -1 };
+    var target = { b: [], k: 0.9, ripple: 0, off: [0, 0], puddle: 0, form: 0, shape: -1, op: [0, 0], ghostA: -1, ghostB: -1 };
     // Ghost shapes cost an SDF evaluation per march step, so phones keep the
     // channel split (three cheap env lookups) and skip the ghosts.
     var GHOSTS = !small;
@@ -352,7 +387,6 @@
       target.off[0] = lerp(A.off[0], B.off[0], f);
       target.off[1] = lerp(A.off[1], B.off[1], f);
       target.puddle = lerp(A.puddle, B.puddle, f);
-      target.hue = lerp(A.hue, B.hue, f);
       // Each artifact HOLDS a defined plateau around its chapter centre and the
       // metal only goes liquid for a brief handoff at the midpoint: leaving a
       // chapter (near A) the shape clings to full form across [0, 0.36] then
@@ -445,7 +479,6 @@
       uniforms.uK.value += (target.k - uniforms.uK.value) * Math.min(1, dt * 6);
       uniforms.uRipple.value += (target.ripple - uniforms.uRipple.value) * Math.min(1, dt * 4);
       uniforms.uPuddle.value += (target.puddle - uniforms.uPuddle.value) * Math.min(1, dt * 3);
-      uniforms.uHue.value += (target.hue - uniforms.uHue.value) * Math.min(1, dt * 3);
       uniforms.uOff.value.x += (target.off[0] - uniforms.uOff.value.x) * Math.min(1, dt * 4);
       uniforms.uOff.value.y += (target.off[1] - uniforms.uOff.value.y) * Math.min(1, dt * 4);
       // Solidify promptly, melt fast — the artifact "sets" as the page settles.
