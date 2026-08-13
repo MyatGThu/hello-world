@@ -1065,3 +1065,61 @@ html.js [data-rise]:not(.is-risen) { opacity: 0; }
 .cursor__label { color: var(--bone); }
 
 /* reduced motion: annotations are static anyway; nothing extra to disable */
+
+/* ----- Sketch-plate cards -----
+   Every card on every page is a small figure plate from the same notebook:
+   a numbered head closed by a dashed schematic rule, a display-serif title,
+   a dashed caption rule at the foot, and tape where the geometry allows it.
+   Pure restyle: no markup changes, so the case modal and reveals are
+   untouched. */
+
+/* the head row reads as a figure label strip */
+.case__head, .pcard__head, .cmodal__head {
+  padding-bottom: 10px; border-bottom: 1px dashed rgb(from var(--ink) r g b / 0.45);
+}
+.icard__logo { padding-bottom: 12px; border-bottom: 1px dashed rgb(from var(--ink) r g b / 0.45); height: auto; }
+
+/* titles join the editorial voice */
+.case__title, .cert__title, .pcard__title, .icard__title, .cmodal__title {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: 0; line-height: 1.04;
+}
+.case__title { font-size: clamp(22px, 2.3vw, 30px); }
+.cert__title { font-size: clamp(18px, 2vw, 24px); }
+.pcard__title { font-size: clamp(22px, 2.2vw, 28px); }
+.icard__title { font-size: clamp(21px, 2.2vw, 29px); }
+
+/* the foot line becomes a figure caption: dashed rule, then the mono note */
+.case__open, .cert__open, .pcard__meta {
+  padding-top: 10px; border-top: 1px dashed rgb(from var(--ink) r g b / 0.45);
+}
+.icard__tag {
+  margin-top: auto; align-self: stretch; border: 0; border-radius: 0; padding: 10px 0 0;
+  border-top: 1px dashed rgb(from var(--ink) r g b / 0.45);
+  font-family: var(--mono); letter-spacing: .1em;
+}
+
+/* tape holds the plates to the page — alternating corners so a grid reads as
+   pinned-up sheets, not a print run. pcards are overflow-clipped for their
+   backdrops, so they skip the tape rather than show it sliced. */
+.case::before, .cert::before, .icard::before {
+  content: ""; position: absolute; top: -9px; left: 18%; width: 64px; height: 19px;
+  transform: rotate(-3deg);
+  background: rgb(from var(--accent) r g b / 0.16); border: 1px solid rgb(from var(--accent) r g b / 0.22);
+  pointer-events: none;
+}
+.case:nth-child(2n)::before, .cert:nth-child(2n)::before, .icard:nth-child(2n)::before {
+  left: auto; right: 16%; transform: rotate(2.5deg);
+  background: rgb(from var(--accent-2) r g b / 0.13); border-color: rgb(from var(--accent-2) r g b / 0.2);
+}
+.case, .cert, .icard { position: relative; }
+
+/* margin doodles: the pcard backdrops trade the neon tint for graphite,
+   tipped slightly like a sketch running off the page edge */
+.pcard__bg { color: var(--ink); opacity: 0.1; transform: rotate(-2deg) scale(1.06); }
+.pcard__bg--pitch { opacity: 1; transform: rotate(-2deg) scale(1.06); }
+
+/* toolbox specimens: name over a dashed label rule */
+.tool__cat { border-top: 1px dashed rgb(from var(--ink) r g b / 0.4); padding-top: 7px; margin-top: 2px; }
+
+/* the modal is the plate held up to the light — a stronger head rule */
+.cmodal__head { border-bottom-color: rgb(from var(--ink) r g b / 0.6); }
