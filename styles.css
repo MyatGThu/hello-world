@@ -1123,3 +1123,100 @@ html.js [data-rise]:not(.is-risen) { opacity: 0; }
 
 /* the modal is the plate held up to the light — a stronger head rule */
 .cmodal__head { border-bottom-color: rgb(from var(--ink) r g b / 0.6); }
+
+/* ===========================================================================
+   DRAFTING & PRINT EPHEMERA
+   Traditions reviewed and borrowed: exposed construction grids from the
+   drafting table (the guides a draughtsman rules before lettering), and
+   three pieces of print furniture — the "continued on page" turn, the
+   colophon, and the rubber stamp.
+   =========================================================================== */
+
+/* ----- Construction lines -----
+   Non-photo blue baselines and a margin line behind display headings, the
+   guides that would never survive to print. Behind the glyphs (isolate +
+   z-index), in front of the canvas. */
+.plate__title, .hero__title--about {
+  position: relative; isolation: isolate;
+}
+.plate__title::before, .hero__title--about::before {
+  content: ""; position: absolute; inset: -0.06em -18px -0.02em; z-index: -1;
+  background:
+    /* baseline rows, one per line of display type */
+    repeating-linear-gradient(0deg,
+      transparent 0 calc(0.92em - 1px), rgba(96, 140, 200, 0.22) calc(0.92em - 1px) 0.92em),
+    /* the left margin line, ticked in red like a ledger */
+    linear-gradient(90deg, rgba(214, 31, 105, 0.28) 0 1px, transparent 1px);
+  pointer-events: none;
+}
+/* measurement ticks on the plate rule, like a scale bar */
+.plate__rule { position: relative; }
+.plate__rule::after {
+  content: ""; position: absolute; left: 0; right: 0; top: -5px; height: 5px;
+  background: repeating-linear-gradient(90deg,
+    rgb(from var(--ink) r g b / 0.5) 0 1px, transparent 1px clamp(28px, 4vw, 64px));
+  pointer-events: none;
+}
+
+/* ----- The page turn: "continued on Plate N" with a dog-eared corner ----- */
+.turn {
+  display: block; position: relative; overflow: hidden;
+  max-width: var(--maxw); margin: clamp(40px, 8vh, 110px) auto clamp(30px, 5vh, 60px);
+  padding: clamp(26px, 4.5vh, 48px) var(--pad) clamp(30px, 5vh, 56px);
+  border-top: 3px double var(--ink);
+  isolation: isolate;
+}
+.turn__k {
+  display: block; font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--accent);
+}
+.turn__t {
+  display: block; margin-top: 12px;
+  font-family: var(--font-display); font-weight: 800; letter-spacing: 0; line-height: 0.95;
+  font-size: clamp(34px, 6.5vw, 92px); color: var(--ink);
+  transition: color .35s var(--ease), transform .5s var(--ease);
+}
+.turn__t em { font-style: normal; font-size: 0.38em; color: var(--muted); letter-spacing: .01em; }
+/* the dog-ear: the lifted corner (paper triangle) over its shadow */
+.turn__fold { position: absolute; right: 0; bottom: 0; width: 56px; height: 56px; transition: width .45s var(--ease), height .45s var(--ease); }
+.turn__fold::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(315deg, transparent 49.5%, rgba(35, 32, 25, 0.22) 50%, var(--bone-2) 50.5%, var(--bone-2) 100%);
+  border-top-left-radius: 4px;
+  box-shadow: -3px -3px 8px -4px rgba(35, 32, 25, 0.4);
+}
+@media (hover: hover) {
+  .turn:hover .turn__t { color: var(--accent); transform: translateX(14px); }
+  .turn:hover .turn__fold { width: 84px; height: 84px; }
+}
+
+/* ----- Rubber stamp (contact) ----- */
+.stamp {
+  position: absolute; right: clamp(16px, 9vw, 150px); bottom: clamp(60px, 14vh, 150px);
+  transform: rotate(-8deg);
+  font-family: var(--mono); font-size: clamp(13px, 1.3vw, 17px); line-height: 1.35;
+  letter-spacing: .18em; text-transform: uppercase; text-align: center;
+  color: var(--accent-2);
+  border: 2.5px solid var(--accent-2); border-radius: 10px;
+  padding: 14px 18px; opacity: 0.66; mix-blend-mode: multiply; pointer-events: none;
+  /* worn ink: an uneven mask so the impression prints patchy, never crisp */
+  -webkit-mask-image: radial-gradient(120% 90% at 32% 28%, #000 55%, rgba(0,0,0,0.45) 78%, rgba(0,0,0,0.85) 100%);
+  mask-image: radial-gradient(120% 90% at 32% 28%, #000 55%, rgba(0,0,0,0.45) 78%, rgba(0,0,0,0.85) 100%);
+}
+.stamp::after {
+  content: ""; position: absolute; inset: 4px; border: 1px solid var(--accent-2); border-radius: 7px;
+}
+@media (max-width: 760px) { .stamp { position: static; display: inline-block; margin-top: 34px; } }
+
+/* ----- Colophon ----- */
+.foot { position: relative; }
+.foot__colophon {
+  flex-basis: 100%; text-align: center; order: 9;
+  padding-top: 14px; margin-top: 6px; border-top: 1px dashed rgb(from var(--ink) r g b / 0.35);
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; color: var(--faint);
+  text-transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turn:hover .turn__t { transform: none; }
+}
