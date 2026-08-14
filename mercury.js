@@ -110,13 +110,16 @@
       uGhostA: { value: -1 },
       uGhostB: { value: -1 },
       uGhostOff: { value: new T.Vector2(0, 0) },
+      // Exploded view: 0 assembled, 1 the parts held apart on the assembly axis.
+      uExplode: { value: 0 },
       uAlpha: { value: 0 }
     };
 
     var frag = [
       "precision highp float;",
       "uniform float uTime, uK, uPuddle, uRipple, uAlpha, uN, uForm, uShape, uScale;",
-      "uniform float uSplit, uGhostA, uGhostB;",
+      "uniform float uSplit, uGhostA, uGhostB, uExplode;",
+      "int gPart;", // which machine part the last sdObject(…, 5) evaluation was closest to
       "uniform vec2 uRes, uOff, uStretch, uMouse, uObj, uGhostOff;",
       "uniform vec4 uBlobs[" + MAXB + "];",
       "uniform vec4 uImpacts[" + MAXI + "];",
@@ -129,7 +132,9 @@
       /* ---- The artifacts. Local space, roughly 4 units wide, facing +z. ---- */
       "float sdObject(vec3 p, float shape){",
       "  p /= uScale;",
-      "  p.xz *= rot(sin(uTime*0.30)*mix(0.30, 0.18, uForm));", // turntable sway, calmest when fully cast
+      // turntable sway, calmest when fully cast — and still when exploded: a
+      // diagram holds its pose
+      "  p.xz *= rot(sin(uTime*0.30)*mix(0.30, 0.18, uForm)*(1.0 - 0.9*uExplode));",
       "  float d = 1e9;",
       "  if (shape < 0.5) {", // 0 — headset
       "    float band = length(vec2(length(p.xy) - 1.15, p.z)) - 0.18;",
@@ -174,16 +179,30 @@
       "    usb = min(usb, sdBox(uq - vec3(0.56, 0.0, 0.0), vec3(0.3, 0.2, 0.11)));",
       "    d = min(fl, usb);",
       "  } else {", // 5 — THE MACHINE: a gyroscopic stabiliser, three nested rings live-spinning around a core
-      "    vec3 q1 = p; q1.xy *= rot(uTime*0.22);",
+      /* uExplode pulls the parts apart along the assembly axis, gunpla-manual
+         style — rings up the axis, mast and beacon down it, core anchored —
+         while the spin winds down to a held diagram pose. gPart records which
+         part is closest so the exploded view can cel-colour per runner. */
+      "    vec3 EXD = vec3(0.76, 0.65, 0.0);",
+      "    float sp = 1.0 - 0.92*uExplode;",
+      "    vec3 q1 = p - EXD*(1.7*uExplode); q1.xy *= rot(uTime*0.22*sp + 0.45*uExplode);",
       "    float r1 = length(vec2(length(q1.xy) - 1.5, q1.z)) - 0.085;",
-      "    vec3 q2 = p; q2.yz *= rot(1.05); q2.xy *= rot(-uTime*0.31);",
+      "    vec3 q2 = p - EXD*(0.95*uExplode); q2.yz *= rot(1.05); q2.xy *= rot(-uTime*0.31*sp);",
       "    float r2 = length(vec2(length(q2.xy) - 1.08, q2.z)) - 0.065;",
-      "    vec3 q3 = p; q3.xz *= rot(0.8); q3.yz *= rot(uTime*0.27);",
+      "    vec3 q3 = p - EXD*(0.35*uExplode); q3.xz *= rot(0.8); q3.yz *= rot(uTime*0.27*sp);",
       "    float r3 = length(vec2(length(q3.yz) - 0.66, q3.x)) - 0.05;",
-      "    float core = length(p) - 0.36;",
-      "    float mast = sdBox(p - vec3(0.0, 0.85, 0.0), vec3(0.028, 0.5, 0.028));", // antenna
-      "    float tip = length(p - vec3(0.0, 1.42, 0.0)) - 0.07;",
-      "    d = min(min(r1, r2), min(r3, min(tip, smin(core, mast, 0.08))));",
+      "    vec3 pc = p + EXD*(0.18*uExplode);",
+      "    float core = length(pc) - 0.36;",
+      "    vec3 pm = p - vec3(0.0, 0.85, 0.0) + EXD*(0.9*uExplode);",
+      "    float mast = sdBox(pm, vec3(0.028, 0.5, 0.028));", // antenna
+      "    vec3 pt = p - vec3(0.0, 1.42, 0.0) + EXD*(1.25*uExplode);",
+      "    float tip = length(pt) - 0.07;",
+      "    d = r1; gPart = 0;",
+      "    if (r2 < d) { d = r2; gPart = 1; }",
+      "    if (r3 < d) { d = r3; gPart = 2; }",
+      "    float cm = smin(core, mast, 0.08);",
+      "    if (cm < d) { d = cm; gPart = core < mast ? 3 : 4; }",
+      "    if (tip < d) { d = tip; gPart = 4; }",
       "  }",
       "  return d * uScale;",
       "}",
@@ -242,6 +261,16 @@
       "  }",
       "  return m;",
       "}",
+      /* Runner colours for the exploded view — gunpla manuals colour-code
+         parts by the runner they snap off. A cyan, B magenta, C amber; the
+         core prints porcelain, mast and beacon stay ink. */
+      "vec3 partCol(int id){",
+      "  if (id == 0) return vec3(0.10, 0.66, 0.74);",
+      "  if (id == 1) return vec3(0.86, 0.30, 0.52);",
+      "  if (id == 2) return vec3(0.93, 0.62, 0.28);",
+      "  if (id == 3) return vec3(0.90, 0.88, 0.82);",
+      "  return vec3(0.14, 0.13, 0.11);",
+      "}",
       "vec3 normalAt(vec3 p){",
       "  vec2 e = vec2(0.004, -0.004);",
       "  return normalize(e.xyy*map(p+e.xyy) + e.yyx*map(p+e.yyx) + e.yxy*map(p+e.yxy) + e.xxx*map(p+e.xxx));",
@@ -271,6 +300,20 @@
       "  vec3 NEON_B = vec3(1.0, 0.26, 0.60);",    // magenta — the timeline ahead
       "  if (!hit) {",
       "    float edge = smoothstep(0.09, 0.012, glow) * 0.7;", // the drawn outline, just outside the surface
+      /* Exploded: the dotted assembly axis the parts separated along, drawn on
+         the z=0 plane in the machine's local frame — the gunpla dotted line. */
+      "    if (uExplode > 0.01 && uShape > 4.5) {",
+      "      float t0 = -ro.z / rd.z;",
+      "      vec2 v = ((ro + rd*t0).xy - uOff) / uStretch - (uObj - uOff);",
+      "      v /= uScale;",
+      "      vec2 a = normalize(vec2(0.76, 0.65));",
+      "      float along = dot(v, a);",
+      "      float perp = abs(dot(v, vec2(-a.y, a.x)));",
+      "      float dash = step(0.55, fract(along*2.6));",
+      "      float axis = (1.0 - smoothstep(0.014, 0.034, perp)) * dash * uExplode * 0.55;",
+      "      axis *= 1.0 - smoothstep(2.2, 2.5, abs(along - 0.2));", // bounded segment
+      "      edge = max(edge, axis);",
+      "    }",
       /* The shapes this chapter did NOT settle on, as neon interference. Only
          the miss path runs them, so the chosen shape occludes its own ghosts;
          outlines, never fills, so they cannot park a mass behind body copy. */
@@ -317,6 +360,20 @@
          colour registration. */
       "  vec3 col = GRAPH;",
       "  if (uSplit > 0.001) col = mix(GRAPH, mix(NEON_A, NEON_B, step(s2, s1)), uSplit * 0.6);",
+      /* Exploded view: the pencil study becomes the printed manual page. The
+         hatching cross-fades into flat cel bands (three hard tone steps, the
+         anime way), coloured by the part's runner, with the silhouette
+         re-inked as the outline. */
+      "  if (uExplode > 0.01 && uShape > 4.5) {",
+      "    vec3 lp = p; lp.xy = (lp.xy - uOff) / uStretch;",
+      "    sdObject(lp - vec3(uObj - uOff, 0.0), 5.0);", // refresh gPart at the hit point
+      "    vec3 cel = partCol(gPart);",
+      "    float band = clamp(floor(tone*3.0 + 0.5)/3.0, 0.3, 1.0);",
+      "    cel *= 0.6 + 0.4*band;",
+      "    cel = mix(cel, vec3(0.1, 0.09, 0.08), 0.75*smoothstep(0.5, 0.92, fre));", // anime ink edge
+      "    col = mix(col, cel, uExplode);",
+      "    ink = mix(ink, 0.94, uExplode);",
+      "  }",
       "  gl_FragColor = vec4(col, ink * uAlpha);",
       "}"
     ].join("\n");
@@ -457,6 +514,12 @@
     var hushed = false;
     window.addEventListener("mt:hush", function (e) { hushed = !!(e.detail && e.detail.on); });
 
+    // Exploded view request from the page (the fig.00a button). Honoured only
+    // while the machine is actually cast: liquid cannot explode, and scrolling
+    // away melts the diagram back together on its own.
+    var explodeOn = false;
+    window.addEventListener("mt:explode", function (e) { explodeOn = !!(e.detail && e.detail.on); });
+
     /* ---------- Frame loop ---------- */
     var lastSc = -1, lastT = performance.now(), running = true, shown = false;
     document.addEventListener("visibilitychange", function () { running = !document.hidden; if (running) { lastT = performance.now(); lastSc = -1; tick(); } });
@@ -509,6 +572,11 @@
       uniforms.uGhostA.value = GHOSTS ? target.ghostA : -1;
       uniforms.uGhostB.value = GHOSTS ? target.ghostB : -1;
       uniforms.uGhostOff.value.set(uniforms.uSplit.value * 0.9, uniforms.uSplit.value * 0.2);
+
+      // Explode eases in only while the machine is fully cast, and releases
+      // itself the moment the form starts to melt.
+      var exTarget = explodeOn && uniforms.uForm.value > 0.85 && target.shape === 5 ? 1 : 0;
+      uniforms.uExplode.value += (exTarget - uniforms.uExplode.value) * Math.min(1, dt * 3.2);
 
       var stretchGain = 1 - 0.9 * uniforms.uForm.value;
       var sy = 1 + Math.min(0.5, Math.abs(v) * 0.00035) * stretchGain;
