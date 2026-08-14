@@ -212,7 +212,19 @@ INDEX_MAIN = """
         <!-- schematic callouts pointing into the drawing -->
         <span class="anno anno--l" style="top: 4%; right: 3%; --lead: 110px;" aria-hidden="true">fig.00 — <em>gyro stabiliser</em></span>
         <span class="anno anno--r" style="bottom: -6%; left: 38%; --lead: 80px;" aria-hidden="true">graphite 2B // drafted 2077</span>
+
+        <button class="anno-btn" id="explodeBtn" type="button" aria-pressed="false">fig.00a — exploded view</button>
       </div>
+
+      <!-- Exploded-view parts list: runner-coded, credential-rated -->
+      <ol class="parts" aria-label="Machine parts — the stack behind the work">
+        <li class="part part--a1"><span class="part__runner">A1</span><span class="part__cred">MD-102</span><span class="part__code">END · outer ring</span><span class="part__name">Endpoint — Intune, Autopilot, SOE</span></li>
+        <li class="part part--a2"><span class="part__runner">A2</span><span class="part__cred">SC-300<i>*</i></span><span class="part__code">IDN · mid ring</span><span class="part__name">Identity — Entra, conditional access</span></li>
+        <li class="part part--a3"><span class="part__runner">A3</span><span class="part__cred">AZ-900</span><span class="part__code">CLD · inner ring</span><span class="part__name">Cloud — Azure, Microsoft 365</span></li>
+        <li class="part part--b1"><span class="part__runner">B1</span><span class="part__cred">L2&nbsp;ESC</span><span class="part__code">SRV · core</span><span class="part__name">Service — the desk, SLAs, on-call</span></li>
+        <li class="part part--c1"><span class="part__runner">C1</span><span class="part__cred">KBA</span><span class="part__code">SIG · beacon</span><span class="part__name">Signal — docs &amp; playbooks</span></li>
+        <li class="parts__note" aria-hidden="true">* in progress — see Plate 05</li>
+      </ol>
 
       <div class="hero__foot">
         <div class="hero__portrait" data-parallax="-0.16" data-cursor="that's me">
@@ -864,8 +876,10 @@ def build():
     # current about.html rather than retyping content that already ships.
     cur = open(os.path.join(REPO, "about.html")).read()
     start = cur.index('<!-- ============================ OFF THE CLOCK')
-    end = cur.index('<!-- ============================ CONTACT')
-    play_and_grow = cur[start:end].rstrip()
+    # everything up to whichever closing section the current file carries
+    ends = [cur.index(m) for m in ('<!-- ============================ CONTACT',
+                                   '<!-- ============================ PAGE TURN') if m in cur]
+    play_and_grow = cur[start:min(ends)].rstrip()
 
     pages = {
         "index.html": dict(

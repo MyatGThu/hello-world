@@ -618,6 +618,22 @@
     });
   }
 
+  /* ---------- Exploded view: the fig.00a toggle on the cover ---------- */
+  function initExplode() {
+    var btn = document.getElementById("explodeBtn");
+    if (!btn) return;
+    var on = false;
+    btn.addEventListener("click", function () {
+      on = !on;
+      btn.setAttribute("aria-pressed", String(on));
+      btn.textContent = on ? "fig.00a — assemble" : "fig.00a — exploded view";
+      document.documentElement.classList.toggle("is-exploded", on);
+      // mercury owns the machine; it eases the explode in only while the
+      // machine is actually cast, and releases it when the form melts.
+      window.dispatchEvent(new CustomEvent("mt:explode", { detail: { on: on } }));
+    });
+  }
+
   /* ---------- Portrait: blurred until hovered / tapped / focused ---------- */
   function initPortrait() {
     var portrait = document.querySelector(".hero__portrait");
@@ -893,6 +909,7 @@
     initMarquee();
     initCursor();
     initMagnetic();
+    initExplode();
     initPortrait();
     initWorkPreview();
     initProgress();

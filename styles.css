@@ -1220,3 +1220,96 @@ html.js [data-rise]:not(.is-risen) { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   .turn:hover .turn__t { transform: none; }
 }
+
+/* ===========================================================================
+   EXPLODED VIEW — the gunpla plate
+   fig.00a pulls the cover machine apart on its assembly axis; the shader
+   trades cross-hatch for cel bands, and these chips are the parts list:
+   runner-coded like a gunpla manual, laid out like a FUT player card, on the
+   dark tooltip panel the Dota inventory taught everyone to read.
+   =========================================================================== */
+
+/* runner colours — must agree with partCol() in mercury.js */
+:root {
+  --runner-a: #1aa8bc;
+  --runner-b: #dc4d85;
+  --runner-c: #eda04a;
+  --runner-core: #e6e2d6;
+}
+
+/* the toggle: a schematic callout that happens to be pressable */
+.anno-btn {
+  position: absolute; top: 34%; right: 3%; z-index: 4;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent); background: none; cursor: pointer;
+  border: 1.5px solid var(--accent); border-radius: var(--sketch-r-sm);
+  padding: 7px 12px;
+  opacity: 0; pointer-events: none; transition: opacity .4s var(--ease), background .3s var(--ease), color .3s var(--ease);
+}
+html.has-scene .anno-btn { opacity: 1; pointer-events: auto; }
+.anno-btn:hover, html.is-exploded .anno-btn { background: var(--accent); color: var(--bone); }
+@media (max-width: 900px) {
+  .anno-btn { position: static; display: inline-block; margin-top: 16px; }
+}
+
+/* the parts list: revealed by the explosion, stacked down the right edge */
+.parts {
+  position: absolute; right: var(--pad); top: 52%; z-index: 4;
+  width: min(300px, 23vw); list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 9px;
+  pointer-events: none;
+}
+.part {
+  display: grid; grid-template-columns: 30px 1fr auto; grid-template-rows: auto auto;
+  gap: 1px 10px; align-items: center;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(242, 239, 230, 0.03) 3px 4px),
+    var(--noir);
+  color: var(--noir-fg);
+  border: 1.5px solid var(--ink); border-left: 4px solid var(--part, var(--faint));
+  border-radius: var(--sketch-r-sm);
+  padding: 9px 12px 9px 10px;
+  opacity: 0; transform: translateX(26px);
+  transition: opacity .45s var(--ease), transform .55s var(--ease);
+}
+.part--a1 { --part: var(--runner-a); }
+.part--a2 { --part: var(--runner-b); }
+.part--a3 { --part: var(--runner-c); }
+.part--b1 { --part: var(--runner-core); }
+.part--c1 { --part: var(--noir-fg); }
+.part__runner {
+  grid-row: 1 / 3; align-self: center; justify-self: center;
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  color: var(--noir); background: var(--part, var(--faint));
+  padding: 4px 5px; border-radius: 4px;
+}
+/* the FUT slot: the credential is the rating */
+.part__cred { font-family: var(--font-display); font-weight: 800; font-size: 17px; letter-spacing: .01em; line-height: 1; }
+.part__cred i { font-style: normal; color: var(--part); }
+.part__code { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--part, var(--faint)); justify-self: end; }
+.part__name { grid-column: 2 / 4; font-size: 11px; color: rgb(from var(--noir-fg) r g b / 0.62); line-height: 1.35; }
+.parts__note {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: var(--muted);
+  text-align: right; opacity: 0; transition: opacity .4s var(--ease) .5s;
+}
+/* leader dashes from chip toward the drawing */
+.part::before {
+  content: ""; position: absolute; top: 50%; right: 100%; margin-right: 6px;
+  width: 34px; border-top: 1px dashed var(--part, var(--faint)); opacity: 0;
+  transition: opacity .4s var(--ease);
+}
+.part { position: relative; }
+
+/* staggered assembly-manual reveal */
+html.is-exploded .part { opacity: 1; transform: translateX(0); }
+html.is-exploded .part::before { opacity: .7; }
+html.is-exploded .parts__note { opacity: 1; }
+html.is-exploded .part:nth-child(1) { transition-delay: .05s; }
+html.is-exploded .part:nth-child(2) { transition-delay: .13s; }
+html.is-exploded .part:nth-child(3) { transition-delay: .21s; }
+html.is-exploded .part:nth-child(4) { transition-delay: .29s; }
+html.is-exploded .part:nth-child(5) { transition-delay: .37s; }
+
+/* the chips need room and the machine beside them: desktop only */
+@media (max-width: 1100px) { .parts { display: none; } }
+@media (prefers-reduced-motion: reduce) { .part { transition: none; } }
