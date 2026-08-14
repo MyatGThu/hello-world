@@ -135,6 +135,7 @@ FOOT = """
     <span>© 2026 Myat Thu</span>
     <a href="index.html" data-cursor="cover">Back to the cover ↑</a>
     <span>Melbourne, Australia</span>
+    <span class="foot__colophon">Set in Bodoni Moda, Outfit &amp; Share Tech Mono · the machine is drawn live in WebGL · no trackers, no cookies</span>
   </footer>
 
   <script src="vendor/gsap.min.js" defer></script>
@@ -147,6 +148,18 @@ FOOT = """
 </body>
 </html>
 """
+
+def turn(href, plate_no, title, kicker, chapter=None):
+    ch = ' data-chapter="%s"' % chapter if chapter else ""
+    return """
+    <!-- ============================ PAGE TURN ============================ -->
+    <a class="turn" href="%s"%s data-cursor="turn the page">
+      <span class="turn__k" data-reveal>Continued on Plate %s</span>
+      <span class="turn__t" data-reveal>%s <em>— %s</em></span>
+      <span class="turn__fold" aria-hidden="true"></span>
+    </a>
+""" % (href, ch, plate_no, title, kicker)
+
 
 def plate(no, name, kicker, title_html, stand):
     return """
@@ -311,17 +324,7 @@ INDEX_MAIN = """
       </p>
     </section>
 
-    <!-- ============================ MARGIN NOTE ============================ -->
-    <section class="lab" data-chapter="Connect" aria-label="Get in touch">
-      <div class="caps__head">
-        <h2 class="section-title" data-reveal>The margin note</h2>
-        <p class="caps__note" data-reveal>Every good field book ends with a forwarding address.</p>
-      </div>
-      <p class="contact__cv-row" data-reveal>
-        <a class="contact__cv" href="contact.html" data-cursor="connect">Open Connect <span aria-hidden="true">→</span></a>
-      </p>
-    </section>
-  </main>
+""" + turn("about.html", "02", "The Person", "About", chapter="Connect") + """  </main>
 """
 
 # ============================== WORK ==============================
@@ -517,13 +520,14 @@ WORK_MAIN = """
         </div>
       </div>
     </section>
-  </main>
-""" % plate("03", "The Orbit", "work",
+%s  </main>
+""" % (plate("03", "The Orbit", "work",
             """        <span class="line" aria-hidden="true"><span class="word" data-split>The</span></span>
         <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Orbit.</span></span>""",
             "From the MYER shop floor to second-level escalation at IPH Limited: seven years of "
             "turning broken tickets into documented fixes — across a 400-store retail fleet, an "
-            "MSP's cloud clients, and a legal-sector professional services group.")
+            "MSP's cloud clients, and a legal-sector professional services group."),
+       turn("projects.html", "04", "The Proof", "Projects"))
 
 # ============================== PROJECTS ==============================
 PROJECTS_MAIN = """
@@ -597,12 +601,13 @@ PROJECTS_MAIN = """
         <li class="lab__item" data-cap><span class="lab__k">04</span><h3 class="lab__t">Local VMs &amp; PowerShell</h3><p class="lab__d">Hyper-V and Windows Sandbox for builds and break-fix, with PowerShell to automate the repetitive bits.</p></li>
       </ul>
     </section>
-  </main>
-""" % plate("04", "The Proof", "projects",
+%s  </main>
+""" % (plate("04", "The Proof", "projects",
             """        <span class="line" aria-hidden="true"><span class="word" data-split>The</span></span>
         <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Proof.</span></span>""",
             "Three case files and a standing lab. The pattern in all of them: find what actually "
-            "broke, fix it once, and write it down so the next person is faster.")
+            "broke, fix it once, and write it down so the next person is faster."),
+       turn("credentials.html", "05", "The Seals", "Credentials"))
 
 # ============================== CREDENTIALS ==============================
 CREDENTIALS_MAIN = """
@@ -708,13 +713,14 @@ CREDENTIALS_MAIN = """
         </li>
       </ol>
     </section>
-  </main>
-""" % plate("05", "The Seals", "credentials",
+%s  </main>
+""" % (plate("05", "The Seals", "credentials",
             """        <span class="line" aria-hidden="true"><span class="word" data-split>The</span></span>
         <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Seals.</span></span>""",
             "Four certifications earned while working full time — MD-102, AZ-900, SC-900 and "
             "Google IT Support — with SC-300 in progress, backed by a live tenant lab rather "
-            "than flashcards.")
+            "than flashcards."),
+       turn("contact.html", "06", "Connect", "Contact"))
 
 # ============================== CONTACT ==============================
 CONTACT_MAIN = """
@@ -747,9 +753,10 @@ CONTACT_MAIN = """
         <span>Open to full-time &amp; contract</span>
         <span>Usually replies within a day</span>
       </div>
+      <span class="stamp" aria-hidden="true">Open<br/>to work<br/>2026</span>
     </section>
-  </main>
-"""
+%s  </main>
+""" % turn("index.html", "01", "The Cover", "Back to the start")
 
 # ============================== ABOUT ==============================
 ABOUT_MAIN = """
@@ -849,18 +856,8 @@ ABOUT_MAIN = """
 
     __PLAY_AND_GROW__
 
-    <!-- ============================ CONTACT CTA ============================ -->
-    <section class="lab" aria-label="Get in touch">
-      <div class="caps__head">
-        <h2 class="section-title" data-reveal>Margin note</h2>
-        <p class="caps__note" data-reveal>The full forwarding address lives on its own plate.</p>
-      </div>
-      <p class="contact__cv-row" data-reveal>
-        <a class="contact__cv" href="contact.html" data-cursor="connect">Open Connect <span aria-hidden="true">→</span></a>
-      </p>
-    </section>
-  </main>
-"""
+%s  </main>
+""" % turn("work.html", "03", "The Orbit", "Work")
 
 def build():
     # about keeps its existing play + grow sections verbatim: lift them from the
