@@ -232,16 +232,68 @@
       .to(title, { opacity: 0, fontWeight: 200, y: -40, ease: "none" }, 0);
   }
 
+  /* ---------- The colour press: scroll-driven palette switches ----------
+     Each [data-palette] section claims the page as it crosses the middle
+     band of the viewport; the root attribute swap animates the registered
+     colour tokens, and the shader is told the new ink so the drawing
+     re-inks itself in step. */
+  function initPalette() {
+    if (!hasGSAP) return; // static paper without ScrollTrigger
+    var secs = gsap.utils.toArray("main [data-palette]");
+    if (!secs.length) return;
+    var root = document.documentElement;
+    // shader ink per stock, normalised RGB — must agree with styles.css
+    var INK = {
+      paper: [0.155, 0.145, 0.125],
+      cobalt: [0.93, 0.91, 0.85],
+      coral: [0.11, 0.05, 0.02],
+      acid: [0.11, 0.12, 0.05],
+      forest: [0.92, 0.90, 0.84],
+      plum: [0.93, 0.90, 0.84]
+    };
+    function set(name) {
+      if (root.getAttribute("data-palette") === name) return;
+      root.setAttribute("data-palette", name);
+      var ink = INK[name] || INK.paper;
+      // mercury lazy-loads its renderer, so a palette set at boot can fire
+      // before its listener exists — leave the current ink where a late
+      // joiner can read it.
+      window.__mtInk = ink;
+      window.dispatchEvent(new CustomEvent("mt:palette", { detail: { ink: ink } }));
+    }
+    secs.forEach(function (sec) {
+      var name = sec.getAttribute("data-palette");
+      ScrollTrigger.create({
+        trigger: sec, start: "top 62%", end: "bottom 38%",
+        onEnter: function () { set(name); },
+        onEnterBack: function () { set(name); }
+      });
+    });
+    set(secs[0].getAttribute("data-palette"));
+  }
+
   /* ---------- Parallax ---------- */
   function initParallax() {
     if (!hasGSAP || reduceMotion) return;
-    gsap.utils.toArray("[data-parallax]").forEach(function (el) {
+    gsap.utils.toArray("[data-parallax], [data-parallax-z]").forEach(function (el) {
       var y = parseFloat(el.getAttribute("data-parallax")) || 0;
       var x = parseFloat(el.getAttribute("data-parallax-x")) || 0;
       var rot = parseFloat(el.getAttribute("data-parallax-rot")) || 0;
-      gsap.to(el, {
+      var z = parseFloat(el.getAttribute("data-parallax-z")) || 0;
+      var to = {
         yPercent: y * 100, xPercent: x * 100, rotation: rot, ease: "none",
         scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true }
+      };
+      // depth layer: the element starts pushed into the page and travels to
+      // the surface as it crosses the viewport
+      if (z) { gsap.fromTo(el, { z: z, transformPerspective: 900 }, Object.assign({ z: 0 }, to)); }
+      else gsap.to(el, to);
+    });
+    // plate titles surface out of the page as they arrive
+    gsap.utils.toArray(".plate__title").forEach(function (t) {
+      gsap.fromTo(t, { z: -110, transformPerspective: 900 }, {
+        z: 0, ease: "none",
+        scrollTrigger: { trigger: t, start: "top bottom", end: "top 45%", scrub: 0.4 }
       });
     });
   }
@@ -351,7 +403,7 @@
       g.setAttribute("aria-hidden", "true");
       g.textContent = pad(i + 1, 2);
       // Drifts slower than the content in front of it — a true depth layer.
-      if (!reduceMotion) g.setAttribute("data-parallax", "-0.35");
+      if (!reduceMotion) { g.setAttribute("data-parallax", "-0.35"); g.setAttribute("data-parallax-z", "-140"); }
       s.classList.add("has-ghost");
       s.insertBefore(g, s.firstChild);
     });
@@ -902,6 +954,7 @@
     initGhosts();
     initParallax();
     initToolbox();
+    initPalette();
     initDrift();
     initSkew();
     initDivergence();
