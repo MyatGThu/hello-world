@@ -149,8 +149,9 @@ FOOT = """
 </html>
 """
 
-def turn(href, plate_no, title, kicker, chapter=None):
+def turn(href, plate_no, title, kicker, chapter=None, palette="forest"):
     ch = ' data-chapter="%s"' % chapter if chapter else ""
+    ch += ' data-palette="%s"' % palette
     return """
     <!-- ============================ PAGE TURN ============================ -->
     <a class="turn" href="%s"%s data-cursor="turn the page">
@@ -181,8 +182,8 @@ def plate(no, name, kicker, title_html, stand):
 INDEX_MAIN = """
   <main id="main">
     <!-- ============================ COVER ============================ -->
-    <section class="hero" id="top" data-chapter="Arrival">
-      <div class="hero__bg" data-parallax="0.22" aria-hidden="true"></div>
+    <section class="hero" id="top" data-chapter="Arrival" data-palette="paper">
+      <div class="hero__bg" data-parallax="0.22" data-parallax-z="-90" aria-hidden="true"></div>
 
       <p class="hero__eyebrow" data-reveal>
         <span>Field notes — modern workplace division</span><span>Melbourne, AU — 2026</span>
@@ -273,33 +274,33 @@ INDEX_MAIN = """
     </div>
 
     <!-- ============================ CONTENTS ============================ -->
-    <section class="toc" id="contents" data-chapter="Contents" aria-label="Contents">
+    <section class="toc" id="contents" data-chapter="Contents" data-palette="cobalt" aria-label="Contents">
       <div class="caps__head">
         <h2 class="section-title" data-reveal>Contents</h2>
         <p class="caps__note" data-reveal>Five plates. Each one is its own page — open any of them.</p>
       </div>
       <ol class="toc__list">
-        <li><a class="toc__row" href="about.html" data-cursor="open plate">
+        <li><a class="toc__row" data-parallax-z="-30" href="about.html" data-cursor="open plate">
           <span class="toc__no">PL.02</span>
           <span class="toc__t">The Person</span>
           <span class="toc__d">About — off the clock &amp; the brief</span>
         </a></li>
-        <li><a class="toc__row" href="work.html" data-cursor="open plate">
+        <li><a class="toc__row" data-parallax-z="-55" href="work.html" data-cursor="open plate">
           <span class="toc__no">PL.03</span>
           <span class="toc__t">The Orbit</span>
           <span class="toc__d">Work — four roles, seven years</span>
         </a></li>
-        <li><a class="toc__row" href="projects.html" data-cursor="open plate">
+        <li><a class="toc__row" data-parallax-z="-80" href="projects.html" data-cursor="open plate">
           <span class="toc__no">PL.04</span>
           <span class="toc__t">The Proof</span>
           <span class="toc__d">Projects — case files &amp; the lab</span>
         </a></li>
-        <li><a class="toc__row" href="credentials.html" data-cursor="open plate">
+        <li><a class="toc__row" data-parallax-z="-105" href="credentials.html" data-cursor="open plate">
           <span class="toc__no">PL.05</span>
           <span class="toc__t">The Seals</span>
           <span class="toc__d">Credentials — four certs, one in flight</span>
         </a></li>
-        <li><a class="toc__row" href="contact.html" data-cursor="open plate">
+        <li><a class="toc__row" data-parallax-z="-130" href="contact.html" data-cursor="open plate">
           <span class="toc__no">PL.06</span>
           <span class="toc__t">Connect</span>
           <span class="toc__d">Contact — usually replies within a day</span>
@@ -308,7 +309,7 @@ INDEX_MAIN = """
     </section>
 
     <!-- ============================ STATS ============================ -->
-    <section class="stats" data-chapter="Signal" aria-label="By the numbers">
+    <section class="stats" data-chapter="Signal" data-palette="coral" aria-label="By the numbers">
       <div class="stat" data-reveal>
         <span class="stat__num" data-count="400" data-suffix="+">400+</span>
         <span class="stat__label">Retail stores kept running nationwide</span>
@@ -328,7 +329,7 @@ INDEX_MAIN = """
     </section>
 
     <!-- ============================ NOW ============================ -->
-    <section class="now" aria-label="What I'm focused on now">
+    <section class="now" data-palette="acid" aria-label="What I'm focused on now">
       <span class="now__tag"><span class="now__dot" aria-hidden="true"></span> Now</span>
       <p class="now__text" data-reveal>
         Studying for <strong>SC-300</strong> — Microsoft Identity &amp; Access Administrator —
@@ -344,7 +345,7 @@ WORK_MAIN = """
   <main id="main">
 %s
     <!-- ============================ WORK ============================ -->
-    <section class="work" id="work" data-chapter="The Orbit">
+    <section class="work" id="work" data-chapter="The Orbit" data-palette="cobalt">
       <div class="work__grid">
         <aside class="work__aside">
           <div class="work__sticky">
@@ -442,7 +443,7 @@ WORK_MAIN = """
     </section>
 
     <!-- ============================ CAPABILITIES ============================ -->
-    <section class="caps" id="caps" data-chapter="The Craft">
+    <section class="caps" id="caps" data-chapter="The Craft" data-palette="acid">
       <div class="caps__head">
         <h2 class="section-title" data-reveal>Capabilities</h2>
         <p class="caps__note" data-reveal>
@@ -460,7 +461,7 @@ WORK_MAIN = """
     </section>
 
     <!-- ============================ APPROACH ============================ -->
-    <section class="approach" id="approach">
+    <section class="approach" id="approach" data-palette="coral">
       <div class="caps__head">
         <h2 class="section-title" data-reveal>How I work</h2>
         <p class="caps__note" data-reveal>My default playbook for turning a ticket into a clean resolution.</p>
@@ -490,7 +491,7 @@ WORK_MAIN = """
     </section>
 
     <!-- ============================ TOOLBOX ============================ -->
-    <section class="toolbox" id="toolbox" aria-label="Tech stack and toolbox">
+    <section class="toolbox" id="toolbox" data-palette="plum" aria-label="Tech stack and toolbox">
       <div class="toolbox__head">
         <h2 class="section-title" data-reveal>Toolbox</h2>
         <p class="toolbox__note" data-reveal>The day-to-day stack I build, secure and support on.</p>
@@ -546,7 +547,7 @@ PROJECTS_MAIN = """
   <main id="main">
 %s
     <!-- ============================ CASE FILES ============================ -->
-    <section class="cases" id="projects" data-chapter="The Proof">
+    <section class="cases" id="projects" data-chapter="The Proof" data-palette="cobalt">
       <div class="caps__head">
         <h2 class="section-title" data-reveal>Case files</h2>
         <p class="caps__note" data-reveal>A few problems I've owned from ticket to resolution.</p>
@@ -601,7 +602,7 @@ PROJECTS_MAIN = """
     </section>
 
     <!-- ============================ HOME LAB ============================ -->
-    <section class="lab" id="lab" data-chapter="The Bench" data-cursor="break it">
+    <section class="lab" id="lab" data-chapter="The Bench" data-palette="coral" data-cursor="break it">
       <div class="caps__head">
         <h2 class="section-title" data-reveal>Home lab</h2>
         <p class="caps__note" data-reveal>Where I break things on purpose — my sandbox for SC-300 and the Microsoft cloud. <span class="lab__hint">Go on — dent the drawing.</span></p>
@@ -626,7 +627,7 @@ CREDENTIALS_MAIN = """
   <main id="main">
 %s
     <!-- ============================ CERTIFICATIONS ============================ -->
-    <section class="certs" id="certs" data-chapter="The Seals">
+    <section class="certs" id="certs" data-chapter="The Seals" data-palette="acid">
       <div class="certs__head">
         <h2 class="section-title" data-reveal>Credentials</h2>
         <p class="certs__note" data-reveal>Certified across the Microsoft and Google stacks.</p>
@@ -696,7 +697,7 @@ CREDENTIALS_MAIN = """
     </section>
 
     <!-- ============================ EDUCATION ============================ -->
-    <section class="edu" id="edu">
+    <section class="edu" id="edu" data-palette="plum">
       <h2 class="section-title section-title--sm" data-reveal>Study</h2>
       <ol class="edu__list">
         <li class="edu__item" data-reveal>
@@ -744,7 +745,7 @@ CONTACT_MAIN = """
     </header>
 
     <!-- ============================ CONTACT ============================ -->
-    <section class="contact" id="contact" data-chapter="Connect">
+    <section class="contact" id="contact" data-chapter="Connect" data-palette="cobalt">
       <p class="contact__avail" data-reveal><span class="contact__dot" aria-hidden="true"></span> Available for new opportunities — 2026</p>
       <h1 class="contact__title" aria-label="Let's work together" data-reveal>
         <span class="line" aria-hidden="true">
@@ -768,14 +769,14 @@ CONTACT_MAIN = """
       <span class="stamp" aria-hidden="true">Open<br/>to work<br/>2026</span>
     </section>
 %s  </main>
-""" % turn("index.html", "01", "The Cover", "Back to the start")
+""" % turn("index.html", "01", "The Cover", "Back to the start", palette="paper")
 
 # ============================== ABOUT ==============================
 ABOUT_MAIN = """
   <main id="main">
     <!-- ============================ HERO ============================ -->
-    <section class="hero hero--about" id="top">
-      <div class="hero__bg" data-parallax="0.22" aria-hidden="true"></div>
+    <section class="hero hero--about" id="top" data-palette="paper">
+      <div class="hero__bg" data-parallax="0.22" data-parallax-z="-90" aria-hidden="true"></div>
 
       <p class="hero__eyebrow" data-reveal>
         <span>Field notes — the person</span><span>Plate 02 — Melbourne, AU</span>
@@ -792,7 +793,7 @@ ABOUT_MAIN = """
     </section>
 
     <!-- ============================ PROFESSIONAL BIO ============================ -->
-    <section class="intro" id="bio" data-chapter="The Person">
+    <section class="intro" id="bio" data-chapter="The Person" data-palette="cobalt">
       <p class="chap" data-reveal><em>Fig.01</em> The professional</p>
       <p class="intro__lead" data-words>
         I am an IT professional specialised in the Microsoft ecosystem, with a
@@ -804,7 +805,7 @@ ABOUT_MAIN = """
     </section>
 
     <!-- ============================ THE BRIEF ============================ -->
-    <section class="approach" id="brief" aria-label="The brief, for hiring managers">
+    <section class="approach" id="brief" data-palette="acid" aria-label="The brief, for hiring managers">
       <div class="caps__head">
         <h2 class="section-title" data-reveal>The brief</h2>
         <p class="caps__note" data-reveal>What a hiring manager should know in thirty seconds.</p>
@@ -880,6 +881,10 @@ def build():
     ends = [cur.index(m) for m in ('<!-- ============================ CONTACT',
                                    '<!-- ============================ PAGE TURN') if m in cur]
     play_and_grow = cur[start:min(ends)].rstrip()
+    play_and_grow = play_and_grow.replace('<section class="play" id="play">',
+                                          '<section class="play" id="play" data-palette="coral">')
+    play_and_grow = play_and_grow.replace('<section class="grow" id="grow">',
+                                          '<section class="grow" id="grow" data-palette="plum">')
 
     pages = {
         "index.html": dict(

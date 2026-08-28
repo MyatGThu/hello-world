@@ -1313,3 +1313,84 @@ html.is-exploded .part:nth-child(5) { transition-delay: .37s; }
 /* the chips need room and the machine beside them: desktop only */
 @media (max-width: 1100px) { .parts { display: none; } }
 @media (prefers-reduced-motion: reduce) { .part { transition: none; } }
+
+/* ===========================================================================
+   THE COLOUR PRESS — scroll-driven vibrant palettes
+   Storey-style: each section declares a paper stock, and the whole page
+   re-inks itself as you scroll into it. The four base tokens are REGISTERED
+   custom properties, so changing them animates: the browser interpolates the
+   colours and every consumer (scrims, rules, divergence shadows, hover
+   fills) rides along. Derived tokens are re-declared relative to the base
+   four, so a palette is only ever four colours.
+   =========================================================================== */
+@property --bone { syntax: "<color>"; inherits: true; initial-value: #f2efe6; }
+@property --ink { syntax: "<color>"; inherits: true; initial-value: #232019; }
+@property --accent { syntax: "<color>"; inherits: true; initial-value: #00808f; }
+@property --accent-2 { syntax: "<color>"; inherits: true; initial-value: #d61f69; }
+
+:root {
+  transition: --bone .7s var(--ease), --ink .7s var(--ease),
+              --accent .7s var(--ease), --accent-2 .7s var(--ease);
+}
+/* Derived stocks follow the palette — but only where the engine can compute
+   them. A custom property is not validated at declaration time, so without
+   this guard an old engine would carry garbage to every use site instead of
+   falling back to the literals in the token block. */
+@supports (color: color-mix(in oklab, red 50%, blue)) {
+  :root {
+    --bone-2: color-mix(in oklab, var(--bone) 86%, var(--ink));
+    --muted: color-mix(in oklab, var(--ink) 64%, var(--bone));
+    --faint: color-mix(in oklab, var(--ink) 44%, var(--bone));
+    --line: rgb(from var(--ink) r g b / 0.24);
+    --card: color-mix(in oklab, var(--bone) 89%, white);
+  }
+}
+
+/* the six paper stocks */
+:root[data-palette="cobalt"] { --bone: #2438c9; --ink: #f2efe6; --accent: #9fe8f0; --accent-2: #ffd84a; }
+:root[data-palette="coral"]  { --bone: #e4502e; --ink: #200b04; --accent: #3d1409; --accent-2: #ffe9c9; }
+:root[data-palette="acid"]   { --bone: #dde24e; --ink: #20240c; --accent: #164a3f; --accent-2: #b0186f; }
+:root[data-palette="forest"] { --bone: #175c43; --ink: #efeadb; --accent: #ffd84a; --accent-2: #ff9ad5; }
+:root[data-palette="plum"]   { --bone: #46265f; --ink: #f0e9dc; --accent: #ffb02e; --accent-2: #6fe3d0; }
+/* paper is the initial-value state; the attribute resets to it explicitly */
+:root[data-palette="paper"]  { --bone: #f2efe6; --ink: #232019; --accent: #00808f; --accent-2: #d61f69; }
+
+/* grain multiplies to nothing on dark stocks — flip it to screen there */
+:root[data-palette="cobalt"], :root[data-palette="forest"], :root[data-palette="plum"] {
+  --grain-blend: screen; --grain-op: 0.07;
+}
+
+/* ----- Vibrant hover: the colour answers the pointer ----- */
+.case, .cert, .icard, .pcard, .tool__card {
+  transition: background-color .4s var(--ease), border-color .4s var(--ease),
+              box-shadow .4s var(--ease), transform .4s var(--ease);
+}
+@media (hover: hover) {
+  .case:hover, .cert:hover, .icard:hover, .pcard:hover {
+    background: color-mix(in oklab, var(--card) 72%, var(--accent));
+  }
+  /* contents rows invert to a full accent bar */
+  .toc__row { transition: background-color .35s var(--ease), padding-left .45s var(--ease); }
+  .toc__row:hover { background: var(--accent); }
+  .toc__row:hover .toc__t, .toc__row:hover .toc__no, .toc__row:hover .toc__d { color: var(--bone); }
+  /* capability rows fill with accent wash rather than hatch alone */
+  .cap:hover::before { background: color-mix(in oklab, var(--accent) 18%, transparent); }
+  /* the page turn floods */
+  .turn { transition: background-color .45s var(--ease); }
+  .turn:hover { background: color-mix(in oklab, var(--bone) 80%, var(--accent)); }
+}
+
+/* dark-stock exception: the feature icard is noir-on-noir when the page goes
+   dark; give it a visible edge instead of vanishing */
+:root[data-palette="cobalt"] .icard--feature,
+:root[data-palette="forest"] .icard--feature,
+:root[data-palette="plum"] .icard--feature { border-color: var(--line); }
+
+/* ----- Hidden scrollbars, every axis, including the modal ----- */
+.cmodal__card { scrollbar-width: none; }
+.cmodal__card::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* colour fades are not motion, but keep them brisk for RM users */
+  :root { transition-duration: .25s; }
+}

@@ -112,6 +112,9 @@
       uGhostOff: { value: new T.Vector2(0, 0) },
       // Exploded view: 0 assembled, 1 the parts held apart on the assembly axis.
       uExplode: { value: 0 },
+      // The pencil's pigment — re-inked to match the active paper stock, so
+      // the drawing is graphite on paper and chalk on cobalt.
+      uInk: { value: new T.Vector3(0.155, 0.145, 0.125) },
       uAlpha: { value: 0 }
     };
 
@@ -119,6 +122,7 @@
       "precision highp float;",
       "uniform float uTime, uK, uPuddle, uRipple, uAlpha, uN, uForm, uShape, uScale;",
       "uniform float uSplit, uGhostA, uGhostB, uExplode;",
+      "uniform vec3 uInk;",
       "int gPart;", // which machine part the last sdObject(…, 5) evaluation was closest to
       "uniform vec2 uRes, uOff, uStretch, uMouse, uObj, uGhostOff;",
       "uniform vec4 uBlobs[" + MAXB + "];",
@@ -295,7 +299,7 @@
       "    t += d * 0.85;",
       "    if (t > 14.0) break;",
       "  }",
-      "  vec3 GRAPH = vec3(0.155, 0.145, 0.125);", // 2B graphite
+      "  vec3 GRAPH = uInk;", // pencil pigment for the active paper stock
       "  vec3 NEON_A = vec3(0.05, 0.72, 0.82);",   // cyan — the timeline just left
       "  vec3 NEON_B = vec3(1.0, 0.26, 0.60);",    // magenta — the timeline ahead
       "  if (!hit) {",
@@ -520,6 +524,19 @@
     var explodeOn = false;
     window.addEventListener("mt:explode", function (e) { explodeOn = !!(e.detail && e.detail.on); });
 
+    // The page tells us its new paper stock; the drawing re-inks over ~a third
+    // of a second so it never pops against the CSS colour fade.
+    var inkTarget = new T.Vector3(0.155, 0.145, 0.125);
+    // catch up with a palette set before this renderer finished lazy-loading
+    if (window.__mtInk && window.__mtInk.length === 3) {
+      inkTarget.fromArray(window.__mtInk);
+      uniforms.uInk.value.copy(inkTarget); // no visible lerp from the wrong ink
+    }
+    window.addEventListener("mt:palette", function (e) {
+      var i = e.detail && e.detail.ink;
+      if (i && i.length === 3) inkTarget.set(i[0], i[1], i[2]);
+    });
+
     /* ---------- Frame loop ---------- */
     var lastSc = -1, lastT = performance.now(), running = true, shown = false;
     document.addEventListener("visibilitychange", function () { running = !document.hidden; if (running) { lastT = performance.now(); lastSc = -1; tick(); } });
@@ -577,6 +594,8 @@
       // itself the moment the form starts to melt.
       var exTarget = explodeOn && uniforms.uForm.value > 0.85 && target.shape === 5 ? 1 : 0;
       uniforms.uExplode.value += (exTarget - uniforms.uExplode.value) * Math.min(1, dt * 3.2);
+
+      uniforms.uInk.value.lerp(inkTarget, Math.min(1, dt * 3));
 
       var stretchGain = 1 - 0.9 * uniforms.uForm.value;
       var sy = 1 + Math.min(0.5, Math.abs(v) * 0.00035) * stretchGain;
