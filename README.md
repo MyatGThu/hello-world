@@ -1,83 +1,55 @@
-# Myat Thu — Field Notes
+# Myat Thu — Edition
 
-Portfolio of **Myat Thu**, an IT professional in the Microsoft modern workplace
-(Intune, Entra ID, cloud administration). A static multi-page site deployed to
-GitHub Pages.
+Portfolio of **Myat Thu**, an IT professional in the Microsoft modern
+workplace (Intune, Entra ID, cloud administration). A static multi-page site
+deployed to GitHub Pages.
 
 **Live:** https://myatgthu.github.io/resume.io/
 
-## The concept
+## The design
 
-An engineer's field notebook from 2077. The site draws a living machine in
-pencil: a raymarched blob of liquid graphite that solidifies into a different
-sketched artifact on every page (a gyroscopic machine on the cover, a headset,
-a keyboard, a spinning disc, a terminal you can dent, a floppy disk and USB
-stick). Between forms it is liquid. When you scroll fast, or while a shape is
-undecided, the page splits into two neon timelines (cyan and magenta) that
-collapse back into one form when you stop. That collapse is the argument of
-the whole site: many possible configurations, one standard result, which is
-what an SOE engineer does for a living.
+Poster-editorial. One geometric sans (Outfit) set enormous, and five flat
+warm paper stocks — cream, sun, persimmon, moss, ink — that the whole page
+presses through as you scroll: the stock tokens are registered custom
+properties, so a section crossing the middle of the viewport re-inks the
+entire page in one animated swap. Thick rules, hard edges, offset-block
+shadows, uppercase display type, mono labels.
 
-Three styles are combined deliberately:
+Depth comes from a three-part parallax vocabulary (`data-px`, `data-px-x`,
+`data-px-z`): floating geometry and index rows start pushed into the page and
+surface as they cross the viewport, and the poster shapes also lean with the
+pointer. Entrances are one class flip driven by ScrollTrigger with CSS owning
+the easing — line-masked headlines, rise-ins, scroll-scrubbed word reveals,
+velocity-reactive tickers, magnetic CTAs, and a flat difference-blend cursor.
 
-- **Pencil sketch**: cross-hatched WebGL shading with a hand wobble stepped to
-  about 5 fps, hand-drawn borders, taped photos, dashed schematic callouts.
-- **Editorial**: Bodoni Moda display type, folios and plate numbers, a
-  magazine table of contents, standfirsts, double rules.
-- **Cyberpunk**: neon interference ghosts, chromatic text divergence under
-  scroll velocity, scanlined blackboard menu.
-
-## Pages
-
-Each tab in the masthead is a real page, not an anchor:
-
-| Page | Plate | The machine casts |
-| --- | --- | --- |
-| `index.html` | Cover and contents | The gyro machine |
-| `about.html` | The Person | Headset |
-| `work.html` | The Orbit | Spinning disc, then keyboard |
-| `projects.html` | The Proof | Terminal (click the lab section to dent it) |
-| `credentials.html` | The Seals | Floppy disk and USB stick |
-| `contact.html` | Connect | Mirror puddle |
-
-Navigation between pages uses cross-document View Transitions where the
-browser supports them, with a wipe fallback elsewhere.
+Every masthead tab is a real page: Cover, About, Work, Projects, Credentials,
+Contact, chained end-to-end by a NEXT block on every page. Navigation uses
+native cross-document View Transitions where supported. Scrollbars are hidden
+on both axes; a thick accent progress bar (CSS scroll timeline) keeps
+orientation.
 
 ## Stack
 
-Vanilla HTML/CSS/JS. No build step for the site itself; the six pages are
-assembled by one generator script so the shared masthead, menu and footer can
-never drift apart.
-
-- **Three.js** (custom minimal build) renders one fullscreen fragment shader:
-  SDF metaballs and artifact models, cross-hatch NPR shading, click impacts,
-  and the divergence ghosts.
-- **GSAP + ScrollTrigger** drive reveals, the toolbox switchback, counters and
-  the velocity marquee.
-- **Lenis** provides inertia scrolling.
-- **Anime.js** handles letter cascades and the chapter caption.
-- Scroll progress and page transitions run on native CSS (scroll timelines,
-  `@view-transition`) where supported.
-
-## Structure
+Vanilla HTML/CSS/JS. GSAP + ScrollTrigger and Lenis only — no WebGL, no
+other runtime dependencies. The six pages are assembled by one generator
+(`tools/build-pages.py`) so the shared shell can never drift.
 
 ```
 index.html ...        # six pages, one shared shell
-styles.css            # tokens (paper/graphite/neon) + sketch revision layer
+styles.css            # the whole design system, written from scratch
 main.js               # motion modules; every one degrades without JS
-mercury.js            # the raymarched machine
-assets/fonts/         # self-hosted Outfit, Bodoni Moda, Share Tech Mono
-vendor/               # GSAP, ScrollTrigger, Lenis, Anime.js, Three.js build
+assets/fonts/         # self-hosted Outfit + Share Tech Mono
+vendor/               # GSAP, ScrollTrigger, Lenis
 .github/workflows/    # GitHub Pages deployment
-.claude/skills/       # Claude Code skills used to build and review the site
+.claude/skills/       # Claude Code skills used while building
 ```
 
 ## Accessibility
 
-`prefers-reduced-motion` disables the canvas, the loader and all scroll
-choreography while keeping every word readable. The site works without
-JavaScript. Interactive elements are keyboard reachable, and body copy sits on
-a soft paper scrim wherever the drawing passes behind it.
+Reduced motion gets every word with no entrances, no tickers and brisk
+colour fades. The site is fully readable without JavaScript. Interactive
+elements are keyboard reachable with visible focus; stock pairs hold
+readable contrast for body text.
 
 ## Notes
 

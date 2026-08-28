@@ -4,349 +4,145 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — Myat Thu</title>
-  <meta name="description" content="The person behind the field notes — the professional brief for hiring managers, and how Myat Thu switches off: gaming, films, football, and always leveling up." />
+  <meta name="description" content="The person and the brief — scale, escalation, device lifecycle, documentation. Plus how he switches off." />
   <meta name="author" content="Myat Thu" />
   <link rel="canonical" href="https://myatgthu.github.io/hello-world.io/about.html" />
-  <meta name="theme-color" content="#f2efe6" />
+  <meta name="theme-color" content="#f3efe4" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Myat Thu" />
   <meta property="og:url" content="https://myatgthu.github.io/hello-world.io/about.html" />
   <meta property="og:title" content="About — Myat Thu" />
-  <meta property="og:description" content="The person behind the field notes — the professional brief for hiring managers, and how Myat Thu switches off: gaming, films, football, and always leveling up." />
+  <meta property="og:description" content="The person and the brief — scale, escalation, device lifecycle, documentation. Plus how he switches off." />
   <meta property="og:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
   <meta property="og:image:width" content="2400" />
   <meta property="og:image:height" content="1260" />
-  <meta property="og:image:alt" content="Myat Thu — IT professional shaping the Microsoft modern workplace. Intune · Entra ID · Cloud · Melbourne." />
+  <meta property="og:image:alt" content="Myat Thu — IT professional. Intune, Entra ID, cloud. Melbourne." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="About — Myat Thu" />
-  <meta name="twitter:description" content="The person behind the field notes — the professional brief for hiring managers, and how Myat Thu switches off: gaming, films, football, and always leveling up." />
+  <meta name="twitter:description" content="The person and the brief — scale, escalation, device lifecycle, documentation. Plus how he switches off." />
   <meta name="twitter:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23201d15'/><text x='50' y='70' font-size='56' font-family='Arial,sans-serif' font-weight='700' fill='%23f2efe6' text-anchor='middle'>M</text></svg>" />
-
-  <script>document.documentElement.classList.add('js');try{var n=sessionStorage.getItem('nav');if(n){var c=document.documentElement.classList;c.add('is-entering');if(n==='wipe')c.add('is-wipe');}}catch(e){}</script>
-
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2316150f'/><text x='50' y='72' font-size='62' font-family='Arial,sans-serif' font-weight='900' fill='%23f3efe4' text-anchor='middle'>M</text></svg>" />
+  <script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('nav')){document.documentElement.classList.add('is-arrived');sessionStorage.removeItem('nav');}}catch(e){}</script>
   <link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/share-tech-mono.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css?v=__BUILD__" />
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="dot" aria-hidden="true"><span class="dot__label"></span></div>
 
-  <div class="grain" aria-hidden="true"></div>
-  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
-  <div class="wipe" aria-hidden="true"><span class="wipe__label">Turning the page —</span></div>
-
-  <!-- Masthead: the tabs are pages, not anchors -->
-  <header class="head" id="head">
-    <a class="head__brand" href="index.html" data-cursor="cover">Myat&nbsp;Thu</a>
-    <nav class="head__nav" aria-label="Pages">
-      <a href="about.html" aria-current="page"><i>02</i>About</a>
-      <a href="work.html"><i>03</i>Work</a>
-      <a href="projects.html"><i>04</i>Projects</a>
-      <a href="credentials.html"><i>05</i>Credentials</a>
-      <a href="contact.html"><i>06</i>Contact</a>
+  <header class="bar">
+    <a class="bar__mark" href="index.html" data-cur="cover">MYAT&nbsp;THU<sup>&reg;</sup></a>
+    <nav class="bar__nav" aria-label="Pages">
+      <a href="about.html" aria-current="page"><i>2</i>About</a>
+      <a href="work.html"><i>3</i>Work</a>
+      <a href="projects.html"><i>4</i>Projects</a>
+      <a href="credentials.html"><i>5</i>Credentials</a>
+      <a href="contact.html"><i>6</i>Contact</a>
     </nav>
-    <div class="head__right">
-      <a class="head__status" href="contact.html" data-cursor="say hi">
-        <span class="head__dot"></span> <span>Open to work</span>
-      </a>
-      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
-        <span class="menu-btn__label">Menu</span>
-        <span class="menu-btn__bars"><i></i><i></i></span>
-      </button>
+    <div class="bar__end">
+      <a class="bar__status" href="contact.html" data-cur="say hi"><b></b>OPEN&nbsp;TO&nbsp;WORK</a>
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="ov" aria-label="Menu"><i></i><i></i></button>
     </div>
   </header>
 
-  <!-- Fullscreen menu -->
-  <nav class="menu" id="menu" aria-label="Primary" aria-hidden="true">
-    <div class="menu__inner">
-      <ul class="menu__links">
-        <li><a href="index.html"><span class="menu__idx">01</span> Cover</a></li>
-        <li><a href="about.html" aria-current="page"><span class="menu__idx">02</span> About</a></li>
-        <li><a href="work.html"><span class="menu__idx">03</span> Work</a></li>
-        <li><a href="projects.html"><span class="menu__idx">04</span> Projects</a></li>
-        <li><a href="credentials.html"><span class="menu__idx">05</span> Credentials</a></li>
-        <li><a href="contact.html"><span class="menu__idx">06</span> Contact</a></li>
-      </ul>
-      <div class="menu__meta">
-        <div class="menu__col">
-          <span class="menu__h">Get in touch</span>
-          <a href="mailto:myatgeorgethu@gmail.com" data-cursor="email">myatgeorgethu@gmail.com</a>
-          <a href="assets/Myat-Thu-CV.pdf" download data-cursor="download">Download CV ↓</a>
-        </div>
-        <div class="menu__col">
-          <span class="menu__h">Based in</span>
-          <span>Melbourne, Australia</span>
-        </div>
-        <div class="menu__col">
-          <span class="menu__h">Status</span>
-          <span>Open to opportunities — 2026</span>
-        </div>
-      </div>
+  <nav class="ov" id="ov" aria-label="Primary" aria-hidden="true">
+    <ul class="ov__list">
+      <li><a href="index.html"><em>01</em><span>Cover</span></a></li>
+      <li><a href="about.html" aria-current="page"><em>02</em><span>About</span></a></li>
+      <li><a href="work.html"><em>03</em><span>Work</span></a></li>
+      <li><a href="projects.html"><em>04</em><span>Projects</span></a></li>
+      <li><a href="credentials.html"><em>05</em><span>Credentials</span></a></li>
+      <li><a href="contact.html"><em>06</em><span>Contact</span></a></li>
+    </ul>
+    <div class="ov__meta">
+      <a href="mailto:myatgeorgethu@gmail.com" data-cur="email">myatgeorgethu@gmail.com</a>
+      <a href="assets/Myat-Thu-CV.pdf" download data-cur="download">Download CV ↓</a>
+      <span>Melbourne, Australia</span>
     </div>
   </nav>
 
   <main id="main">
-    <!-- ============================ HERO ============================ -->
-    <section class="hero hero--about" id="top" data-palette="paper">
-      <div class="hero__bg" data-parallax="0.22" data-parallax-z="-90" aria-hidden="true"></div>
 
-      <p class="hero__eyebrow" data-reveal>
-        <span>Field notes — the person</span><span>Plate 02 — Melbourne, AU</span>
-      </p>
-
-      <h1 class="hero__title hero__title--about" aria-label="Beyond the help desk">
-        <span class="line" aria-hidden="true"><span class="word" data-split>Beyond the</span></span>
-        <span class="line" aria-hidden="true"><span class="word word--accent" data-split>help desk.</span></span>
+    <section class="poster" data-stock="cream">
+      <p class="poster__k" data-a="up">About — the person</p>
+      <h1 class="poster__t">
+        <span class="ln"><b data-a="mask">BEYOND</b></span>
+        <span class="ln"><b data-a="mask">THE DESK</b></span>
       </h1>
-
-      <a class="hero__scroll" href="#bio" data-cursor="scroll" aria-label="Scroll to content">
-        <span>Scroll</span><i></i>
-      </a>
+      <p class="poster__sub" data-a="up">IT professional by day. Microsoft ecosystem specialist — moved past traditional support into automation and security.</p>
+      <span class="geo geo--ring" data-px="0.4" data-px-z="-120" aria-hidden="true"></span>
+      <span class="geo geo--block" data-px="-0.3" data-px-z="-60" aria-hidden="true"></span>
+      <span class="geo geo--cross" data-px="0.6" data-px-z="-180" aria-hidden="true">+</span>
+      <a class="poster__cue" href="#next" data-cur="scroll" aria-label="Scroll"><i></i></a>
     </section>
 
-    <!-- ============================ PROFESSIONAL BIO ============================ -->
-    <section class="intro" id="bio" data-chapter="The Person" data-palette="cobalt">
-      <p class="chap" data-reveal><em>Fig.01</em> The professional</p>
-      <p class="intro__lead" data-words>
-        I am an IT professional specialised in the Microsoft ecosystem, with a
-        strong focus on modern device management and cloud administration. I have
-        moved beyond traditional support toward automation and security —
-        leveraging Microsoft Intune and Entra ID to keep operations seamless,
-        compliant, and quietly resilient.
+    <section class="lead" id="next" data-stock="sun">
+      <p class="sec__k" data-a="up">Who</p>
+      <p class="lead__t" data-words>
+        I keep a modern workplace running — Intune and Entra ID for device and
+        identity, Microsoft 365 end to end, and the automation that makes it
+        quietly resilient. I fix it once, then I write it down.
       </p>
     </section>
 
-    <!-- ============================ THE BRIEF ============================ -->
-    <section class="approach" id="brief" data-palette="acid" aria-label="The brief, for hiring managers">
-      <div class="caps__head">
-        <h2 class="section-title" data-reveal>The brief</h2>
-        <p class="caps__note" data-reveal>What a hiring manager should know in thirty seconds.</p>
+    <section class="grid4" data-stock="persimmon" aria-label="The brief, for hiring managers">
+      <p class="sec__k" data-a="up">The brief</p>
+      <div class="grid4__g">
+        <div class="cell" data-a="up"><em>01</em><h3>Scale under pressure</h3><p>400+ stores, 40–50 tickets a day, holiday cover included. Volume doesn't rattle him.</p></div>
+        <div class="cell" data-a="up"><em>02</em><h3>Trusted escalation</h3><p>Second-level point for the IPH desk; earlier L3 network exposure at a Telstra-partner MSP.</p></div>
+        <div class="cell" data-a="up"><em>03</em><h3>Device lifecycle</h3><p>SOE builds, imaging, onboarding to offboarding — the endpoint from box to retirement.</p></div>
+        <div class="cell" data-a="up"><em>04</em><h3>Writes it down</h3><p>KBAs, rollout playbooks, Change Board, annual audits. The fix that stays fixed.</p></div>
       </div>
-      <ol class="steps">
-        <li class="step" data-cap>
-          <span class="step__n">01</span>
-          <h3 class="step__t">Scale under pressure</h3>
-          <p class="step__d">A 400+ store retail fleet, 40–50 tickets a day, public-holiday cover included. Volume doesn't rattle him.</p>
-        </li>
-        <li class="step" data-cap>
-          <span class="step__n">02</span>
-          <h3 class="step__t">Trusted escalation</h3>
-          <p class="step__d">Second-level point for the IPH service desk, with earlier Level 3 network and firewall exposure at a Telstra-partner MSP.</p>
-        </li>
-        <li class="step" data-cap>
-          <span class="step__n">03</span>
-          <h3 class="step__t">Owns the device lifecycle</h3>
-          <p class="step__d">SOE builds, imaging, onboarding to offboarding, hardware remediation — the endpoint from box to retirement.</p>
-        </li>
-        <li class="step" data-cap>
-          <span class="step__n">04</span>
-          <h3 class="step__t">Writes it down</h3>
-          <p class="step__d">KBAs, rollout playbooks, Change Board representation, annual IT audits. The fix that stays fixed.</p>
-        </li>
-      </ol>
-      <p class="caps__note" data-reveal style="margin-top: clamp(22px, 4vh, 40px); max-width: 60ch;">
-        The next seat: endpoint engineering. SC-300 is in progress, and conditional
-        access and identity governance are already live in the lab tenant.
-      </p>
+      <p class="grid4__note" data-a="up">Next seat: endpoint engineering. SC-300 in progress; conditional access already live in the lab.</p>
     </section>
 
-    <!-- ============================ PERSONAL BIO ============================ -->
-    <section class="intro" id="offclock">
-      <p class="chap" data-reveal><em>Fig.02</em> Off the clock</p>
-      <p class="intro__lead" data-words>
-        I'm Myat — an IT professional by day. Off the clock you'll find me deep
-        in a Dota 2 match, lining up a FIFA fixture, catching the latest superhero
-        film, or rewatching a comfort series. I'm always tinkering with new
-        Microsoft tech and keeping one eye on the markets.
-      </p>
-    </section>
+    <div class="tick" aria-hidden="true"><div class="tick__t"><span>Dota 2</span><b>●</b><span>EA Sports FC</span><b>●</b><span>Superhero films</span><b>●</b><span>Comfort TV</span><b>●</b><span>Claude Code</span><b>●</b><span>Saturday football</span><b>●</b><span>Dota 2</span><b>●</b><span>EA Sports FC</span><b>●</b><span>Superhero films</span><b>●</b><span>Comfort TV</span><b>●</b><span>Claude Code</span><b>●</b><span>Saturday football</span><b>●</b></div></div>
 
-    <!-- ============================ MARQUEE ============================ -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track" id="marquee">
-        <span>Dota 2</span><span class="dot">✦</span>
-        <span>FIFA</span><span class="dot">✦</span>
-        <span>Superhero films</span><span class="dot">✦</span>
-        <span>Comfort TV</span><span class="dot">✦</span>
-        <span>SC-300</span><span class="dot">✦</span>
-        <span>Finance news</span><span class="dot">✦</span>
-        <span>Dota 2</span><span class="dot">✦</span>
-        <span>FIFA</span><span class="dot">✦</span>
-        <span>Superhero films</span><span class="dot">✦</span>
-        <span>Comfort TV</span><span class="dot">✦</span>
-        <span>SC-300</span><span class="dot">✦</span>
-        <span>Finance news</span><span class="dot">✦</span>
-      </div>
-    </div>
-
-    <!-- ============================ OFF THE CLOCK ============================ -->
-    <section class="play" id="play" data-palette="coral">
-      <!-- floating parallax blocks -->
-      <span class="blok blok--ring" data-parallax="0.5" data-parallax-x="0.18" data-parallax-rot="40" aria-hidden="true"></span>
-      <span class="blok blok--sq" data-parallax="-0.4" data-parallax-x="-0.2" data-parallax-rot="-30" aria-hidden="true"></span>
-      <span class="blok blok--dot" data-parallax="0.7" data-parallax-x="0.3" aria-hidden="true"></span>
-      <span class="blok blok--plus" data-parallax="-0.6" data-parallax-x="0.25" data-parallax-rot="60" aria-hidden="true">+</span>
-
-      <div class="play__head">
-        <h2 class="section-title" data-reveal>Off the clock</h2>
-        <p class="play__note" data-reveal>How I switch off and recharge.</p>
-      </div>
-
-      <ul class="pcards pcards--clock">
-        <li class="pcard pcard--bg" data-rise>
-          <svg class="pcard__bg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(45 160 100)"><rect x="92" y="32" width="136" height="136" rx="8" /><line x1="92" y1="32" x2="228" y2="168" /><circle cx="104" cy="156" r="11" /><circle cx="216" cy="44" r="11" /><path d="M92 100h28M200 168v-28" opacity="0.7" /></g></svg>
-          <div class="pcard__head"><span class="pcard__no">CLOCK_01</span><span class="pcard__tag">Gaming · MOBA</span></div>
-          <div class="pcard__brand">
-            <span class="logo-tile logo-tile--sm" data-cursor="Dota 2"><img class="logo-tile__img" src="assets/icons/dota2.svg" alt="Dota 2" /></span>
-            <h3 class="pcard__title">Dota 2</h3>
-          </div>
-          <p class="pcard__summary">The ranked grind — matchmaking, team fights, and the occasional 60-minute nail-biter won on a good late-game comeback.</p>
-          <span class="pcard__meta">Valve · Steam</span>
-        </li>
-
-        <li class="pcard pcard--bg" data-rise>
-          <svg class="pcard__bg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><g><rect x="92" y="76" width="136" height="58" rx="29" /><circle cx="124" cy="105" r="3.2" fill="currentColor" stroke="none" /><line x1="116" y1="105" x2="132" y2="105" /><line x1="124" y1="97" x2="124" y2="113" /><circle cx="196" cy="98" r="4" /><circle cx="210" cy="111" r="4" /><circle cx="182" cy="111" r="4" /><circle cx="196" cy="124" r="4" /></g></svg>
-          <div class="pcard__head"><span class="pcard__no">CLOCK_02</span><span class="pcard__tag">Gaming · Football</span></div>
-          <div class="pcard__brand">
-            <span class="logo-tile logo-tile--sm" data-cursor="EA Sports FC"><span class="logo-tile__mark logo-tile__mark--fc">EA&nbsp;FC</span></span>
-            <h3 class="pcard__title">EA Sports FC</h3>
-          </div>
-          <p class="pcard__summary">Building Ultimate Team squads and grinding career mode — football for the nights I can't be out on the pitch.</p>
-          <span class="pcard__meta">EA Sports</span>
-        </li>
-
-        <li class="pcard pcard--bg" data-rise>
-          <svg class="pcard__bg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M160.0 22.0 L171.4 57.5 L199.0 32.5 L191.1 68.9 L227.5 61.0 L202.5 88.6 L238.0 100.0 L202.5 111.4 L227.5 139.0 L191.1 131.1 L199.0 167.5 L171.4 142.5 L160.0 178.0 L148.6 142.5 L121.0 167.5 L128.9 131.1 L92.5 139.0 L117.5 111.4 L82.0 100.0 L117.5 88.6 L92.5 61.0 L128.9 68.9 L121.0 32.5 L148.6 57.5 Z" /><g fill="currentColor" stroke="none"><circle cx="24" cy="150" r="2.2" /><circle cx="40" cy="150" r="2.2" /><circle cx="56" cy="150" r="2.2" /><circle cx="72" cy="150" r="2.2" /><circle cx="24" cy="164" r="2.2" /><circle cx="40" cy="164" r="2.2" /><circle cx="56" cy="164" r="2.2" /><circle cx="72" cy="164" r="2.2" /><circle cx="24" cy="178" r="2.2" /><circle cx="40" cy="178" r="2.2" /><circle cx="56" cy="178" r="2.2" /><circle cx="72" cy="178" r="2.2" /><circle cx="252" cy="22" r="2" /><circle cx="268" cy="22" r="2" /><circle cx="284" cy="22" r="2" /><circle cx="252" cy="36" r="2" /><circle cx="268" cy="36" r="2" /><circle cx="284" cy="36" r="2" /></g></svg>
-          <div class="pcard__head"><span class="pcard__no">CLOCK_03</span><span class="pcard__tag">Cinema · Marvel &amp; DC</span></div>
-          <div class="pcard__brand">
-            <span class="logo-tile logo-tile--sm" data-cursor="Superhero films"><img class="logo-tile__img" src="assets/icons/dcentertainment.svg" alt="DC" /></span>
-            <h3 class="pcard__title">Superhero films</h3>
-          </div>
-          <p class="pcard__summary">Marvel and DC on the big screen — team-ups, origin stories, and an ever-growing watchlist I'm always adding to.</p>
-          <span class="pcard__meta">Opening night</span>
-        </li>
-
-        <li class="pcard pcard--bg" data-rise>
-          <svg class="pcard__bg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><g><line x1="150" y1="44" x2="138" y2="70" /><line x1="170" y1="44" x2="182" y2="70" /><rect x="96" y="70" width="128" height="84" rx="10" /><rect x="106" y="80" width="92" height="64" rx="5" /><circle cx="210" cy="92" r="4" /><circle cx="210" cy="108" r="4" /><rect x="116" y="158" width="88" height="6" rx="3" /></g></svg>
-          <div class="pcard__head"><span class="pcard__no">CLOCK_04</span><span class="pcard__tag">Comfort TV · Rewatchable</span></div>
-          <div class="pcard__brand">
-            <span class="logo-tile logo-tile--sm" data-cursor="Comfort TV"><img class="logo-tile__img" src="assets/icons/netflix.svg" alt="Netflix" /></span>
-            <h3 class="pcard__title">Comfort TV</h3>
-          </div>
-          <p class="pcard__summary">The rewatch rotation that's always on in the background — Supernatural, The Big Bang Theory, How I Met Your Mother, and Brooklyn Nine-Nine.</p>
-          <span class="pcard__meta">On in the background</span>
-        </li>
-
-        <li class="pcard pcard--bg" data-rise>
-          <svg class="pcard__bg" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><g><path d="M150 70 L122 100 L150 130" /><path d="M170 70 L198 100 L170 130" /><line x1="116" y1="150" x2="204" y2="150" /><line x1="116" y1="162" x2="178" y2="162" /><line x1="116" y1="138" x2="166" y2="138" /></g></svg>
-          <div class="pcard__head"><span class="pcard__no">CLOCK_05</span><span class="pcard__tag">Building · AI</span></div>
-          <div class="pcard__brand">
-            <span class="logo-tile logo-tile--sm" data-cursor="Claude Code"><img class="logo-tile__img" src="assets/icons/claude.svg" alt="Claude" /></span>
-            <h3 class="pcard__title">Claude Code</h3>
-          </div>
-          <p class="pcard__summary">Tinkering with agentic coding after hours — pointing Claude Code at small problems, automating the dull bits, and building little tools just to see how far it goes.</p>
-          <span class="pcard__meta">Personal projects · ongoing</span>
-        </li>
-
-        <li class="pcard pcard--bg" data-rise>
-          <svg class="pcard__bg pcard__bg--pitch" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <rect x="0" y="0" width="320" height="200" fill="#2f9e44" fill-opacity="0.12" />
-            <g fill="#2f9e44" fill-opacity="0.06">
-              <rect x="40" y="0" width="40" height="200" /><rect x="120" y="0" width="40" height="200" /><rect x="200" y="0" width="40" height="200" /><rect x="280" y="0" width="40" height="200" />
-            </g>
-            <g fill="none" stroke="#2f9e44" stroke-opacity="0.5" stroke-width="1.6" stroke-linejoin="round">
-              <rect x="10" y="10" width="300" height="180" rx="2" />
-              <line x1="160" y1="10" x2="160" y2="190" />
-              <circle cx="160" cy="100" r="30" />
-              <circle cx="160" cy="100" r="1.8" fill="#2f9e44" fill-opacity="0.5" stroke="none" />
-              <rect x="10" y="55" width="44" height="90" />
-              <rect x="10" y="80" width="16" height="40" />
-              <rect x="266" y="55" width="44" height="90" />
-              <rect x="294" y="80" width="16" height="40" />
-              <path d="M54 82a22 22 0 0 1 0 36" />
-              <path d="M266 82a22 22 0 0 0 0 36" />
-            </g>
-          </svg>
-          <div class="pcard__head"><span class="pcard__no">CLOCK_06</span><span class="pcard__tag">Football · Physical</span></div>
-          <div class="pcard__brand">
-            <span class="logo-tile logo-tile--sm" data-cursor="Saturday football">
-              <svg class="logo-tile__img" viewBox="0 0 24 24" fill="none" stroke="#181511" stroke-width="1.3" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 6.7l3.9 2.8-1.5 4.6H9.6L8.1 9.5 12 6.7z" />
-                <path d="M12 6.7V3.3M15.9 9.5l3.1-1.1M14.4 14.1l2.8 2.2M9.6 14.1l-2.8 2.2M8.1 9.5L5 8.4" />
-              </svg>
-            </span>
-            <h3 class="pcard__title">Saturday football</h3>
-          </div>
-          <p class="pcard__summary">Informal pickup games on the Monash Sport soccer fields every Saturday — the standing weekly fixture that gets me off the screen and out on the pitch.</p>
-          <span class="pcard__meta">Monash Sport · every Saturday</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- ============================ ALWAYS LEVELING UP ============================ -->
-    <section class="grow" id="grow" data-palette="plum">
-      <span class="blok blok--sq2" data-parallax="0.45" data-parallax-x="-0.22" data-parallax-rot="-45" aria-hidden="true"></span>
-      <span class="blok blok--dot2" data-parallax="-0.5" data-parallax-x="0.2" aria-hidden="true"></span>
-
-      <div class="play__head">
-        <h2 class="section-title" data-reveal>Always leveling up</h2>
-        <p class="play__note" data-reveal>How I keep the career moving forward.</p>
-      </div>
-
-      <div class="cardgrid">
-        <article class="icard icard--feature" data-cap data-parallax="0.05">
-          <span class="icard__badge">In progress</span>
-          <span class="icard__code">SC-300</span>
-          <h3 class="icard__title">Microsoft Identity &amp; Access Administrator</h3>
-          <p class="icard__desc">My current study focus — deepening Entra ID, conditional access, and identity governance.</p>
-          <span class="icard__tag">Certification</span>
-        </article>
-
-        <article class="icard" data-cap data-parallax="-0.05">
-          <div class="icard__logo icard__logo--multi">
-            <img src="assets/icons/pluralsight.svg" alt="Pluralsight" />
-            <img src="assets/icons/coursera.svg" alt="Coursera" />
-          </div>
-          <h3 class="icard__title">New technologies</h3>
-          <p class="icard__desc">Reading, labs, and courses — staying current with the Microsoft cloud and security stack.</p>
-          <span class="icard__tag">Learning</span>
-        </article>
-
-        <article class="icard" data-cap data-parallax="0.06">
-          <div class="icard__logo"><img src="assets/icons/googlenews.svg" alt="Google News" /></div>
-          <h3 class="icard__title">Finance &amp; markets</h3>
-          <p class="icard__desc">A daily read of finance news — markets, tech, and the bigger picture.</p>
-          <span class="icard__tag">Reading</span>
-        </article>
+    <section class="cards" data-stock="cream" aria-label="Off the clock">
+      <p class="sec__k" data-a="up">Off the clock</p>
+      <div class="cards__g">
+        <article class="card" data-a="up"><em>A</em><h3>Dota 2</h3><p>The ranked grind — team fights and the occasional 60-minute nail-biter.</p><span>Valve · Steam</span></article>
+        <article class="card" data-a="up"><em>B</em><h3>EA Sports FC</h3><p>Ultimate Team squads and career mode for nights off the pitch.</p><span>EA Sports</span></article>
+        <article class="card" data-a="up"><em>C</em><h3>Superhero films</h3><p>Marvel and DC on the big screen, watchlist always growing.</p><span>Opening night</span></article>
+        <article class="card" data-a="up"><em>D</em><h3>Comfort TV</h3><p>Supernatural, TBBT, HIMYM, Brooklyn Nine-Nine on rotation.</p><span>Background</span></article>
+        <article class="card" data-a="up"><em>E</em><h3>Claude Code</h3><p>Agentic coding after hours — automating the dull bits.</p><span>Ongoing</span></article>
+        <article class="card" data-a="up"><em>F</em><h3>Saturday football</h3><p>Pickup games at Monash Sport, every week.</p><span>Weekly</span></article>
       </div>
     </section>
 
+    <section class="cards cards--3" data-stock="moss" aria-label="Leveling up">
+      <p class="sec__k" data-a="up">Leveling up</p>
+      <div class="cards__g">
+        <article class="card card--hot" data-a="up"><em>★</em><h3>SC-300</h3><p>Identity &amp; Access Administrator — current study focus.</p><span>In progress</span></article>
+        <article class="card" data-a="up"><em>+</em><h3>New tech</h3><p>Reading, labs and courses across the Microsoft cloud stack.</p><span>Always</span></article>
+        <article class="card" data-a="up"><em>%</em><h3>Markets</h3><p>A daily read of finance news — tech and the bigger picture.</p><span>Daily</span></article>
+      </div>
+    </section>
 
-    <!-- ============================ PAGE TURN ============================ -->
-    <a class="turn" href="work.html" data-palette="forest" data-cursor="turn the page">
-      <span class="turn__k" data-reveal>Continued on Plate 03</span>
-      <span class="turn__t" data-reveal>The Orbit <em>— Work</em></span>
-      <span class="turn__fold" aria-hidden="true"></span>
+    <a class="next" href="work.html" data-stock="ink" data-cur="next page">
+      <span class="next__k" data-a="up">Next</span>
+      <span class="next__t" data-a="mask">Work</span>
+      <span class="next__a" aria-hidden="true">→</span>
     </a>
   </main>
 
-  <footer class="foot">
-    <span>© 2026 Myat Thu</span>
-    <a href="index.html" data-cursor="cover">Back to the cover ↑</a>
-    <span>Melbourne, Australia</span>
-    <span class="foot__colophon">Set in Bodoni Moda, Outfit &amp; Share Tech Mono · the machine is drawn live in WebGL · no trackers, no cookies</span>
+  <footer class="end">
+    <a class="end__cta" href="mailto:myatgeorgethu@gmail.com" data-mag="0.18" data-cur="email">
+      <span class="end__k">Say hello</span>
+      <span class="end__mail">myatgeorgethu@gmail.com<i>→</i></span>
+    </a>
+    <div class="end__meta">
+      <span>© 2026 Myat Thu</span>
+      <span>Melbourne, Australia</span>
+      <span>No trackers, no cookies</span>
+      <a href="index.html" data-cur="cover">Back to cover ↑</a>
+    </div>
   </footer>
 
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
   <script src="vendor/lenis.min.js" defer></script>
-  <script src="vendor/anime.umd.min.js" defer></script>
   <script src="main.js?v=__BUILD__" defer></script>
-  <!-- mercury lazy-loads vendor/three.mercury.min.js itself, off the critical path -->
-  <script src="mercury.js?v=__BUILD__" defer></script>
 </body>
 </html>
