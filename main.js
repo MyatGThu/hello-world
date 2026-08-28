@@ -1,10 +1,10 @@
 /* ===========================================================================
    EDITION — motion
-   Lenis inertia + GSAP triggers. One entrance system (data-a), one colour
-   press (data-stock), one parallax vocabulary (data-px / data-px-x /
-   data-px-z with pointer depth on the poster), tickers, counters, magnetic
-   CTAs, a square difference cursor. Everything degrades to a fully readable
-   static page without JS or under reduced motion.
+   Lenis inertia + GSAP triggers. One entrance system (data-a), one parallax
+   vocabulary (data-px / data-px-x / data-px-z with pointer depth on the
+   poster), tickers, counters, magnetic CTAs, the credential overlay, a
+   square difference cursor. Monochrome by design; everything degrades to a
+   fully readable static page without JS or under reduced motion.
    =========================================================================== */
 (function () {
   "use strict";
@@ -67,26 +67,6 @@
         onLeaveBack: function () { el.classList.remove("is-in"); }
       });
     });
-  }
-
-  /* ---------- The colour press: data-stock sections re-ink the page ---------- */
-  function initPress() {
-    if (!hasGSAP) return;
-    var secs = gsap.utils.toArray("main [data-stock]");
-    if (!secs.length) return;
-    var root = document.documentElement;
-    function set(name) {
-      if (root.getAttribute("data-stock") !== name) root.setAttribute("data-stock", name);
-    }
-    secs.forEach(function (sec) {
-      var name = sec.getAttribute("data-stock");
-      ScrollTrigger.create({
-        trigger: sec, start: "top 58%", end: "bottom 42%",
-        onEnter: function () { set(name); },
-        onEnterBack: function () { set(name); }
-      });
-    });
-    set(secs[0].getAttribute("data-stock"));
   }
 
   /* ---------- Parallax: scroll xyz + pointer xyz on posters ---------- */
@@ -248,6 +228,65 @@
     });
   }
 
+  /* ---------- Credential overlay ---------- */
+  function initCertModal() {
+    var seals = document.querySelectorAll(".seal");
+    if (!seals.length) return;
+
+    var modal = document.createElement("div");
+    modal.className = "cmodal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML =
+      '<div class="cmodal__bg"></div>' +
+      '<div class="cmodal__card">' +
+        '<button class="cmodal__x" type="button" aria-label="Close">✕</button>' +
+        '<p class="cmodal__code"></p><h2 class="cmodal__t"></h2>' +
+        '<div class="cmodal__body"></div>' +
+      '</div>';
+    document.body.appendChild(modal);
+    var codeEl = modal.querySelector(".cmodal__code");
+    var titleEl = modal.querySelector(".cmodal__t");
+    var bodyEl = modal.querySelector(".cmodal__body");
+    var closeBtn = modal.querySelector(".cmodal__x");
+    var source = null;
+
+    function open(seal) {
+      source = seal;
+      var info = seal.querySelector(".seal__info");
+      codeEl.textContent = seal.querySelector("b") ? seal.querySelector("b").textContent : "";
+      titleEl.textContent = seal.querySelector("h3") ? seal.querySelector("h3").textContent : "";
+      bodyEl.innerHTML = info ? info.innerHTML : "";
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      if (lenis) lenis.stop(); else document.body.style.overflow = "hidden";
+      closeBtn.focus();
+    }
+    function close() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      if (lenis) lenis.start(); else document.body.style.overflow = "";
+      if (source) source.focus();
+      source = null;
+    }
+    seals.forEach(function (seal) {
+      seal.addEventListener("click", function (e) {
+        // the official-page link inside the card must still act as a link
+        if (e.target.closest && e.target.closest("a")) return;
+        open(seal);
+      });
+      seal.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(seal); }
+      });
+    });
+    modal.querySelector(".cmodal__bg").addEventListener("click", close);
+    closeBtn.addEventListener("click", close);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modal.classList.contains("is-open")) close();
+    });
+  }
+
   /* ---------- Scroll progress (fallback where scroll timelines miss) ---------- */
   function initProg() {
     var bar = document.createElement("div");
@@ -286,12 +325,12 @@
     initLenis();
     initMenu();
     initLinks();
-    initPress();
     initParallax();
     initTickers();
     initCounters();
     initWords();
     initMagnetic();
+    initCertModal();
     initDot();
     initProg();
     runBoot(function () {

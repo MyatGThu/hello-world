@@ -8,12 +8,11 @@ deployed to GitHub Pages.
 
 ## The design
 
-Poster-editorial. One geometric sans (Outfit) set enormous, and five flat
-warm paper stocks — cream, sun, persimmon, moss, ink — that the whole page
-presses through as you scroll: the stock tokens are registered custom
-properties, so a section crossing the middle of the viewport re-inks the
-entire page in one animated swap. Thick rules, hard edges, offset-block
-shadows, uppercase display type, mono labels.
+Poster-editorial in black and white. One geometric sans (Outfit) set
+enormous on warm off-white paper with near-black ink — no colour anywhere,
+so the typography and the rules do all the work. Thick rules, hard edges,
+offset-block shadows, uppercase display type, mono labels; hovers invert
+(ink block, paper type) or underline instead of recolouring.
 
 Depth comes from a three-part parallax vocabulary (`data-px`, `data-px-x`,
 `data-px-z`): floating geometry and index rows start pushed into the page and
@@ -22,11 +21,16 @@ pointer. Entrances are one class flip driven by ScrollTrigger with CSS owning
 the easing — line-masked headlines, rise-ins, scroll-scrubbed word reveals,
 velocity-reactive tickers, magnetic CTAs, and a flat difference-blend cursor.
 
-Every masthead tab is a real page: Cover, About, Work, Projects, Credentials,
-Contact, chained end-to-end by a NEXT block on every page. Navigation uses
-native cross-document View Transitions where supported. Scrollbars are hidden
-on both axes; a thick accent progress bar (CSS scroll timeline) keeps
-orientation.
+Six real pages — Cover, About, Work, Projects, Credentials, Contact —
+chained end-to-end by a NEXT block on every page, with the burger overlay as
+the single menu. Work rows carry each employer's mark as a clickable chip
+that opens the company site in a new tab. Every project case ships a static
+isometric line diagram — boxes projected by a tiny SVG toolkit in the page
+generator — that draws the build like an engineering plate. Credential seals
+open an overlay that explains the certification, maps where it works in each
+role, and links to the official certification page. Navigation uses native
+cross-document View Transitions where supported. Scrollbars are hidden on
+both axes; a thin ink progress bar (CSS scroll timeline) keeps orientation.
 
 ## Stack
 
@@ -46,10 +50,11 @@ vendor/               # GSAP, ScrollTrigger, Lenis
 
 ## Accessibility
 
-Reduced motion gets every word with no entrances, no tickers and brisk
-colour fades. The site is fully readable without JavaScript. Interactive
-elements are keyboard reachable with visible focus; stock pairs hold
-readable contrast for body text.
+Reduced motion gets every word with no entrances and no tickers. The site
+is fully readable without JavaScript. Interactive elements are keyboard
+reachable with visible focus — credential seals are buttons, the overlay is
+a labelled dialog that closes on Escape and returns focus — and the
+ink-on-paper pair holds strong contrast everywhere.
 
 ## Notes
 
