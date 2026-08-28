@@ -4,279 +4,146 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Myat Thu — Modern Workplace & Cloud</title>
-  <meta name="description" content="Myat Thu — an IT professional specialising in the Microsoft ecosystem: Modern Device Management, Intune, Entra ID, and cloud administration. Based in Melbourne, Australia." />
+  <meta name="description" content="Myat Thu — IT professional in the Microsoft ecosystem: Intune, Entra ID, cloud. Melbourne, Australia." />
   <meta name="author" content="Myat Thu" />
   <link rel="canonical" href="https://myatgthu.github.io/hello-world.io/" />
-  <meta name="theme-color" content="#f2efe6" />
+  <meta name="theme-color" content="#f3efe4" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Myat Thu" />
   <meta property="og:url" content="https://myatgthu.github.io/hello-world.io/" />
   <meta property="og:title" content="Myat Thu — Modern Workplace & Cloud" />
-  <meta property="og:description" content="Myat Thu — an IT professional specialising in the Microsoft ecosystem: Modern Device Management, Intune, Entra ID, and cloud administration. Based in Melbourne, Australia." />
+  <meta property="og:description" content="Myat Thu — IT professional in the Microsoft ecosystem: Intune, Entra ID, cloud. Melbourne, Australia." />
   <meta property="og:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
   <meta property="og:image:width" content="2400" />
   <meta property="og:image:height" content="1260" />
-  <meta property="og:image:alt" content="Myat Thu — IT professional shaping the Microsoft modern workplace. Intune · Entra ID · Cloud · Melbourne." />
+  <meta property="og:image:alt" content="Myat Thu — IT professional. Intune, Entra ID, cloud. Melbourne." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Myat Thu — Modern Workplace & Cloud" />
-  <meta name="twitter:description" content="Myat Thu — an IT professional specialising in the Microsoft ecosystem: Modern Device Management, Intune, Entra ID, and cloud administration. Based in Melbourne, Australia." />
+  <meta name="twitter:description" content="Myat Thu — IT professional in the Microsoft ecosystem: Intune, Entra ID, cloud. Melbourne, Australia." />
   <meta name="twitter:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23201d15'/><text x='50' y='70' font-size='56' font-family='Arial,sans-serif' font-weight='700' fill='%23f2efe6' text-anchor='middle'>M</text></svg>" />
-
-  <script>document.documentElement.classList.add('js');try{var n=sessionStorage.getItem('nav');if(n){var c=document.documentElement.classList;c.add('is-entering');if(n==='wipe')c.add('is-wipe');}}catch(e){}</script>
-
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2316150f'/><text x='50' y='72' font-size='62' font-family='Arial,sans-serif' font-weight='900' fill='%23f3efe4' text-anchor='middle'>M</text></svg>" />
+  <script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('nav')){document.documentElement.classList.add('is-arrived');sessionStorage.removeItem('nav');}}catch(e){}</script>
   <link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/share-tech-mono.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css?v=__BUILD__" />
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <div class="grain" aria-hidden="true"></div>
-  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
-  <div class="wipe" aria-hidden="true"><span class="wipe__label">Turning the page —</span></div>
-
-  <!-- Preloader (graphite drop) — the cover only; subpages arrive mid-book -->
-  <div class="loader" id="loader" aria-hidden="true">
-    <div class="loader__drop" aria-hidden="true"></div>
-    <div class="loader__inner">
-      <span class="loader__name">Myat&nbsp;Thu</span>
-      <span class="loader__count"><i id="loaderCount">0</i><em>%</em></span>
-    </div>
-    <div class="loader__bar"><span id="loaderBar"></span></div>
+  <div class="boot" id="boot" aria-hidden="true">
+    <span class="boot__name">MYAT&nbsp;THU</span>
+    <span class="boot__pct" id="bootPct">0</span>
   </div>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="dot" aria-hidden="true"><span class="dot__label"></span></div>
 
-  <!-- Masthead: the tabs are pages, not anchors -->
-  <header class="head" id="head">
-    <a class="head__brand" href="index.html" data-cursor="cover">Myat&nbsp;Thu</a>
-    <nav class="head__nav" aria-label="Pages">
-      <a href="about.html"><i>02</i>About</a>
-      <a href="work.html"><i>03</i>Work</a>
-      <a href="projects.html"><i>04</i>Projects</a>
-      <a href="credentials.html"><i>05</i>Credentials</a>
-      <a href="contact.html"><i>06</i>Contact</a>
+  <header class="bar">
+    <a class="bar__mark" href="index.html" data-cur="cover">MYAT&nbsp;THU<sup>&reg;</sup></a>
+    <nav class="bar__nav" aria-label="Pages">
+      <a href="about.html"><i>2</i>About</a>
+      <a href="work.html"><i>3</i>Work</a>
+      <a href="projects.html"><i>4</i>Projects</a>
+      <a href="credentials.html"><i>5</i>Credentials</a>
+      <a href="contact.html"><i>6</i>Contact</a>
     </nav>
-    <div class="head__right">
-      <a class="head__status" href="contact.html" data-cursor="say hi">
-        <span class="head__dot"></span> <span>Open to work</span>
-      </a>
-      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
-        <span class="menu-btn__label">Menu</span>
-        <span class="menu-btn__bars"><i></i><i></i></span>
-      </button>
+    <div class="bar__end">
+      <a class="bar__status" href="contact.html" data-cur="say hi"><b></b>OPEN&nbsp;TO&nbsp;WORK</a>
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="ov" aria-label="Menu"><i></i><i></i></button>
     </div>
   </header>
 
-  <!-- Fullscreen menu -->
-  <nav class="menu" id="menu" aria-label="Primary" aria-hidden="true">
-    <div class="menu__inner">
-      <ul class="menu__links">
-        <li><a href="index.html" aria-current="page"><span class="menu__idx">01</span> Cover</a></li>
-        <li><a href="about.html"><span class="menu__idx">02</span> About</a></li>
-        <li><a href="work.html"><span class="menu__idx">03</span> Work</a></li>
-        <li><a href="projects.html"><span class="menu__idx">04</span> Projects</a></li>
-        <li><a href="credentials.html"><span class="menu__idx">05</span> Credentials</a></li>
-        <li><a href="contact.html"><span class="menu__idx">06</span> Contact</a></li>
-      </ul>
-      <div class="menu__meta">
-        <div class="menu__col">
-          <span class="menu__h">Get in touch</span>
-          <a href="mailto:myatgeorgethu@gmail.com" data-cursor="email">myatgeorgethu@gmail.com</a>
-          <a href="assets/Myat-Thu-CV.pdf" download data-cursor="download">Download CV ↓</a>
-        </div>
-        <div class="menu__col">
-          <span class="menu__h">Based in</span>
-          <span>Melbourne, Australia</span>
-        </div>
-        <div class="menu__col">
-          <span class="menu__h">Status</span>
-          <span>Open to opportunities — 2026</span>
-        </div>
-      </div>
+  <nav class="ov" id="ov" aria-label="Primary" aria-hidden="true">
+    <ul class="ov__list">
+      <li><a href="index.html" aria-current="page"><em>01</em><span>Cover</span></a></li>
+      <li><a href="about.html"><em>02</em><span>About</span></a></li>
+      <li><a href="work.html"><em>03</em><span>Work</span></a></li>
+      <li><a href="projects.html"><em>04</em><span>Projects</span></a></li>
+      <li><a href="credentials.html"><em>05</em><span>Credentials</span></a></li>
+      <li><a href="contact.html"><em>06</em><span>Contact</span></a></li>
+    </ul>
+    <div class="ov__meta">
+      <a href="mailto:myatgeorgethu@gmail.com" data-cur="email">myatgeorgethu@gmail.com</a>
+      <a href="assets/Myat-Thu-CV.pdf" download data-cur="download">Download CV ↓</a>
+      <span>Melbourne, Australia</span>
     </div>
   </nav>
 
   <main id="main">
-    <!-- ============================ COVER ============================ -->
-    <section class="hero" id="top" data-chapter="Arrival" data-palette="paper">
-      <div class="hero__bg" data-parallax="0.22" data-parallax-z="-90" aria-hidden="true"></div>
 
-      <p class="hero__eyebrow" data-reveal>
-        <span>Field notes — modern workplace division</span><span>Melbourne, AU — 2026</span>
-      </p>
+    <section class="poster" data-stock="cream">
+      <p class="poster__k" data-a="up">IT professional — Melbourne, AU — 2026</p>
+      <h1 class="poster__t">
+        <span class="ln"><b data-a="mask">MYAT</b></span>
+        <span class="ln"><b data-a="mask">THU</b></span>
+      </h1>
+      <p class="poster__sub" data-a="up">Microsoft modern workplace. Device management, identity and cloud — tuned for automation and security.</p>
+      <div class="poster__chips" data-a="up">
+        <span>Service Desk Analyst</span><span>IPH Limited</span><span>Open to work 2026</span>
+      </div>
+      <span class="geo geo--ring" data-px="0.4" data-px-z="-120" aria-hidden="true"></span>
+      <span class="geo geo--block" data-px="-0.3" data-px-z="-60" aria-hidden="true"></span>
+      <span class="geo geo--cross" data-px="0.6" data-px-z="-180" aria-hidden="true">+</span>
+      <a class="poster__cue" href="#next" data-cur="scroll" aria-label="Scroll"><i></i></a>
+    </section>
 
-      <div class="hero__main">
-        <h1 class="hero__title" aria-label="Myat Thu">
-          <span class="line" aria-hidden="true"><span class="word" data-split>Myat</span></span>
-          <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Thu.</span></span>
-        </h1>
+    <div class="tick" aria-hidden="true"><div class="tick__t"><span>Microsoft Intune</span><b>●</b><span>Entra ID</span><b>●</b><span>Windows Autopilot</span><b>●</b><span>Azure</span><b>●</b><span>PowerShell</span><b>●</b><span>Endpoint Security</span><b>●</b><span>Microsoft 365</span><b>●</b><span>Microsoft Intune</span><b>●</b><span>Entra ID</span><b>●</b><span>Windows Autopilot</span><b>●</b><span>Azure</span><b>●</b><span>PowerShell</span><b>●</b><span>Endpoint Security</span><b>●</b><span>Microsoft 365</span><b>●</b></div></div>
 
-        <a class="badge" href="contact.html" data-cursor="let's talk" data-magnetic="0.34" aria-label="Open to work, available 2026">
-          <svg class="badge__svg" viewBox="0 0 140 140" aria-hidden="true">
-            <defs>
-              <path id="badgePath" d="M70,70 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0" />
-            </defs>
-            <text><textPath href="#badgePath" startOffset="0">OPEN TO WORK ✦ MELBOURNE ✦ 2026 ✦ </textPath></text>
-          </svg>
-          <span class="badge__center" aria-hidden="true">↓</span>
+    <section class="index" id="next" data-stock="sun">
+      <p class="sec__k" data-a="up">Index</p>
+      <nav class="index__list" aria-label="Site index">
+        <a class="row" href="about.html" data-px-z="-40" data-cur="open">
+          <em>01</em><strong data-a="mask">About</strong><span>The person &amp; the brief</span><i>→</i>
         </a>
-
-        <p class="hero__thesis" data-reveal>
-          Every device that lands on my desk leaves in the same shape.
-          So does the machine.
-        </p>
-
-        <!-- schematic callouts pointing into the drawing -->
-        <span class="anno anno--l" style="top: 4%; right: 3%; --lead: 110px;" aria-hidden="true">fig.00 — <em>gyro stabiliser</em></span>
-        <span class="anno anno--r" style="bottom: -6%; left: 38%; --lead: 80px;" aria-hidden="true">graphite 2B // drafted 2077</span>
-
-        <button class="anno-btn" id="explodeBtn" type="button" aria-pressed="false">fig.00a — exploded view</button>
-      </div>
-
-      <!-- Exploded-view parts list: runner-coded, credential-rated -->
-      <ol class="parts" aria-label="Machine parts — the stack behind the work">
-        <li class="part part--a1"><span class="part__runner">A1</span><span class="part__cred">MD-102</span><span class="part__code">END · outer ring</span><span class="part__name">Endpoint — Intune, Autopilot, SOE</span></li>
-        <li class="part part--a2"><span class="part__runner">A2</span><span class="part__cred">SC-300<i>*</i></span><span class="part__code">IDN · mid ring</span><span class="part__name">Identity — Entra, conditional access</span></li>
-        <li class="part part--a3"><span class="part__runner">A3</span><span class="part__cred">AZ-900</span><span class="part__code">CLD · inner ring</span><span class="part__name">Cloud — Azure, Microsoft 365</span></li>
-        <li class="part part--b1"><span class="part__runner">B1</span><span class="part__cred">L2&nbsp;ESC</span><span class="part__code">SRV · core</span><span class="part__name">Service — the desk, SLAs, on-call</span></li>
-        <li class="part part--c1"><span class="part__runner">C1</span><span class="part__cred">KBA</span><span class="part__code">SIG · beacon</span><span class="part__name">Signal — docs &amp; playbooks</span></li>
-        <li class="parts__note" aria-hidden="true">* in progress — see Plate 05</li>
-      </ol>
-
-      <div class="hero__foot">
-        <div class="hero__portrait" data-parallax="-0.16" data-cursor="that's me">
-          <div class="hero__portrait-media">
-            <img class="hero__portrait-img" src="assets/portrait.jpg" alt="Myat Thu" width="470" height="627" />
-          </div>
-        </div>
-        <div class="hero__intro">
-          <p class="hero__role" data-reveal>
-            IT professional shaping the <b>Microsoft modern workplace</b> —
-            device management, identity, and cloud, tuned for automation and security.
-          </p>
-          <div class="hero__meta" data-reveal>
-            <span>Service Desk Analyst</span>
-            <span>IPH Limited</span>
-            <span>Melbourne, Australia</span>
-          </div>
-        </div>
-      </div>
-
-      <a class="hero__scroll" href="#contents" data-cursor="scroll" aria-label="Scroll to contents">
-        <span>Scroll</span><i></i>
-      </a>
+        <a class="row" href="work.html" data-px-z="-70" data-cur="open">
+          <em>02</em><strong data-a="mask">Work</strong><span>Four roles, seven years</span><i>→</i>
+        </a>
+        <a class="row" href="projects.html" data-px-z="-100" data-cur="open">
+          <em>03</em><strong data-a="mask">Projects</strong><span>Case files &amp; the lab</span><i>→</i>
+        </a>
+        <a class="row" href="credentials.html" data-px-z="-130" data-cur="open">
+          <em>04</em><strong data-a="mask">Credentials</strong><span>Four certs, one in flight</span><i>→</i>
+        </a>
+        <a class="row" href="contact.html" data-px-z="-160" data-cur="open">
+          <em>05</em><strong data-a="mask">Contact</strong><span>Replies within a day</span><i>→</i>
+        </a>
+      </nav>
     </section>
 
-    <!-- ============================ MARQUEE ============================ -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee__track" id="marquee">
-        <span>Microsoft Intune</span><span class="dot">✦</span>
-        <span>Entra ID</span><span class="dot">✦</span>
-        <span>Windows Autopilot</span><span class="dot">✦</span>
-        <span>Modern Device Management</span><span class="dot">✦</span>
-        <span>Azure</span><span class="dot">✦</span>
-        <span>PowerShell</span><span class="dot">✦</span>
-        <span>Endpoint Security</span><span class="dot">✦</span>
-        <span>Microsoft 365</span><span class="dot">✦</span>
-        <span>Microsoft Intune</span><span class="dot">✦</span>
-        <span>Entra ID</span><span class="dot">✦</span>
-        <span>Windows Autopilot</span><span class="dot">✦</span>
-        <span>Modern Device Management</span><span class="dot">✦</span>
-        <span>Azure</span><span class="dot">✦</span>
-        <span>PowerShell</span><span class="dot">✦</span>
-        <span>Endpoint Security</span><span class="dot">✦</span>
-        <span>Microsoft 365</span><span class="dot">✦</span>
-      </div>
-    </div>
-
-    <!-- ============================ CONTENTS ============================ -->
-    <section class="toc" id="contents" data-chapter="Contents" data-palette="cobalt" aria-label="Contents">
-      <div class="caps__head">
-        <h2 class="section-title" data-reveal>Contents</h2>
-        <p class="caps__note" data-reveal>Five plates. Each one is its own page — open any of them.</p>
-      </div>
-      <ol class="toc__list">
-        <li><a class="toc__row" data-parallax-z="-30" href="about.html" data-cursor="open plate">
-          <span class="toc__no">PL.02</span>
-          <span class="toc__t">The Person</span>
-          <span class="toc__d">About — off the clock &amp; the brief</span>
-        </a></li>
-        <li><a class="toc__row" data-parallax-z="-55" href="work.html" data-cursor="open plate">
-          <span class="toc__no">PL.03</span>
-          <span class="toc__t">The Orbit</span>
-          <span class="toc__d">Work — four roles, seven years</span>
-        </a></li>
-        <li><a class="toc__row" data-parallax-z="-80" href="projects.html" data-cursor="open plate">
-          <span class="toc__no">PL.04</span>
-          <span class="toc__t">The Proof</span>
-          <span class="toc__d">Projects — case files &amp; the lab</span>
-        </a></li>
-        <li><a class="toc__row" data-parallax-z="-105" href="credentials.html" data-cursor="open plate">
-          <span class="toc__no">PL.05</span>
-          <span class="toc__t">The Seals</span>
-          <span class="toc__d">Credentials — four certs, one in flight</span>
-        </a></li>
-        <li><a class="toc__row" data-parallax-z="-130" href="contact.html" data-cursor="open plate">
-          <span class="toc__no">PL.06</span>
-          <span class="toc__t">Connect</span>
-          <span class="toc__d">Contact — usually replies within a day</span>
-        </a></li>
-      </ol>
+    <section class="nums" data-stock="persimmon" aria-label="By the numbers">
+      <div class="num" data-a="up"><b data-count="400" data-suffix="+">400+</b><span>Retail stores kept running</span></div>
+      <div class="num" data-a="up"><b data-count="50" data-suffix="/day">50/day</b><span>Tickets cleared at peak</span></div>
+      <div class="num" data-a="up"><b data-count="2" data-suffix="nd">2nd</b><span>Level escalation for the desk</span></div>
+      <div class="num" data-a="up"><b data-count="4" data-suffix="">4</b><span>Microsoft &amp; Google certs</span></div>
     </section>
 
-    <!-- ============================ STATS ============================ -->
-    <section class="stats" data-chapter="Signal" data-palette="coral" aria-label="By the numbers">
-      <div class="stat" data-reveal>
-        <span class="stat__num" data-count="400" data-suffix="+">400+</span>
-        <span class="stat__label">Retail stores kept running nationwide</span>
-      </div>
-      <div class="stat" data-reveal>
-        <span class="stat__num" data-count="50" data-suffix="/day">50/day</span>
-        <span class="stat__label">Tickets cleared a day at peak load</span>
-      </div>
-      <div class="stat" data-reveal>
-        <span class="stat__num" data-count="2" data-suffix="nd">2nd</span>
-        <span class="stat__label">Level escalation point for the desk</span>
-      </div>
-      <div class="stat" data-reveal>
-        <span class="stat__num" data-count="4" data-suffix="">4</span>
-        <span class="stat__label">Microsoft &amp; Google certifications</span>
-      </div>
+    <section class="now" data-stock="moss">
+      <p class="sec__k" data-a="up">Now</p>
+      <p class="now__t" data-a="mask">Studying SC-300 —</p>
+      <p class="now__t now__t--b" data-a="mask">identity &amp; access.</p>
+      <p class="now__d" data-a="up">Deepening Entra ID, conditional access and identity governance in a live lab tenant.</p>
     </section>
 
-    <!-- ============================ NOW ============================ -->
-    <section class="now" data-palette="acid" aria-label="What I'm focused on now">
-      <span class="now__tag"><span class="now__dot" aria-hidden="true"></span> Now</span>
-      <p class="now__text" data-reveal>
-        Studying for <strong>SC-300</strong> — Microsoft Identity &amp; Access Administrator —
-        deepening Entra ID, conditional access, and identity governance.
-      </p>
-    </section>
-
-
-    <!-- ============================ PAGE TURN ============================ -->
-    <a class="turn" href="about.html" data-chapter="Connect" data-palette="forest" data-cursor="turn the page">
-      <span class="turn__k" data-reveal>Continued on Plate 02</span>
-      <span class="turn__t" data-reveal>The Person <em>— About</em></span>
-      <span class="turn__fold" aria-hidden="true"></span>
+    <a class="next" href="about.html" data-stock="ink" data-cur="next page">
+      <span class="next__k" data-a="up">Next</span>
+      <span class="next__t" data-a="mask">About</span>
+      <span class="next__a" aria-hidden="true">→</span>
     </a>
   </main>
 
-  <footer class="foot">
-    <span>© 2026 Myat Thu</span>
-    <a href="index.html" data-cursor="cover">Back to the cover ↑</a>
-    <span>Melbourne, Australia</span>
-    <span class="foot__colophon">Set in Bodoni Moda, Outfit &amp; Share Tech Mono · the machine is drawn live in WebGL · no trackers, no cookies</span>
+  <footer class="end">
+    <a class="end__cta" href="mailto:myatgeorgethu@gmail.com" data-mag="0.18" data-cur="email">
+      <span class="end__k">Say hello</span>
+      <span class="end__mail">myatgeorgethu@gmail.com<i>→</i></span>
+    </a>
+    <div class="end__meta">
+      <span>© 2026 Myat Thu</span>
+      <span>Melbourne, Australia</span>
+      <span>No trackers, no cookies</span>
+      <a href="index.html" data-cur="cover">Back to cover ↑</a>
+    </div>
   </footer>
 
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
   <script src="vendor/lenis.min.js" defer></script>
-  <script src="vendor/anime.umd.min.js" defer></script>
   <script src="main.js?v=__BUILD__" defer></script>
-  <!-- mercury lazy-loads vendor/three.mercury.min.js itself, off the critical path -->
-  <script src="mercury.js?v=__BUILD__" defer></script>
 </body>
 </html>

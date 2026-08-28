@@ -4,195 +4,146 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Projects — Myat Thu</title>
-  <meta name="description" content="Case files and the home lab — dock standardisation across 400+ stores, the service-desk playbook, modern device builds, and a live Microsoft 365 lab tenant." />
+  <meta name="description" content="Case files and the home lab — dock standardisation, the desk playbook, modern device builds." />
   <meta name="author" content="Myat Thu" />
   <link rel="canonical" href="https://myatgthu.github.io/hello-world.io/projects.html" />
-  <meta name="theme-color" content="#f2efe6" />
+  <meta name="theme-color" content="#f3efe4" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Myat Thu" />
   <meta property="og:url" content="https://myatgthu.github.io/hello-world.io/projects.html" />
   <meta property="og:title" content="Projects — Myat Thu" />
-  <meta property="og:description" content="Case files and the home lab — dock standardisation across 400+ stores, the service-desk playbook, modern device builds, and a live Microsoft 365 lab tenant." />
+  <meta property="og:description" content="Case files and the home lab — dock standardisation, the desk playbook, modern device builds." />
   <meta property="og:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
   <meta property="og:image:width" content="2400" />
   <meta property="og:image:height" content="1260" />
-  <meta property="og:image:alt" content="Myat Thu — IT professional shaping the Microsoft modern workplace. Intune · Entra ID · Cloud · Melbourne." />
+  <meta property="og:image:alt" content="Myat Thu — IT professional. Intune, Entra ID, cloud. Melbourne." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Projects — Myat Thu" />
-  <meta name="twitter:description" content="Case files and the home lab — dock standardisation across 400+ stores, the service-desk playbook, modern device builds, and a live Microsoft 365 lab tenant." />
+  <meta name="twitter:description" content="Case files and the home lab — dock standardisation, the desk playbook, modern device builds." />
   <meta name="twitter:image" content="https://myatgthu.github.io/hello-world.io/assets/og.png" />
-
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='28' fill='%23201d15'/><text x='50' y='70' font-size='56' font-family='Arial,sans-serif' font-weight='700' fill='%23f2efe6' text-anchor='middle'>M</text></svg>" />
-
-  <script>document.documentElement.classList.add('js');try{var n=sessionStorage.getItem('nav');if(n){var c=document.documentElement.classList;c.add('is-entering');if(n==='wipe')c.add('is-wipe');}}catch(e){}</script>
-
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2316150f'/><text x='50' y='72' font-size='62' font-family='Arial,sans-serif' font-weight='900' fill='%23f3efe4' text-anchor='middle'>M</text></svg>" />
+  <script>document.documentElement.classList.add('js');try{if(sessionStorage.getItem('nav')){document.documentElement.classList.add('is-arrived');sessionStorage.removeItem('nav');}}catch(e){}</script>
   <link rel="preload" href="assets/fonts/outfit.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="assets/fonts/bodoni-moda.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/share-tech-mono.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css?v=__BUILD__" />
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="dot" aria-hidden="true"><span class="dot__label"></span></div>
 
-  <div class="grain" aria-hidden="true"></div>
-  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
-  <div class="wipe" aria-hidden="true"><span class="wipe__label">Turning the page —</span></div>
-
-  <!-- Masthead: the tabs are pages, not anchors -->
-  <header class="head" id="head">
-    <a class="head__brand" href="index.html" data-cursor="cover">Myat&nbsp;Thu</a>
-    <nav class="head__nav" aria-label="Pages">
-      <a href="about.html"><i>02</i>About</a>
-      <a href="work.html"><i>03</i>Work</a>
-      <a href="projects.html" aria-current="page"><i>04</i>Projects</a>
-      <a href="credentials.html"><i>05</i>Credentials</a>
-      <a href="contact.html"><i>06</i>Contact</a>
+  <header class="bar">
+    <a class="bar__mark" href="index.html" data-cur="cover">MYAT&nbsp;THU<sup>&reg;</sup></a>
+    <nav class="bar__nav" aria-label="Pages">
+      <a href="about.html"><i>2</i>About</a>
+      <a href="work.html"><i>3</i>Work</a>
+      <a href="projects.html" aria-current="page"><i>4</i>Projects</a>
+      <a href="credentials.html"><i>5</i>Credentials</a>
+      <a href="contact.html"><i>6</i>Contact</a>
     </nav>
-    <div class="head__right">
-      <a class="head__status" href="contact.html" data-cursor="say hi">
-        <span class="head__dot"></span> <span>Open to work</span>
-      </a>
-      <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
-        <span class="menu-btn__label">Menu</span>
-        <span class="menu-btn__bars"><i></i><i></i></span>
-      </button>
+    <div class="bar__end">
+      <a class="bar__status" href="contact.html" data-cur="say hi"><b></b>OPEN&nbsp;TO&nbsp;WORK</a>
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="ov" aria-label="Menu"><i></i><i></i></button>
     </div>
   </header>
 
-  <!-- Fullscreen menu -->
-  <nav class="menu" id="menu" aria-label="Primary" aria-hidden="true">
-    <div class="menu__inner">
-      <ul class="menu__links">
-        <li><a href="index.html"><span class="menu__idx">01</span> Cover</a></li>
-        <li><a href="about.html"><span class="menu__idx">02</span> About</a></li>
-        <li><a href="work.html"><span class="menu__idx">03</span> Work</a></li>
-        <li><a href="projects.html" aria-current="page"><span class="menu__idx">04</span> Projects</a></li>
-        <li><a href="credentials.html"><span class="menu__idx">05</span> Credentials</a></li>
-        <li><a href="contact.html"><span class="menu__idx">06</span> Contact</a></li>
-      </ul>
-      <div class="menu__meta">
-        <div class="menu__col">
-          <span class="menu__h">Get in touch</span>
-          <a href="mailto:myatgeorgethu@gmail.com" data-cursor="email">myatgeorgethu@gmail.com</a>
-          <a href="assets/Myat-Thu-CV.pdf" download data-cursor="download">Download CV ↓</a>
-        </div>
-        <div class="menu__col">
-          <span class="menu__h">Based in</span>
-          <span>Melbourne, Australia</span>
-        </div>
-        <div class="menu__col">
-          <span class="menu__h">Status</span>
-          <span>Open to opportunities — 2026</span>
-        </div>
-      </div>
+  <nav class="ov" id="ov" aria-label="Primary" aria-hidden="true">
+    <ul class="ov__list">
+      <li><a href="index.html"><em>01</em><span>Cover</span></a></li>
+      <li><a href="about.html"><em>02</em><span>About</span></a></li>
+      <li><a href="work.html"><em>03</em><span>Work</span></a></li>
+      <li><a href="projects.html" aria-current="page"><em>04</em><span>Projects</span></a></li>
+      <li><a href="credentials.html"><em>05</em><span>Credentials</span></a></li>
+      <li><a href="contact.html"><em>06</em><span>Contact</span></a></li>
+    </ul>
+    <div class="ov__meta">
+      <a href="mailto:myatgeorgethu@gmail.com" data-cur="email">myatgeorgethu@gmail.com</a>
+      <a href="assets/Myat-Thu-CV.pdf" download data-cur="download">Download CV ↓</a>
+      <span>Melbourne, Australia</span>
     </div>
   </nav>
 
   <main id="main">
 
-    <!-- ============================ PLATE ============================ -->
-    <header class="plate">
-      <p class="plate__folio" data-reveal>
-        <span>Field notes — projects</span><span>Plate 04</span><span>Melbourne, AU — 2026</span>
-      </p>
-      <h1 class="plate__title" aria-label="The Proof">
-        <span class="line" aria-hidden="true"><span class="word" data-split>The</span></span>
-        <span class="line" aria-hidden="true"><span class="word word--accent" data-split>Proof.</span></span>
+    <section class="poster" data-stock="cream">
+      <p class="poster__k" data-a="up">Projects — owned end to end</p>
+      <h1 class="poster__t">
+        <span class="ln"><b data-a="mask">THE</b></span>
+        <span class="ln"><b data-a="mask">PROOF</b></span>
       </h1>
-      <p class="plate__stand" data-reveal>Three case files and a standing lab. The pattern in all of them: find what actually broke, fix it once, and write it down so the next person is faster.</p>
-      <hr class="plate__rule" />
-    </header>
-
-    <!-- ============================ CASE FILES ============================ -->
-    <section class="cases" id="projects" data-chapter="The Proof" data-palette="cobalt">
-      <div class="caps__head">
-        <h2 class="section-title" data-reveal>Case files</h2>
-        <p class="caps__note" data-reveal>A few problems I've owned from ticket to resolution.</p>
-      </div>
-      <ol class="cases__list">
-        <li class="case" data-rise data-case data-title="Store-fleet dock standardisation" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case file: Store-fleet dock standardisation">
-          <div class="case__head"><span class="case__no">CASE_01</span><span class="case__tag">Endpoint · Rollout</span></div>
-          <h3 class="case__title">Store-fleet dock standardisation</h3>
-          <p class="case__summary">Killed recurring dock failures across 400+ stores with a simpler, documented setup.</p>
-          <span class="case__open" aria-hidden="true">Open case file →</span>
-          <div class="case__data">
-            <p class="cm__overview">Retail laptop docks were failing constantly and costing money to replace right across the store estate.</p>
-            <dl class="cm__rows">
-              <div><dt>Objective</dt><dd>Stop the steady stream of failing, costly laptop docks across 400+ retail stores.</dd></div>
-              <div><dt>My role</dt><dd>Replaced the Lenovo docks with daisy-chained hub monitors and wrote the rollout playbook for the service desk.</dd></div>
-              <div><dt>Outcome</dt><dd>Simpler desk setups, far fewer dock failures, and a repeatable process anyone on the team could run.</dd></div>
-            </dl>
-            <ul class="cm__stack"><li>Hardware</li><li>Rollout</li><li>Documentation</li></ul>
-          </div>
-        </li>
-        <li class="case" data-rise data-case data-title="Service-desk playbook" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case file: Service-desk playbook">
-          <div class="case__head"><span class="case__no">CASE_02</span><span class="case__tag">ITSM · Knowledge</span></div>
-          <h3 class="case__title">Service-desk playbook</h3>
-          <p class="case__summary">Turned tribal knowledge and repeat tickets into a documented, repeatable process.</p>
-          <span class="case__open" aria-hidden="true">Open case file →</span>
-          <div class="case__data">
-            <p class="cm__overview">The desk leaned on a few people's memory; the same issues kept coming back and new starters took a while to get up to speed.</p>
-            <dl class="cm__rows">
-              <div><dt>Objective</dt><dd>Turn tribal knowledge and repeat tickets into a consistent, documented process.</dd></div>
-              <div><dt>My role</dt><dd>Documented SOPs, KBAs and escalation paths, and became the second-level point the desk leans on.</dd></div>
-              <div><dt>Outcome</dt><dd>Faster, more consistent resolutions and a knowledge base new starters could pick up quickly.</dd></div>
-            </dl>
-            <ul class="cm__stack"><li>ITSM</li><li>KBAs</li><li>Process</li></ul>
-          </div>
-        </li>
-        <li class="case" data-rise data-case data-title="Modern device builds &amp; access" tabindex="0" role="button" aria-haspopup="dialog" aria-label="Open case file: Modern device builds and access">
-          <div class="case__head"><span class="case__no">CASE_03</span><span class="case__tag">Identity · Devices</span></div>
-          <h3 class="case__title">Modern device builds &amp; access</h3>
-          <p class="case__summary">Got staff onto secure, standardised devices with the right access from day one.</p>
-          <span class="case__open" aria-hidden="true">Open case file →</span>
-          <div class="case__data">
-            <p class="cm__overview">Device builds and access were manual and inconsistent, creating rework and the odd security gap.</p>
-            <dl class="cm__rows">
-              <div><dt>Objective</dt><dd>Get staff onto secure, standardised devices with the right access from day one.</dd></div>
-              <div><dt>My role</dt><dd>Built laptops to the SOE, handled Active Directory and M365 administration, and ran joiner/leaver processes end to end.</dd></div>
-              <div><dt>Outcome</dt><dd>Consistent, compliant endpoints and a tidy account lifecycle with less manual rework.</dd></div>
-            </dl>
-            <ul class="cm__stack"><li>Intune</li><li>Active Directory</li><li>M365</li></ul>
-          </div>
-        </li>
-      </ol>
+      <p class="poster__sub" data-a="up">Three case files and a standing lab. Find what broke, fix it once, write it down.</p>
+      <span class="geo geo--ring" data-px="0.4" data-px-z="-120" aria-hidden="true"></span>
+      <span class="geo geo--block" data-px="-0.3" data-px-z="-60" aria-hidden="true"></span>
+      <span class="geo geo--cross" data-px="0.6" data-px-z="-180" aria-hidden="true">+</span>
+      <a class="poster__cue" href="#next" data-cur="scroll" aria-label="Scroll"><i></i></a>
     </section>
 
-    <!-- ============================ HOME LAB ============================ -->
-    <section class="lab" id="lab" data-chapter="The Bench" data-palette="coral" data-cursor="break it">
-      <div class="caps__head">
-        <h2 class="section-title" data-reveal>Home lab</h2>
-        <p class="caps__note" data-reveal>Where I break things on purpose — my sandbox for SC-300 and the Microsoft cloud. <span class="lab__hint">Go on — dent the drawing.</span></p>
-      </div>
-      <ul class="lab__grid">
-        <li class="lab__item" data-cap><span class="lab__k">01</span><h3 class="lab__t">Microsoft 365 dev tenant</h3><p class="lab__d">A throwaway tenant for testing conditional access, policies and admin without touching production.</p></li>
-        <li class="lab__item" data-cap><span class="lab__k">02</span><h3 class="lab__t">Entra ID &amp; Intune</h3><p class="lab__d">Hands-on with identity governance, conditional access and endpoint policies — straight from the SC-300 syllabus.</p></li>
-        <li class="lab__item" data-cap><span class="lab__k">03</span><h3 class="lab__t">Azure free account</h3><p class="lab__d">Spinning up resources to learn cloud fundamentals and how the pieces fit together.</p></li>
-        <li class="lab__item" data-cap><span class="lab__k">04</span><h3 class="lab__t">Local VMs &amp; PowerShell</h3><p class="lab__d">Hyper-V and Windows Sandbox for builds and break-fix, with PowerShell to automate the repetitive bits.</p></li>
-      </ul>
+    <section class="casefiles" id="next" data-stock="sun">
+      <p class="sec__k" data-a="up">Case files</p>
+      <article class="case" data-a="up">
+        <header class="case__h"><em>01</em><span>Endpoint · Rollout</span></header>
+        <h3 data-a="mask">Dock standardisation</h3>
+        <p class="case__ctx">Retail docks were failing constantly across the estate.</p>
+        <dl class="case__d">
+          <div><dt>Objective</dt><dd>Stop the stream of failing, costly docks across 400+ stores.</dd></div>
+          <div><dt>Role</dt><dd>Replaced docks with daisy-chained hub monitors; wrote the rollout playbook.</dd></div>
+          <div><dt>Outcome</dt><dd>Simpler desks, far fewer failures, a process anyone could run.</dd></div>
+        </dl>
+      </article>
+      <article class="case" data-a="up">
+        <header class="case__h"><em>02</em><span>ITSM · Knowledge</span></header>
+        <h3 data-a="mask">Service-desk playbook</h3>
+        <p class="case__ctx">The desk leaned on memory; the same issues kept returning.</p>
+        <dl class="case__d">
+          <div><dt>Objective</dt><dd>Turn tribal knowledge into a consistent, documented process.</dd></div>
+          <div><dt>Role</dt><dd>Documented SOPs, KBAs and escalation paths; became the L2 point.</dd></div>
+          <div><dt>Outcome</dt><dd>Faster resolutions and a knowledge base new starters pick up quickly.</dd></div>
+        </dl>
+      </article>
+      <article class="case" data-a="up">
+        <header class="case__h"><em>03</em><span>Identity · Devices</span></header>
+        <h3 data-a="mask">Modern device builds</h3>
+        <p class="case__ctx">Builds and access were manual and inconsistent.</p>
+        <dl class="case__d">
+          <div><dt>Objective</dt><dd>Secure, standardised devices with day-one access.</dd></div>
+          <div><dt>Role</dt><dd>SOE builds, AD and M365 admin, joiner/leaver end to end.</dd></div>
+          <div><dt>Outcome</dt><dd>Compliant endpoints and a tidy account lifecycle.</dd></div>
+        </dl>
+      </article>
     </section>
 
-    <!-- ============================ PAGE TURN ============================ -->
-    <a class="turn" href="credentials.html" data-palette="forest" data-cursor="turn the page">
-      <span class="turn__k" data-reveal>Continued on Plate 05</span>
-      <span class="turn__t" data-reveal>The Seals <em>— Credentials</em></span>
-      <span class="turn__fold" aria-hidden="true"></span>
+    <section class="grid4" data-stock="moss" aria-label="Home lab">
+      <p class="sec__k" data-a="up">The lab</p>
+      <div class="grid4__g">
+        <div class="cell" data-a="up"><em>01</em><h3>M365 dev tenant</h3><p>Conditional access and policy testing away from production.</p></div>
+        <div class="cell" data-a="up"><em>02</em><h3>Entra ID &amp; Intune</h3><p>Identity governance and endpoint policy, straight off the SC-300 syllabus.</p></div>
+        <div class="cell" data-a="up"><em>03</em><h3>Azure account</h3><p>Standing up resources to learn how the pieces fit.</p></div>
+        <div class="cell" data-a="up"><em>04</em><h3>VMs &amp; PowerShell</h3><p>Hyper-V and Sandbox for break-fix; scripts for the repetitive bits.</p></div>
+      </div>
+    </section>
+
+    <a class="next" href="credentials.html" data-stock="ink" data-cur="next page">
+      <span class="next__k" data-a="up">Next</span>
+      <span class="next__t" data-a="mask">Credentials</span>
+      <span class="next__a" aria-hidden="true">→</span>
     </a>
   </main>
 
-  <footer class="foot">
-    <span>© 2026 Myat Thu</span>
-    <a href="index.html" data-cursor="cover">Back to the cover ↑</a>
-    <span>Melbourne, Australia</span>
-    <span class="foot__colophon">Set in Bodoni Moda, Outfit &amp; Share Tech Mono · the machine is drawn live in WebGL · no trackers, no cookies</span>
+  <footer class="end">
+    <a class="end__cta" href="mailto:myatgeorgethu@gmail.com" data-mag="0.18" data-cur="email">
+      <span class="end__k">Say hello</span>
+      <span class="end__mail">myatgeorgethu@gmail.com<i>→</i></span>
+    </a>
+    <div class="end__meta">
+      <span>© 2026 Myat Thu</span>
+      <span>Melbourne, Australia</span>
+      <span>No trackers, no cookies</span>
+      <a href="index.html" data-cur="cover">Back to cover ↑</a>
+    </div>
   </footer>
 
   <script src="vendor/gsap.min.js" defer></script>
   <script src="vendor/ScrollTrigger.min.js" defer></script>
   <script src="vendor/lenis.min.js" defer></script>
-  <script src="vendor/anime.umd.min.js" defer></script>
   <script src="main.js?v=__BUILD__" defer></script>
-  <!-- mercury lazy-loads vendor/three.mercury.min.js itself, off the critical path -->
-  <script src="mercury.js?v=__BUILD__" defer></script>
 </body>
 </html>
