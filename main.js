@@ -146,33 +146,73 @@
     });
   }
 
-  /* ------------------------------ running head ---------------------------- */
+  /* --------------------- running head + the live margins ------------------ */
+  /* One scroll pass drives three things: the sticky head, the section ticks in
+     the left margin, and the section name, page number and progress running
+     down the right margin. Each section carries its own ink.                  */
+  var MARKS = [
+    ["front", "Front page", "P.1", "--red"],
+    ["record", "The record", "P.2", "--blue"],
+    ["reports", "Field reports", "P.3", "--green"],
+    ["notices", "Public notices", "P.4", "--plum"],
+    ["desk", "At the desk", "P.5", "--ochre"],
+    ["wanted", "Situations wanted", "P.6", "--teal"]
+  ];
+
   function initRail() {
     var rail = document.getElementById("rail");
     var prog = document.getElementById("prog");
     var label = document.getElementById("railSec");
+    var gutSec = document.getElementById("gutSec");
+    var gutPage = document.getElementById("gutPage");
+    var gutBar = document.getElementById("gutBar");
+    var gutPct = document.getElementById("gutPct");
+    var ticks = document.getElementById("gutTicks");
+    var tick = ticks ? ticks.querySelectorAll("li") : [];
+    var tinted = [rail, document.querySelector(".gut--l"), document.querySelector(".gut--r")]
+      .filter(function (el) { return el; });
     if (!rail) return;
 
-    var marks = [
-      ["front", "Front page"], ["record", "The record"], ["reports", "Field reports"],
-      ["notices", "Public notices"], ["desk", "At the desk"], ["wanted", "Situations wanted"]
-    ].map(function (m) { return { el: document.getElementById(m[0]), name: m[1] }; })
-      .filter(function (m) { return m.el; });
+    var marks = MARKS.map(function (m) {
+      return { el: document.getElementById(m[0]), name: m[1], page: m[2], ink: m[3] };
+    }).filter(function (m) { return m.el; });
+    if (!marks.length) return;
 
-    var last = "";
+    var at = -1;
+    function setSection(i) {
+      if (i === at) return;
+      at = i;
+      var m = marks[i];
+      tinted.forEach(function (el) { el.style.setProperty("--accent", "var(" + m.ink + ")"); });
+      if (label) label.textContent = m.name;
+      if (gutPage) gutPage.textContent = m.page;
+      for (var t = 0; t < tick.length; t++) tick[t].classList.toggle("on", t === i);
+      if (gutSec) {
+        gutSec.classList.add("is-out");
+        window.setTimeout(function () {
+          gutSec.textContent = m.name;
+          gutSec.classList.remove("is-out");
+        }, 200);
+      }
+    }
+
     function update() {
       var y = window.pageYOffset;
       var max = document.documentElement.scrollHeight - window.innerHeight;
+      var p = max > 0 ? Math.min(Math.max(y / max, 0), 1) : 0;
+
       rail.classList.toggle("is-stuck", y > 260);
-      if (prog) prog.style.transform = "scaleX(" + (max > 0 ? Math.min(y / max, 1) : 0) + ")";
-      if (label) {
-        var name = marks[0].name;
-        for (var i = 0; i < marks.length; i++) {
-          if (marks[i].el.getBoundingClientRect().top <= 120) name = marks[i].name;
-        }
-        if (name !== last) { last = name; label.textContent = name; }
+      if (prog) prog.style.transform = "scaleX(" + p + ")";
+      if (gutBar) gutBar.style.setProperty("--p", p.toFixed(3));
+      if (gutPct) gutPct.textContent = Math.round(p * 100) + "%";
+
+      var i = 0;
+      for (var k = 0; k < marks.length; k++) {
+        if (marks[k].el.getBoundingClientRect().top <= 130) i = k;
       }
+      setSection(i);
     }
+
     if (lenis) lenis.on("scroll", update);
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
