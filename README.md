@@ -37,8 +37,12 @@ ink the way a broadsheet colour-codes its sections (front page red, the
 record blue, field reports green, notices plum, the desk ochre, classifieds
 teal), and it lands on flags, page numbers, rules and labels while the body
 copy stays black on warm newsprint. Nothing re-inks itself as you scroll.
-Times for display, Georgia for body copy, Share Tech Mono for datelines and
-labels.
+The paper is set the way the broadsheets set theirs: a blackletter nameplate
+(Pirata One, subset to its own string), Scotch roman headlines (Playfair
+Display), a transitional serif for reading (PT Serif, with a true italic for
+standfirsts), and Franklin Gothic for every kicker, dateline, cutline and
+standing label (Libre Franklin). All four are self-hosted, latin-subset, and
+come to 184KB.
 
 **The margins work.** On wide screens the desk either side of the sheet runs
 a live indicator: the section you are reading set vertically, its page

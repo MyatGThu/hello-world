@@ -6,16 +6,46 @@
    spine rules), and frames within frames (page rule → section box → plate).
    ========================================================================== */
 
+/* The newspaper's own furniture: a blackletter nameplate, a Scotch roman for
+   headlines, a transitional serif for reading, and Franklin for the labels. */
 @font-face {
-  font-family: "Outfit";
-  src: url("assets/fonts/outfit.woff2") format("woff2");
-  font-weight: 100 900;
+  font-family: "Pirata One";           /* nameplate only, subset to its string */
+  src: url("assets/fonts/pirata-one.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+20, U+45, U+4d, U+54, U+62, U+64-65, U+68-69, U+6c, U+6e-70, U+72, U+74-75;
+}
+@font-face {
+  font-family: "Playfair Display";
+  src: url("assets/fonts/playfair-display.woff2") format("woff2");
+  font-weight: 700 900;
   font-display: swap;
 }
 @font-face {
-  font-family: "Share Tech Mono";
-  src: url("assets/fonts/share-tech-mono.woff2") format("woff2");
+  font-family: "PT Serif";
+  src: url("assets/fonts/pt-serif.woff2") format("woff2");
   font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PT Serif";
+  src: url("assets/fonts/pt-serif-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PT Serif";
+  src: url("assets/fonts/pt-serif-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Libre Franklin";
+  src: url("assets/fonts/libre-franklin.woff2") format("woff2");
+  font-weight: 400 800;
   font-display: swap;
 }
 
@@ -39,10 +69,11 @@
 
   --sheet: 1280px;
 
-  --display: "Times New Roman", Times, Georgia, serif;
-  --text: Georgia, "Times New Roman", Times, serif;
-  --mono: "Share Tech Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --sans: "Outfit", system-ui, -apple-system, sans-serif;
+  --plate: "Pirata One", "Playfair Display", "Times New Roman", serif;
+  --display: "Playfair Display", "Times New Roman", Times, Georgia, serif;
+  --text: "PT Serif", Georgia, "Times New Roman", Times, serif;
+  --label: "Libre Franklin", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --flag: "Libre Franklin", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
   --ease: cubic-bezier(0.76, 0, 0.24, 1);
   --out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -88,7 +119,7 @@ a { color: inherit; }
 .skip {
   position: fixed; top: -60px; left: 12px; z-index: 300;
   background: var(--ink); color: var(--paper); padding: 10px 16px;
-  font-family: var(--mono); font-size: 12px; letter-spacing: .14em;
+  font-family: var(--label); font-size: 12px; letter-spacing: .14em;
   text-transform: uppercase; text-decoration: none; transition: top .2s;
 }
 .skip:focus { top: 12px; }
@@ -126,12 +157,12 @@ html:not(.js) .spin { display: none; }
 }
 
 .spin__ear {
-  font-family: var(--mono); font-size: 10px; letter-spacing: .3em;
+  font-family: var(--label); font-size: 10px; letter-spacing: .3em;
   color: var(--grey); text-transform: uppercase; margin-bottom: 6px;
 }
 .spin__name {
-  font-family: var(--display); font-weight: 700;
-  font-size: clamp(15px, 3.6vw, 30px); letter-spacing: .02em;
+  font-family: var(--plate); font-weight: 400;
+  font-size: clamp(17px, 4.2vw, 34px); letter-spacing: .01em;
   text-align: center; line-height: 1;
   border-top: 3px solid var(--ink); border-bottom: 1px solid var(--ink);
   padding: 8px 0 6px; width: 100%;
@@ -143,7 +174,7 @@ html:not(.js) .spin { display: none; }
   text-align: center;
 }
 .spin__deck {
-  font-family: var(--mono); font-size: clamp(7px, 1.5vw, 11px);
+  font-family: var(--label); font-size: clamp(7px, 1.5vw, 11px);
   letter-spacing: .18em; color: var(--red); text-align: center;
   margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--hair);
   width: 76%;
@@ -163,7 +194,7 @@ html:not(.js) .spin { display: none; }
   position: absolute; right: 18px; bottom: 18px;
   background: none; border: 1px solid rgba(251, 250, 247, .35);
   color: rgba(251, 250, 247, .7); cursor: pointer;
-  font-family: var(--mono); font-size: 11px; letter-spacing: .2em;
+  font-family: var(--label); font-size: 11px; letter-spacing: .2em;
   text-transform: uppercase; padding: 8px 14px;
 }
 .spin__skip:hover { border-color: var(--paper); color: var(--paper); }
@@ -193,7 +224,7 @@ html:not(.js) .spin { display: none; }
   letter-spacing: .02em; text-decoration: none; white-space: nowrap;
 }
 .rail__sec {
-  font-family: var(--mono); font-size: 12.5px; letter-spacing: .22em;
+  font-family: var(--label); font-size: 12.5px; letter-spacing: .22em;
   text-transform: uppercase; color: var(--accent); margin-left: auto;
   transition: color .5s var(--out);
 }
@@ -228,7 +259,7 @@ html:not(.js) .spin { display: none; }
   gap: 18px; padding: clamp(10px, 1.9vh, 20px) 6px; text-decoration: none;
 }
 .ov__list em {
-  font-family: var(--mono); font-style: normal; font-size: 12px;
+  font-family: var(--label); font-style: normal; font-size: 12px;
   letter-spacing: .18em; opacity: .6;
 }
 .ov__list span {
@@ -241,7 +272,7 @@ html:not(.js) .spin { display: none; }
 .ov__meta {
   width: min(880px, 100%); margin: 34px auto 0;
   display: flex; flex-wrap: wrap; gap: 8px 28px;
-  font-family: var(--mono); font-size: 12px; letter-spacing: .1em;
+  font-family: var(--label); font-size: 12px; letter-spacing: .1em;
   text-transform: uppercase; color: rgba(251, 250, 247, .72);
 }
 .ov__meta a { text-decoration: none; }
@@ -258,7 +289,7 @@ html:not(.js) .spin { display: none; }
 html.has-dot .dot { opacity: 1; }
 .dot.is-wide { width: 74px; height: 74px; margin: -37px 0 0 -37px; background: var(--ink); }
 .dot__label {
-  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
+  font-family: var(--label); font-size: 9px; letter-spacing: .12em;
   text-transform: uppercase; color: var(--paper); opacity: 0;
   transition: opacity .2s; text-align: center; line-height: 1.1; padding: 0 6px;
 }
@@ -293,8 +324,8 @@ html.has-dot .dot { opacity: 1; }
 .np { border-top: 5px solid var(--ink); padding-top: 14px; }
 .np__name {
   margin: 0; text-align: center; white-space: nowrap;
-  font-family: var(--display); font-weight: 700;
-  font-size: clamp(22px, 5.6vw, 76px); line-height: 1.02; letter-spacing: .012em;
+  font-family: var(--plate); font-weight: 400;
+  font-size: clamp(26px, 8.2vw, 116px); line-height: 1.04; letter-spacing: .008em;
 }
 .np__line {
   height: 0; border-top: 4px solid var(--red); border-bottom: 1px solid var(--ink);
@@ -303,7 +334,7 @@ html.has-dot .dot { opacity: 1; }
 .np__date {
   display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 6px 18px;
   margin: 8px 0 0; padding-bottom: 10px; border-bottom: 1px solid var(--ink);
-  font-family: var(--mono); font-size: 12.5px; letter-spacing: .16em;
+  font-family: var(--label); font-size: 12.5px; letter-spacing: .16em;
   text-transform: uppercase; color: var(--grey);
 }
 .np__date p { margin: 0; line-height: 1.7; }
@@ -317,7 +348,7 @@ html.has-dot .dot { opacity: 1; }
 .front { padding: clamp(26px, 4.4vw, 60px) 0 clamp(20px, 3vw, 40px); }
 .front__kick {
   margin: 0 0 clamp(14px, 2vw, 26px); text-align: center;
-  font-family: var(--mono); font-size: 13px; letter-spacing: .3em;
+  font-family: var(--label); font-size: 13px; letter-spacing: .3em;
   text-transform: uppercase; color: var(--red);
 }
 .front__head {
@@ -328,14 +359,14 @@ html.has-dot .dot { opacity: 1; }
 .front__head .ln { display: block; overflow: hidden; padding-bottom: .02em; }
 .front__deck {
   max-width: 46ch; margin: clamp(14px, 1.8vw, 22px) auto 0; text-align: center;
-  font-family: var(--display); font-size: clamp(20px, 2.2vw, 28px);
+  font-family: var(--text); font-size: clamp(19px, 2vw, 25px);
   line-height: 1.32; font-style: italic; color: #1d1d1d;
 }
 .front__by {
   display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
   margin: clamp(16px, 2.2vw, 26px) 0 clamp(22px, 3vw, 38px);
   padding: 10px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
-  font-family: var(--mono); font-size: 12.5px; letter-spacing: .22em;
+  font-family: var(--label); font-size: 12.5px; letter-spacing: .22em;
   text-transform: uppercase; color: var(--grey);
 }
 .front__by b { color: var(--ink); }
@@ -374,9 +405,9 @@ html.has-dot .dot { opacity: 1; }
   float: left; color: var(--red); font-family: var(--display); font-weight: 700;
   font-size: 4.05em; line-height: .78; margin: .06em .09em -.04em 0;
 }
-.place { font-family: var(--mono); font-size: .78em; letter-spacing: .1em; color: var(--red); }
+.place { font-family: var(--label); font-size: .78em; letter-spacing: .1em; color: var(--red); }
 .cont {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .2em;
+  font-family: var(--label); font-size: 11px; letter-spacing: .2em;
   text-transform: uppercase; color: var(--grey); text-align: right !important;
 }
 
@@ -384,7 +415,7 @@ html.has-dot .dot { opacity: 1; }
 .inside { border: 3px double var(--ink); padding: 16px 18px 14px; }
 .inside h3 {
   margin: -16px -18px 12px; padding: 11px 10px 9px; background: var(--red); color: var(--paper);
-  font-family: var(--sans); font-weight: 900; font-size: 14px;
+  font-family: var(--flag); font-weight: 900; font-size: 14px;
   letter-spacing: .12em; text-transform: uppercase; text-align: center;
 }
 .inside ul { list-style: none; margin: 0; padding: 0; }
@@ -394,7 +425,7 @@ html.has-dot .dot { opacity: 1; }
   padding: 8px 0; text-decoration: none;
 }
 .inside em {
-  font-family: var(--mono); font-style: normal; font-size: 12.5px;
+  font-family: var(--label); font-style: normal; font-size: 12.5px;
   letter-spacing: .1em; color: var(--red); grid-row: span 2;
 }
 .inside span { font-family: var(--display); font-weight: 700; font-size: 21px; line-height: 1.1; }
@@ -408,25 +439,38 @@ html.has-dot .dot { opacity: 1; }
 .stamp svg { width: 100%; height: auto; transform: rotate(-7deg); opacity: .88; }
 .sk-r { fill: none; stroke: var(--red); stroke-width: 2; }
 .sk-t {
-  font-family: var(--mono); font-size: 13.5px; letter-spacing: .12em; fill: var(--red);
+  font-family: var(--label); font-size: 13.5px; letter-spacing: .12em; fill: var(--red);
 }
 .sk-c {
   font-family: var(--display); font-weight: 700; font-size: 34px;
   text-anchor: middle; fill: var(--red);
 }
 .sk-s {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .3em;
+  font-family: var(--label); font-size: 11px; letter-spacing: .3em;
   text-anchor: middle; fill: var(--red);
 }
 .stamp__ring { transform-origin: 100px 100px; animation: turn 40s linear infinite; }
 @keyframes turn { to { transform: rotate(360deg); } }
+
+
+/* Franklin furniture: kickers, datelines, cutlines and standing labels all sit
+   at medium weight, the way a broadsheet sets everything that is not copy. */
+.np__date, .front__kick, .front__by, .flag em, .case__tag, .case__d dt,
+.case__fig figcaption, .credit, .job__org, .job__yr, .seal__cta, .notice,
+.brief__k, .want__k, .want__side b, .want__cv, .colophon, .rail__sec,
+.num span, .nums__k, .inside em, .info__h, .use b, .cmodal__code, .info__link,
+.row span, .tools, .ov__meta, .ov__list em, .spin__ear, .spin__deck, .skip,
+.dot__label, .place, .gut__mark, .gut__page, .gut__pct em {
+  font-weight: 600;
+}
+.np__date b, .flag b, .nums__k, .info__h, .notice b { font-weight: 800; }
 
 /* ============================ 5. BY THE NUMBERS ========================== */
 
 .nums { border: 1px solid var(--ink); padding: 6px; margin: clamp(24px, 3.4vw, 44px) 0; }
 .nums__k {
   margin: 0; padding: 10px; text-align: center; border-bottom: 1px solid var(--hair);
-  font-family: var(--sans); font-weight: 900; font-size: 13.5px;
+  font-family: var(--flag); font-weight: 900; font-size: 13.5px;
   letter-spacing: .3em; text-transform: uppercase; color: var(--red);
 }
 .nums__g { display: grid; grid-template-columns: repeat(4, 1fr); }
@@ -438,7 +482,7 @@ html.has-dot .dot { opacity: 1; }
   font-variant-numeric: lining-nums;
 }
 .num span {
-  display: block; margin-top: 9px; font-family: var(--mono); font-size: 12.5px;
+  display: block; margin-top: 9px; font-family: var(--label); font-size: 12.5px;
   letter-spacing: .1em; text-transform: uppercase; color: var(--grey); line-height: 1.5;
 }
 
@@ -453,17 +497,17 @@ html.has-dot .dot { opacity: 1; }
 }
 .flag i { height: 0; border-top: 1px solid var(--ink); border-bottom: 4px solid var(--accent); padding-top: 2px; }
 .flag b {
-  font-family: var(--sans); font-weight: 900;
+  font-family: var(--flag); font-weight: 900;
   font-size: clamp(17px, 2.4vw, 28px); letter-spacing: .06em; text-transform: uppercase;
 }
 .flag em {
-  font-family: var(--mono); font-style: normal; font-size: 12.5px;
+  font-family: var(--label); font-style: normal; font-size: 12.5px;
   letter-spacing: .18em; text-transform: uppercase; color: var(--accent);
 }
 .sec__lead {
   max-width: 62ch; margin: 0 auto clamp(24px, 3.4vw, 44px); text-align: center;
-  font-family: var(--display); font-style: italic;
-  font-size: clamp(19px, 2vw, 24px); line-height: 1.45; color: #232323;
+  font-family: var(--text); font-style: italic;
+  font-size: clamp(18px, 1.85vw, 22px); line-height: 1.5; color: #232323;
 }
 
 /* ---- P.2 the record: a spine with medallions hung off it ---- */
@@ -491,7 +535,7 @@ html.has-dot .dot { opacity: 1; }
   box-shadow: 0 0 0 5px var(--paper), 0 0 0 7px var(--accent);
 }
 .job__yr {
-  font-family: var(--mono); font-size: 12.5px; letter-spacing: .1em;
+  font-family: var(--label); font-size: 12.5px; letter-spacing: .1em;
   text-transform: uppercase; color: var(--grey); text-align: center;
 }
 .job__body h3 {
@@ -500,7 +544,7 @@ html.has-dot .dot { opacity: 1; }
 }
 .job__org {
   margin: 6px 0 12px; padding-bottom: 12px; border-bottom: 1px solid var(--hair);
-  font-family: var(--mono); font-size: 13px; letter-spacing: .16em;
+  font-family: var(--label); font-size: 13px; letter-spacing: .16em;
   text-transform: uppercase; color: var(--accent);
 }
 .job__org b { color: var(--grey); margin: 0 6px; }
@@ -531,12 +575,12 @@ html.has-dot .dot { opacity: 1; }
 }
 .case__fig figcaption {
   margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--hair);
-  font-family: var(--mono); font-size: 12.5px; letter-spacing: .04em;
+  font-family: var(--label); font-size: 12.5px; letter-spacing: .04em;
   line-height: 1.65; color: var(--grey);
 }
 .case__fig figcaption b { color: var(--accent); letter-spacing: .16em; text-transform: uppercase; }
 .case__tag {
-  margin: 0 0 8px; font-family: var(--mono); font-size: 12.5px;
+  margin: 0 0 8px; font-family: var(--label); font-size: 12.5px;
   letter-spacing: .22em; text-transform: uppercase; color: var(--accent);
 }
 .case__txt h3 {
@@ -545,13 +589,13 @@ html.has-dot .dot { opacity: 1; }
 }
 .case__ctx {
   margin: 0 0 16px; padding-bottom: 16px; border-bottom: 1px solid var(--hair);
-  font-family: var(--display); font-style: italic; font-size: 20.5px; line-height: 1.42;
+  font-family: var(--text); font-style: italic; font-size: 19px; line-height: 1.5;
 }
 .case__d { margin: 0; }
 .case__d > div { display: grid; grid-template-columns: 104px 1fr; gap: 16px; padding: 10px 0; }
 .case__d > div + div { border-top: 1px dotted var(--hair); }
 .case__d dt {
-  font-family: var(--mono); font-size: 11.5px; letter-spacing: .16em;
+  font-family: var(--label); font-size: 11.5px; letter-spacing: .16em;
   text-transform: uppercase; color: var(--accent); padding-top: 3px;
 }
 .case__d dd { margin: 0; font-size: 17.5px; }
@@ -567,10 +611,10 @@ html.has-dot .dot { opacity: 1; }
 .seal__svg { width: min(190px, 82%); height: auto; margin: 0 auto 14px; display: block; }
 .s-r { fill: none; stroke: var(--accent); stroke-width: 1.6; }
 .s-r--in { stroke-width: 1; stroke-dasharray: 3 4; opacity: .55; }
-.s-t { font-family: var(--mono); font-size: 12.5px; letter-spacing: .1em; fill: var(--accent); }
+.s-t { font-family: var(--label); font-size: 12.5px; letter-spacing: .1em; fill: var(--accent); }
 .s-c { font-family: var(--display); font-weight: 700; font-size: 29px; text-anchor: middle; fill: var(--ink); }
 .s-c--sm { font-size: 16px; letter-spacing: .02em; }
-.s-s { font-family: var(--mono); font-size: 10px; letter-spacing: .26em; text-anchor: middle; fill: var(--accent); }
+.s-s { font-family: var(--label); font-size: 10px; letter-spacing: .26em; text-anchor: middle; fill: var(--accent); }
 .seal__ring { transform-origin: 100px 100px; animation: turn 32s linear infinite; animation-play-state: paused; }
 .seal:hover .seal__ring, .seal:focus-visible .seal__ring { animation-play-state: running; }
 .seal h3 {
@@ -580,14 +624,14 @@ html.has-dot .dot { opacity: 1; }
 .seal p { margin: 0 0 10px; font-size: 17px; color: #2a2a2a; }
 .seal__cta {
   display: block; padding-top: 10px; border-top: 1px solid var(--hair);
-  font-family: var(--mono); font-size: 12px; letter-spacing: .14em;
+  font-family: var(--label); font-size: 12px; letter-spacing: .14em;
   text-transform: uppercase; color: var(--accent);
 }
 .seal__info { display: none; }
 .notice {
   margin: clamp(20px, 2.6vw, 32px) 0 0; padding: 14px 18px;
   border: 1px solid var(--ink); border-left: 8px solid var(--accent);
-  font-family: var(--mono); font-size: 13px; letter-spacing: .08em;
+  font-family: var(--label); font-size: 13px; letter-spacing: .08em;
   text-transform: uppercase; color: var(--grey);
 }
 .notice b { color: var(--accent); margin-right: 10px; letter-spacing: .18em; }
@@ -615,7 +659,7 @@ html.has-dot .dot { opacity: 1; }
 }
 .cmodal__x:hover { background: var(--ink); color: var(--paper); }
 .cmodal__code {
-  margin: 0 0 6px; font-family: var(--mono); font-size: 13px;
+  margin: 0 0 6px; font-family: var(--label); font-size: 13px;
   letter-spacing: .3em; text-transform: uppercase; color: var(--accent);
 }
 .cmodal__t {
@@ -625,17 +669,17 @@ html.has-dot .dot { opacity: 1; }
 }
 .info__about { margin: 0 0 20px; font-size: 18.5px; }
 .info__h {
-  margin: 0 0 12px; font-family: var(--sans); font-weight: 900; font-size: 13px;
+  margin: 0 0 12px; font-family: var(--flag); font-weight: 900; font-size: 13px;
   letter-spacing: .2em; text-transform: uppercase; color: var(--accent);
 }
 .info__uses { display: grid; gap: 12px; margin-bottom: 22px; }
 .use { display: grid; gap: 4px; padding: 12px 14px; border: 1px solid var(--hair); }
-.use b { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+.use b { font-family: var(--label); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
 .use span { font-size: 17px; }
 .info__link {
   display: inline-block; padding: 12px 20px; border: 1px solid var(--accent);
   color: var(--accent);
-  font-family: var(--mono); font-size: 13px; letter-spacing: .14em;
+  font-family: var(--label); font-size: 13px; letter-spacing: .14em;
   text-transform: uppercase; text-decoration: none;
 }
 .info__link:hover { background: var(--accent); color: var(--paper); }
@@ -644,7 +688,7 @@ html.has-dot .dot { opacity: 1; }
 .desk { display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: clamp(18px, 2.4vw, 32px); }
 .brief { border-top: 4px solid var(--accent); padding-top: 16px; }
 .brief__k {
-  margin: 0 0 12px; font-family: var(--mono); font-size: 12.5px;
+  margin: 0 0 12px; font-family: var(--label); font-size: 12.5px;
   letter-spacing: .24em; text-transform: uppercase; color: var(--accent);
 }
 .brief h3 {
@@ -659,8 +703,8 @@ html.has-dot .dot { opacity: 1; }
 .row__mark { width: 46px; height: auto; }
 .row--plain { grid-template-columns: 1fr; }
 .row strong { display: block; font-size: 18.5px; }
-.row span { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--grey); text-transform: uppercase; }
-.tools { font-family: var(--mono); font-size: 14px; letter-spacing: .04em; line-height: 2; color: #2a2a2a; }
+.row span { font-family: var(--label); font-size: 12px; letter-spacing: .1em; color: var(--grey); text-transform: uppercase; }
+.tools { font-family: var(--label); font-size: 14px; letter-spacing: .04em; line-height: 2; color: #2a2a2a; }
 
 /* ---- P.6 situations wanted ---- */
 .want { display: grid; grid-template-columns: 1.4fr .8fr; gap: clamp(18px, 3vw, 44px); align-items: start; }
@@ -678,15 +722,20 @@ html.has-dot .dot { opacity: 1; }
 }
 .want__mail i { font-style: normal; transition: transform .3s var(--out); }
 .want__mail:hover i { transform: translateX(7px); }
-.want__cv { margin: 28px 0 0; font-family: var(--mono); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+.want__cv {
+  margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 12px 28px;
+  font-family: var(--label); font-size: 13px; letter-spacing: .14em; text-transform: uppercase;
+}
 .want__cv a { text-decoration: none; border-bottom: 1px solid var(--accent); padding-bottom: 3px; }
+.want__side li a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+.want__side li a:hover { color: var(--ink); }
 .want__side { border-top: 4px solid var(--accent); padding-top: 16px; }
-.want__k { margin: 0 0 10px; font-family: var(--mono); font-size: 12.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--accent); }
+.want__k { margin: 0 0 10px; font-family: var(--label); font-size: 12.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--accent); }
 .want__side ul { list-style: none; margin: 0; padding: 0; }
 .want__side li { padding: 11px 0; font-size: 17.5px; }
 .want__side li + li { border-top: 1px dotted var(--hair); }
 .want__side b {
-  display: block; font-family: var(--mono); font-size: 11.5px;
+  display: block; font-family: var(--label); font-size: 11.5px;
   letter-spacing: .16em; text-transform: uppercase; color: var(--accent);
 }
 
@@ -695,7 +744,7 @@ html.has-dot .dot { opacity: 1; }
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
   margin-top: 10px; padding: 16px 0 clamp(20px, 3vw, 34px);
   border-top: 4px solid var(--red);
-  font-family: var(--mono); font-size: 12.5px; letter-spacing: .12em;
+  font-family: var(--label); font-size: 12.5px; letter-spacing: .12em;
   text-transform: uppercase; color: var(--grey);
 }
 .colophon a { text-decoration: none; }
@@ -718,7 +767,7 @@ html.has-dot .dot { opacity: 1; }
 
 .gut__mark {
   writing-mode: vertical-rl; transform: rotate(180deg);
-  font-family: var(--mono); font-size: 11px; letter-spacing: .3em;
+  font-family: var(--label); font-size: 11px; letter-spacing: .3em;
   text-transform: uppercase; color: var(--grey); opacity: .75;
 }
 .gut__ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 13px; }
@@ -729,7 +778,7 @@ html.has-dot .dot { opacity: 1; }
 .gut__ticks li.on { width: 30px; background: var(--accent); }
 
 .gut__page {
-  writing-mode: vertical-rl; font-family: var(--mono); font-size: 12px;
+  writing-mode: vertical-rl; font-family: var(--label); font-size: 12px;
   letter-spacing: .3em; color: var(--accent);
   transition: color .5s var(--out);
 }
@@ -748,7 +797,7 @@ html.has-dot .dot { opacity: 1; }
   transition: background-color .5s var(--out);
 }
 .gut__pct em {
-  writing-mode: vertical-rl; font-style: normal; font-family: var(--mono);
+  writing-mode: vertical-rl; font-style: normal; font-family: var(--label);
   font-size: 10.5px; letter-spacing: .2em; color: var(--grey);
 }
 
