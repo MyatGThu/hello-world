@@ -210,6 +210,9 @@
       for (var k = 0; k < marks.length; k++) {
         if (marks[k].el.getBoundingClientRect().top <= 130) i = k;
       }
+      // the last section never reaches the top of a page that has run out of
+      // scroll, so the foot of the paper always reads as the closing section
+      if (max > 0 && y >= max - 4) i = marks.length - 1;
       setSection(i);
     }
 
