@@ -15,10 +15,9 @@ and the burger overlay scrolls rather than navigates.
 Myat is the headline. His name is set as the lead story under a standfirst
 and byline, and the rest of the paper reports on it: **The record** (four
 roles on a spine of circular company medallions that link out to each
-employer), **Field reports** (three case files, each a photograph with the
-fix drawn to scale on an inset plate), **Public notices** (four certification
-seals that open a framed detail overlay), **At the desk**, and **Situations
-wanted**.
+employer), **Field reports** (three case files, each led by a photograph with
+its cutline), **Public notices** (four certification seals that open a framed
+detail overlay), **At the desk**, and **Situations wanted**.
 
 Four compositional devices carry the layout:
 
@@ -26,10 +25,10 @@ Four compositional devices carry the layout:
   medallions, the certification seals with type set on a circular path, and
   the rotating "open to work" rubber stamp.
 - **Leading lines:** column rules, the vertical spine the medallions hang
-  from, and the dashed leaders inside the engravings.
+  from, and the rules that carry each section flag across the page.
 - **Frames within a frame:** the page rule inside the sheet, boxed sidebars
-  inside the page rule, engraving insets printed over photographs, and the
-  notice overlay above it all.
+  inside the page rule, framed photographs inside the reports, and the notice
+  overlay above it all.
 - **Symmetry:** the centred nameplate over its three-cell ear bar, mirrored
   section flags, and the symmetric rows of numbers and seals.
 

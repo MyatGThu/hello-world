@@ -523,17 +523,8 @@ html.has-dot .dot { opacity: 1; }
 .case + .case { border-top: 1px dotted var(--hair); padding-top: clamp(26px, 4vw, 56px); }
 .case--flip .case__fig { order: 2; }
 .case__fig { margin: 0; }
-.case__photo {
-  position: relative; border: 1px solid var(--ink); background: #fff; padding: 10px;
-}
+.case__photo { border: 1px solid var(--ink); background: #fff; padding: 10px; }
 .case__photo > img { width: 100%; height: auto; display: block; }
-/* the explainer inset: a drawing of the same job, printed over the photograph */
-.case__inset {
-  position: absolute; right: 24px; bottom: 24px; width: 46%;
-  background: var(--paper); border: 1px solid var(--ink); padding: 7px;
-  box-shadow: 0 8px 22px rgba(18, 18, 18, .35);
-}
-.case__inset svg { width: 100%; height: auto; display: block; }
 .credit {
   display: block; margin-top: 7px; font-size: 11.5px; letter-spacing: .14em;
   text-transform: uppercase; color: var(--grey); opacity: .85;
@@ -787,7 +778,6 @@ html.has-dot .dot { opacity: 1; }
 @media (max-width: 860px) {
   body { font-size: 16px; }
   .case, .case--flip .case__fig { grid-template-columns: 1fr; order: 0; }
-  .case__inset { width: 42%; right: 18px; bottom: 18px; }
   .seals { grid-template-columns: repeat(2, 1fr); }
   .want { grid-template-columns: 1fr; }
   .job__body ul { columns: 1; }
@@ -812,7 +802,6 @@ html.has-dot .dot { opacity: 1; }
   .job { grid-template-columns: 1fr; gap: 16px; }
   .job__mark { flex-direction: row; align-items: center; gap: 16px; }
   .medal { width: 78px; height: 78px; padding: 14px; }
-  .case__inset { position: static; width: 100%; margin-top: 10px; box-shadow: none; }
   .case__d > div { grid-template-columns: 1fr; gap: 4px; }
   .case__d dt { padding-top: 0; }
   .row--plain { grid-template-columns: 1fr; }
